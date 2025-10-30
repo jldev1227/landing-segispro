@@ -366,9 +366,9 @@
 		},
 		priceRange: '$$',
 		sameAs: [
-			'https://www.facebook.com/segispro',
-			'https://www.linkedin.com/company/segispro',
-			'https://www.instagram.com/segispro'
+			'https://www.facebook.com/SEGISPRO',
+			'https://co.linkedin.com/company/segispro-ingenieria-sas',
+			'https://www.instagram.com/segispro_auditores/'
 		]
 	};
 </script>
@@ -1413,7 +1413,7 @@
 						<!-- Redes sociales -->
 						<div class="flex items-center gap-3">
 							<a
-								href="#"
+								href="https://www.facebook.com/SEGISPRO"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-600"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1423,7 +1423,7 @@
 								</svg>
 							</a>
 							<a
-								href="#"
+								href="https://x.com/segispro_ing"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-400"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1433,7 +1433,7 @@
 								</svg>
 							</a>
 							<a
-								href="#"
+								href="https://www.linkedin.com/company/segispro-ingenieria-sas/"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-700"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -1443,7 +1443,7 @@
 								</svg>
 							</a>
 							<a
-								href="#"
+								href="https://www.instagram.com/segispro_auditores/"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-pink-600"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
