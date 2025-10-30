@@ -10,12 +10,12 @@
 	let activeSection = 'inicio';
 
 	$: isScrolled = scrollY > 50;
-	$: carouselKey = currentIndex; // Forzar re-render cuando cambia el índice
 
 	const navItems = [
 		{ id: 'inicio', label: 'Inicio' },
 		{ id: 'services', label: 'Servicios' },
-		{ id: 'nosotros', label: 'Nosotros' }
+		{ id: 'nosotros', label: 'Nosotros' },
+		{ id: 'experience', label: 'Experiencia' },
 	];
 	let mounted = false;
 	let heroVisible = false;
@@ -858,6 +858,7 @@
 {#if mounted}
 	<!-- Gallery Section -->
 	<section
+		id="experience"
 		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-24"
 	>
 		<!-- Fondo animado -->
