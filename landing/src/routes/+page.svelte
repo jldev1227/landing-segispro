@@ -2,7 +2,6 @@
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import { bounce, fadeInUp } from '$lib/animations';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 
@@ -55,7 +54,22 @@
 			observer.observe(mapContainer);
 		}
 
-		return () => observer.disconnect();
+		// Auto-play interval
+		const interval = setInterval(() => {
+			if (isAutoPlaying && Date.now() - lastInteractionTime > INTERACTION_TIMEOUT) {
+				goToNext();
+			}
+		}, AUTO_PLAY_INTERVAL);
+
+		// Keyboard events
+		window.addEventListener('keydown', handleKeydown);
+
+		return () => {
+			observer.disconnect();
+			clearInterval(interval);
+			clearTimeout(autoPlayTimer);
+			window.removeEventListener('keydown', handleKeydown);
+		};
 	});
 
 	interface Service {
@@ -164,8 +178,135 @@
 	let mapLoaded = false;
 	let mapContainer: HTMLElement;
 
-	// Lazy loading del mapa cuando el usuario hace scroll cerca
-	onMount(() => {});
+	interface GalleryImage {
+		src: string;
+		title: string;
+		description?: string;
+	}
+
+	let images: GalleryImage[] = [	{ src: '/slides/slide-1.jpg', title: 'Slide 1' }, { src: '/slides/slide-2.jpg', title: 'Slide 2' }, { src: '/slides/slide-3.jpg', title: 'Slide 3' }, { src: '/slides/slide-4.jpg', title: 'Slide 4' }, { src: '/slides/slide-5.jpg', title: 'Slide 5' }];
+	
+	let currentIndex = 0;
+	let isAutoPlaying = true;
+	let autoPlayTimer: ReturnType<typeof setTimeout>;
+	let lastInteractionTime = Date.now();
+	let containerWidth = 0;
+	let isDragging = false;
+	let startX = 0;
+	let currentTranslate = 0;
+
+	// Constantes para el efecto 3D
+	const CARD_SPACING = 400; // Espacio entre cards
+	const SCALE_FACTOR = 0.7; // Escala de cards laterales
+	const BLUR_AMOUNT = 4; // Blur en px para cards laterales
+	const AUTO_PLAY_INTERVAL = 2000; // 2 segundos
+	const INTERACTION_TIMEOUT = 3000; // 3 segundos sin interacción
+
+	// Obtener índice circular
+	function getCircularIndex(index: number): number {
+		return ((index % images.length) + images.length) % images.length;
+	}
+
+	// Calcular posición y estilo de cada card
+	function getCardStyle(index: number): string {
+		const position = index - currentIndex;
+		const absPosition = Math.abs(position);
+		
+		// Escala: 1 para el centro, menor para los lados
+		const scale = position === 0 ? 1 : SCALE_FACTOR - (absPosition - 1) * 0.1;
+		
+		// Blur: 0 para el centro, aumenta para los lados
+		const blur = position === 0 ? 0 : BLUR_AMOUNT + (absPosition - 1) * 2;
+		
+		// Opacidad
+		const opacity = position === 0 ? 1 : 0.6 - (absPosition - 1) * 0.2;
+		
+		// Posición Z (profundidad)
+		const translateZ = position === 0 ? 0 : -100 * absPosition;
+		
+		// Posición X
+		const translateX = position * CARD_SPACING;
+		
+		// Rotación Y para efecto 3D
+		const rotateY = position * -15;
+		
+		return `
+			transform: 
+				translateX(${translateX}px) 
+				translateZ(${translateZ}px) 
+				rotateY(${rotateY}deg) 
+				scale(${Math.max(0.4, scale)});
+			filter: blur(${Math.min(8, blur)}px);
+			opacity: ${Math.max(0, opacity)};
+			z-index: ${100 - absPosition};
+			pointer-events: ${position === 0 ? 'auto' : 'none'};
+		`;
+	}
+
+	// Navegación
+	function goToNext() {
+		currentIndex = getCircularIndex(currentIndex + 1);
+		resetAutoPlay();
+	}
+
+	function goToPrev() {
+		currentIndex = getCircularIndex(currentIndex - 1);
+		resetAutoPlay();
+	}
+
+	function goToIndex(index: number) {
+		currentIndex = index;
+		resetAutoPlay();
+	}
+
+	// Auto-play logic
+	function resetAutoPlay() {
+		lastInteractionTime = Date.now();
+		isAutoPlaying = false;
+		clearTimeout(autoPlayTimer);
+		
+		// Reanudar auto-play después de 3 segundos sin interacción
+		autoPlayTimer = setTimeout(() => {
+			isAutoPlaying = true;
+		}, INTERACTION_TIMEOUT);
+	}
+
+	// Drag handlers
+	function handleDragStart(e: MouseEvent | TouchEvent) {
+		isDragging = true;
+		startX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+		resetAutoPlay();
+	}
+
+	function handleDragMove(e: MouseEvent | TouchEvent) {
+		if (!isDragging) return;
+		
+		const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+		currentTranslate = currentX - startX;
+	}
+
+	function handleDragEnd() {
+		if (!isDragging) return;
+		isDragging = false;
+		
+		// Cambiar slide si el drag fue suficiente
+		if (Math.abs(currentTranslate) > 50) {
+			if (currentTranslate > 0) {
+				goToPrev();
+			} else {
+				goToNext();
+			}
+		}
+		
+		currentTranslate = 0;
+	}
+
+	// Keyboard navigation
+	function handleKeydown(e: KeyboardEvent) {
+		if (e.key === 'ArrowLeft') goToPrev();
+		if (e.key === 'ArrowRight') goToNext();
+	}
+
 </script>
 
 <svelte:head>
@@ -677,6 +818,160 @@
 		{/if}
 	</div>
 </section>
+
+{#if mounted}
+	<!-- Gallery Section -->
+	<section class="relative py-24 px-6 bg-linear-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
+		<!-- Fondo animado -->
+		<div class="absolute inset-0 opacity-20">
+			<div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0); background-size: 50px 50px;"></div>
+		</div>
+
+		<!-- Glow effect desde la imagen actual -->
+		<div 
+			class="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"
+			style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"
+		></div>
+
+		<div class="container mx-auto max-w-7xl relative z-10">
+			<!-- Header -->
+			<div in:fly={{ y: 30, duration: 800 }} class="text-center mb-16">
+				<p class="text-sm text-blue-400 uppercase tracking-wide mb-3 font-semibold">
+					Nuestra experiencia
+				</p>
+				<h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+					Proyectos que <span class="text-blue-400">transforman</span>
+				</h2>
+				<div class="w-24 h-1.5 bg-linear-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+			</div>
+
+			<!-- 3D Carousel Container -->
+			<div 
+				class="relative h-[500px] md:h-[600px]"
+				style="perspective: 2000px;"
+				bind:clientWidth={containerWidth}
+			>
+				<!-- Cards -->
+				<div 
+					class="carousel-track absolute inset-0 flex items-center justify-center"
+					style="transform-style: preserve-3d;"
+					on:mousedown={handleDragStart}
+					on:mousemove={handleDragMove}
+					on:mouseup={handleDragEnd}
+					on:mouseleave={handleDragEnd}
+					on:touchstart={handleDragStart}
+					on:touchmove={handleDragMove}
+					on:touchend={handleDragEnd}
+					role="region"
+					aria-label="Galería de imágenes"
+				>
+					{#each images as image, i}
+						{@const relativeIndex = i - currentIndex}
+						{@const isVisible = Math.abs(relativeIndex) <= 3}
+						
+						{#if isVisible}
+							<div
+								class="gallery-card absolute w-[300px] md:w-[500px] h-[400px] md:h-[500px] rounded-3xl overflow-hidden transition-all duration-700 ease-out cursor-pointer"
+								style={getCardStyle(i)}
+								on:click={() => i === currentIndex ? null : goToIndex(i)}
+								role="button"
+								tabindex={i === currentIndex ? 0 : -1}
+							>
+								<!-- Imagen -->
+								<img 
+									src={image.src} 
+									alt={image.title}
+									class="w-full h-full object-cover"
+									loading="lazy"
+								/>
+								
+								<!-- Overlay gradient -->
+								<div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
+								
+								<!-- Info (solo visible en card activa) -->
+								{#if i === currentIndex}
+									<div 
+										class="absolute bottom-0 left-0 right-0 p-8 text-white"
+										in:fly={{ y: 20, duration: 600, delay: 300 }}
+									>
+										<h3 class="text-3xl md:text-4xl font-bold mb-3">
+											{image.title}
+										</h3>
+										{#if image.description}
+											<p class="text-gray-300 text-lg">
+												{image.description}
+											</p>
+										{/if}
+									</div>
+								{/if}
+
+								<!-- Border glow en card activa -->
+								{#if i === currentIndex}
+									<div class="absolute inset-0 border-4 border-blue-500/50 rounded-3xl pointer-events-none animate-pulse"></div>
+								{/if}
+							</div>
+						{/if}
+					{/each}
+				</div>
+
+				<!-- Navigation Arrows -->
+				<button
+					on:click={goToPrev}
+					class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-50 w-14 h-14 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 border border-white/20"
+					aria-label="Imagen anterior"
+				>
+					<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
+					</svg>
+				</button>
+
+				<button
+					on:click={goToNext}
+					class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 w-14 h-14 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 border border-white/20"
+					aria-label="Siguiente imagen"
+				>
+					<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
+					</svg>
+				</button>
+			</div>
+
+			<!-- Indicators -->
+			<div class="flex items-center justify-center gap-3 mt-12">
+				{#each images as _, i}
+					<button
+						on:click={() => goToIndex(i)}
+						class="transition-all duration-300 rounded-full"
+						class:w-12={i === currentIndex}
+						class:w-3={i !== currentIndex}
+						class:h-3={true}
+						class:bg-blue-500={i === currentIndex}
+						class:bg-white={i !== currentIndex}
+						class:bg-opacity-30={i !== currentIndex}
+						class:hover:bg-white={i !== currentIndex}
+						class:hover:bg-opacity-50={i !== currentIndex}
+						aria-label={`Ir a imagen ${i + 1}`}
+					></button>
+				{/each}
+			</div>
+
+			<!-- Auto-play indicator -->
+			<div class="text-center mt-8">
+				<div class="inline-flex items-center gap-3 text-sm text-gray-400">
+					<div 
+						class="w-2 h-2 rounded-full transition-colors duration-300"
+						class:bg-green-500={isAutoPlaying}
+						class:bg-gray-500={!isAutoPlaying}
+						class:animate-pulse={isAutoPlaying}
+					></div>
+					<span>
+						{isAutoPlaying ? 'Reproducción automática' : 'Pausado - Usa las flechas ← →'}
+					</span>
+				</div>
+			</div>
+		</div>
+	</section>
+{/if}
 
 <!-- Clients Section -->
 <section class="bg-gray-50 px-6 py-16">
@@ -1313,6 +1608,31 @@
 		animation: borderGlow 3s ease infinite;
 		border-radius: inherit;
 		filter: blur(2px);
+	}
+
+	.carousel-track {
+		transition: transform 0.1s ease-out;
+	}
+
+	.gallery-card {
+		box-shadow: 
+			0 25px 50px -12px rgba(0, 0, 0, 0.5),
+			0 0 80px rgba(59, 130, 246, 0.2);
+	}
+
+	.gallery-card:hover {
+		box-shadow: 
+			0 35px 60px -12px rgba(0, 0, 0, 0.6),
+			0 0 100px rgba(59, 130, 246, 0.4);
+	}
+
+	/* Smooth cursor */
+	.carousel-track {
+		cursor: grab;
+	}
+
+	.carousel-track:active {
+		cursor: grabbing;
 	}
 
 	@keyframes borderGlow {
