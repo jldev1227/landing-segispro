@@ -492,7 +492,7 @@
 							{#if activeSection === item.id}
 								<span
 									class="absolute inset-0 rounded-full bg-linear-to-r from-blue-600 to-blue-500 shadow-lg"
-									in:fly={{ scale: 0.8, duration: 400 }}
+									in:fly={{ duration: 400 }}
 								></span>
 							{/if}
 
