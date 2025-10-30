@@ -743,7 +743,7 @@
 
 <!-- Characteristics Section -->
 <section
-	id="characteristics"
+	id="nosotros"
 	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
 >
 	<!-- Elementos decorativos de fondo -->
@@ -1461,13 +1461,13 @@
 						<ul class="space-y-3">
 							<li>
 								<a
-									href="#nosotros"
+									href="#inicio"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<span
 										class="mr-0 h-px w-0 bg-blue-400 transition-all duration-300 group-hover:mr-2 group-hover:w-2"
 									></span>
-									Nosotros
+									Inicio
 								</a>
 							</li>
 							<li>
@@ -1483,24 +1483,24 @@
 							</li>
 							<li>
 								<a
-									href="#"
+									href="#Nosotros"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<span
 										class="mr-0 h-px w-0 bg-blue-400 transition-all duration-300 group-hover:mr-2 group-hover:w-2"
 									></span>
-									Equipo
+									Nosotros
 								</a>
 							</li>
 							<li>
 								<a
-									href="#"
+									href="#experiencia"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<span
 										class="mr-0 h-px w-0 bg-blue-400 transition-all duration-300 group-hover:mr-2 group-hover:w-2"
 									></span>
-									Carreras
+									Experiencia
 								</a>
 							</li>
 						</ul>
