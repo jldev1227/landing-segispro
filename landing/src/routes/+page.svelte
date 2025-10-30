@@ -1483,7 +1483,7 @@
 							</li>
 							<li>
 								<a
-									href="#Nosotros"
+									href="#nosotros"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<span
@@ -1494,7 +1494,7 @@
 							</li>
 							<li>
 								<a
-									href="#experiencia"
+									href="#experience"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<span
