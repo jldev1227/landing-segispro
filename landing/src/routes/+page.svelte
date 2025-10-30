@@ -186,11 +186,12 @@
 	}
 
 	let images: GalleryImage[] = [
-		{ src: '/slides/slide-1.jpg', title: 'Slide 1' },
-		{ src: '/slides/slide-2.jpg', title: 'Slide 2' },
-		{ src: '/slides/slide-3.jpg', title: 'Slide 3' },
-		{ src: '/slides/slide-4.jpg', title: 'Slide 4' },
-		{ src: '/slides/slide-5.jpg', title: 'Slide 5' }
+		{ src: '/slides/slide-1.jpg', title: 'Imagen 1' },
+		{ src: '/slides/slide-2.jpg', title: 'Imagen 2' },
+		{ src: '/slides/slide-3.jpg', title: 'Imagen 3' },
+		{ src: '/slides/slide-4.jpg', title: 'Imagen 4' },
+		{ src: '/slides/slide-5.jpg', title: 'Imagen 5' },
+		{ src: '/slides/slide-6.jpg', title: 'Imagen 6' }
 	];
 
 	let currentIndex = 0;
@@ -949,9 +950,9 @@
 											class="absolute right-0 bottom-0 left-0 p-8 text-white"
 											in:fly={{ y: 20, duration: 600, delay: 300 }}
 										>
-											<h3 class="mb-3 text-3xl font-bold md:text-4xl">
+											<!-- <h3 class="mb-3 text-3xl font-bold md:text-4xl">
 												{image.title}
-											</h3>
+											</h3> -->
 											{#if image.description}
 												<p class="text-lg text-gray-300">
 													{image.description}
