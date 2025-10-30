@@ -15,7 +15,7 @@
 		{ id: 'inicio', label: 'Inicio' },
 		{ id: 'services', label: 'Servicios' },
 		{ id: 'nosotros', label: 'Nosotros' },
-		{ id: 'experience', label: 'Experiencia' },
+		{ id: 'experience', label: 'Experiencia' }
 	];
 	let mounted = false;
 	let heroVisible = false;
@@ -326,6 +326,51 @@
 		if (e.key === 'ArrowLeft') goToPrev();
 		if (e.key === 'ArrowRight') goToNext();
 	}
+
+	// Datos estructurados JSON-LD para Google
+
+	const schemaData = {
+		'@context': 'https://schema.org',
+		'@type': 'ProfessionalService',
+		name: 'SEGISPRO Ingeniería',
+		image: 'https://www.segispro.com/assets/logo.png',
+		'@id': 'https://www.segispro.com',
+		url: 'https://www.segispro.com',
+		telephone: '+573105031316',
+		email: 'gerencia@segispro.com',
+		address: {
+			'@type': 'PostalAddress',
+			streetAddress: 'Yopal',
+			addressLocality: 'Yopal',
+			addressRegion: 'Casanare',
+			postalCode: '850001',
+			addressCountry: 'CO'
+		},
+		geo: {
+			'@type': 'GeoCoordinates',
+			latitude: 5.336674979441651,
+			longitude: -72.38573869384264
+		},
+		openingHoursSpecification: {
+			'@type': 'OpeningHoursSpecification',
+			dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+			opens: '08:00',
+			closes: '18:00'
+		},
+		foundingDate: '2009',
+		description:
+			'Desde 2009, somos líderes en soluciones integrales mediante Sistemas de Gestión en seguridad, salud laboral, medio ambiente y calidad para empresas públicas y privadas.',
+		areaServed: {
+			'@type': 'Country',
+			name: 'Colombia'
+		},
+		priceRange: '$$',
+		sameAs: [
+			'https://www.facebook.com/segispro',
+			'https://www.linkedin.com/company/segispro',
+			'https://www.instagram.com/segispro'
+		]
+	};
 </script>
 
 <svelte:head>
@@ -377,57 +422,6 @@
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://www.segispro.com" />
 
-	<!-- Datos estructurados JSON-LD para Google -->
-	<script type="application/ld+json">
-		{JSON.stringify({
-			"@context": "https://schema.org",
-			"@type": "ProfessionalService",
-			"name": "SEGISPRO Ingeniería",
-			"image": "https://www.segispro.com/assets/logo.png",
-			"@id": "https://www.segispro.com",
-			"url": "https://www.segispro.com",
-			"telephone": "+573105031316",
-			"email": "gerencia@segispro.com",
-			"address": {
-				"@type": "PostalAddress",
-				"streetAddress": "Yopal",
-				"addressLocality": "Yopal",
-				"addressRegion": "Casanare",
-				"postalCode": "850001",
-				"addressCountry": "CO"
-			},
-			"geo": {
-				"@type": "GeoCoordinates",
-				"latitude": 5.336674979441651,
-				"longitude": -72.38573869384264
-			},
-			"openingHoursSpecification": {
-				"@type": "OpeningHoursSpecification",
-				"dayOfWeek": [
-					"Monday",
-					"Tuesday",
-					"Wednesday",
-					"Thursday",
-					"Friday"
-				],
-				"opens": "08:00",
-				"closes": "18:00"
-			},
-			"foundingDate": "2009",
-			"description": "Desde 2009, somos líderes en soluciones integrales mediante Sistemas de Gestión en seguridad, salud laboral, medio ambiente y calidad para empresas públicas y privadas.",
-			"areaServed": {
-				"@type": "Country",
-				"name": "Colombia"
-			},
-			"priceRange": "$$",
-			"sameAs": [
-				"https://www.facebook.com/segispro",
-				"https://www.linkedin.com/company/segispro",
-				"https://www.instagram.com/segispro"
-			]
-		})}
-	</script>
-
 	<!-- Robots -->
 	<meta
 		name="robots"
@@ -446,6 +440,8 @@
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="/favicon.png" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+	{@html `<script type="application/ld+json">${JSON.stringify(schemaData)}<\/script>`}
 </svelte:head>
 
 <svelte:window bind:scrollY />
