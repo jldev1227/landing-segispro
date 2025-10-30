@@ -10,11 +10,12 @@
 	let activeSection = 'inicio';
 
 	$: isScrolled = scrollY > 50;
+	$: carouselKey = currentIndex; // Forzar re-render cuando cambia el índice
 
 	const navItems = [
 		{ id: 'inicio', label: 'Inicio' },
 		{ id: 'services', label: 'Servicios' },
-		{ id: 'nosotros', label: 'Nosotros' },
+		{ id: 'nosotros', label: 'Nosotros' }
 	];
 	let mounted = false;
 	let heroVisible = false;
@@ -184,8 +185,14 @@
 		description?: string;
 	}
 
-	let images: GalleryImage[] = [	{ src: '/slides/slide-1.jpg', title: 'Slide 1' }, { src: '/slides/slide-2.jpg', title: 'Slide 2' }, { src: '/slides/slide-3.jpg', title: 'Slide 3' }, { src: '/slides/slide-4.jpg', title: 'Slide 4' }, { src: '/slides/slide-5.jpg', title: 'Slide 5' }];
-	
+	let images: GalleryImage[] = [
+		{ src: '/slides/slide-1.jpg', title: 'Slide 1' },
+		{ src: '/slides/slide-2.jpg', title: 'Slide 2' },
+		{ src: '/slides/slide-3.jpg', title: 'Slide 3' },
+		{ src: '/slides/slide-4.jpg', title: 'Slide 4' },
+		{ src: '/slides/slide-5.jpg', title: 'Slide 5' }
+	];
+
 	let currentIndex = 0;
 	let isAutoPlaying = true;
 	let autoPlayTimer: ReturnType<typeof setTimeout>;
@@ -209,37 +216,49 @@
 
 	// Calcular posición y estilo de cada card
 	function getCardStyle(index: number): string {
-		const position = index - currentIndex;
+		// Calcular posición circular relativa
+		let position = index - currentIndex;
+
+		// Normalizar para loop circular (camino más corto)
+		const halfLength = Math.floor(images.length / 2);
+		if (position > halfLength) {
+			position -= images.length;
+		} else if (position < -halfLength) {
+			position += images.length;
+		}
+
 		const absPosition = Math.abs(position);
-		
+
+		// Solo mostrar cards cercanas (optimización)
+		if (absPosition > 2) {
+			return 'display: none;';
+		}
+
 		// Escala: 1 para el centro, menor para los lados
-		const scale = position === 0 ? 1 : SCALE_FACTOR - (absPosition - 1) * 0.1;
-		
+		const scale = position === 0 ? 1 : Math.max(0.4, SCALE_FACTOR - (absPosition - 1) * 0.1);
+
 		// Blur: 0 para el centro, aumenta para los lados
-		const blur = position === 0 ? 0 : BLUR_AMOUNT + (absPosition - 1) * 2;
-		
+		const blur = position === 0 ? 0 : Math.min(8, BLUR_AMOUNT + (absPosition - 1) * 2);
+
 		// Opacidad
-		const opacity = position === 0 ? 1 : 0.6 - (absPosition - 1) * 0.2;
-		
+		const opacity = position === 0 ? 1 : Math.max(0.2, 0.6 - (absPosition - 1) * 0.2);
+
 		// Posición Z (profundidad)
 		const translateZ = position === 0 ? 0 : -100 * absPosition;
-		
+
 		// Posición X
 		const translateX = position * CARD_SPACING;
-		
+
 		// Rotación Y para efecto 3D
 		const rotateY = position * -15;
-		
+
 		return `
-			transform: 
-				translateX(${translateX}px) 
-				translateZ(${translateZ}px) 
-				rotateY(${rotateY}deg) 
-				scale(${Math.max(0.4, scale)});
-			filter: blur(${Math.min(8, blur)}px);
-			opacity: ${Math.max(0, opacity)};
+			transform: translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale});
+			filter: blur(${blur}px);
+			opacity: ${opacity};
 			z-index: ${100 - absPosition};
 			pointer-events: ${position === 0 ? 'auto' : 'none'};
+			display: block;
 		`;
 	}
 
@@ -264,7 +283,7 @@
 		lastInteractionTime = Date.now();
 		isAutoPlaying = false;
 		clearTimeout(autoPlayTimer);
-		
+
 		// Reanudar auto-play después de 3 segundos sin interacción
 		autoPlayTimer = setTimeout(() => {
 			isAutoPlaying = true;
@@ -280,7 +299,7 @@
 
 	function handleDragMove(e: MouseEvent | TouchEvent) {
 		if (!isDragging) return;
-		
+
 		const currentX = 'touches' in e ? e.touches[0].clientX : e.clientX;
 		currentTranslate = currentX - startX;
 	}
@@ -288,7 +307,7 @@
 	function handleDragEnd() {
 		if (!isDragging) return;
 		isDragging = false;
-		
+
 		// Cambiar slide si el drag fue suficiente
 		if (Math.abs(currentTranslate) > 50) {
 			if (currentTranslate > 0) {
@@ -297,7 +316,7 @@
 				goToNext();
 			}
 		}
-		
+
 		currentTranslate = 0;
 	}
 
@@ -306,47 +325,57 @@
 		if (e.key === 'ArrowLeft') goToPrev();
 		if (e.key === 'ArrowRight') goToNext();
 	}
-
 </script>
 
 <svelte:head>
 	<!-- Title optimizado -->
-	<title>SEGISPRO - Capacitaciones y Auditorías en Seguridad y Salud Laboral | Yopal, Casanare</title>
-	
+	<title
+		>SEGISPRO - Capacitaciones y Auditorías en Seguridad y Salud Laboral | Yopal, Casanare</title
+	>
+
 	<!-- Meta descripción -->
-	<meta 
-		name="description" 
-		content="Desde 2009, SEGISPRO ofrece capacitaciones, auditorías y sistemas de gestión en seguridad, salud laboral, medio ambiente y calidad para empresas en Yopal, Casanare y toda Colombia." 
+	<meta
+		name="description"
+		content="Desde 2009, SEGISPRO ofrece capacitaciones, auditorías y sistemas de gestión en seguridad, salud laboral, medio ambiente y calidad para empresas en Yopal, Casanare y toda Colombia."
 	/>
-	
+
 	<!-- Meta keywords -->
-	<meta 
-		name="keywords" 
-		content="capacitaciones empresariales, auditorías SST, seguridad laboral, salud ocupacional, sistemas de gestión, HSEQ, Yopal, Casanare, Colombia, SEGISPRO" 
+	<meta
+		name="keywords"
+		content="capacitaciones empresariales, auditorías SST, seguridad laboral, salud ocupacional, sistemas de gestión, HSEQ, Yopal, Casanare, Colombia, SEGISPRO"
 	/>
-	
+
 	<!-- Autor y copyright -->
 	<meta name="author" content="SEGISPRO Ingeniería" />
 	<meta name="copyright" content="SEGISPRO © 2025" />
-	
+
 	<!-- Open Graph (Facebook, LinkedIn) -->
 	<meta property="og:type" content="website" />
-	<meta property="og:title" content="SEGISPRO - Tu aliado estratégico en seguridad y salud laboral" />
-	<meta property="og:description" content="Capacitaciones personalizadas y auditorías especializadas para empresas. Más de 15 años de experiencia en sistemas de gestión HSEQ." />
+	<meta
+		property="og:title"
+		content="SEGISPRO - Tu aliado estratégico en seguridad y salud laboral"
+	/>
+	<meta
+		property="og:description"
+		content="Capacitaciones personalizadas y auditorías especializadas para empresas. Más de 15 años de experiencia en sistemas de gestión HSEQ."
+	/>
 	<meta property="og:url" content="https://www.segispro.com" />
 	<meta property="og:image" content="https://www.segispro.com/og-image.jpg" />
 	<meta property="og:locale" content="es_CO" />
 	<meta property="og:site_name" content="SEGISPRO" />
-	
+
 	<!-- Twitter Card -->
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content="SEGISPRO - Capacitaciones y Auditorías SST" />
-	<meta name="twitter:description" content="Líderes en soluciones integrales de seguridad, salud laboral y medio ambiente desde 2009." />
+	<meta
+		name="twitter:description"
+		content="Líderes en soluciones integrales de seguridad, salud laboral y medio ambiente desde 2009."
+	/>
 	<meta name="twitter:image" content="https://www.segispro.com/twitter-card.jpg" />
-	
+
 	<!-- Canonical URL -->
 	<link rel="canonical" href="https://www.segispro.com" />
-	
+
 	<!-- Datos estructurados JSON-LD para Google -->
 	<script type="application/ld+json">
 		{JSON.stringify({
@@ -397,19 +426,22 @@
 			]
 		})}
 	</script>
-	
+
 	<!-- Robots -->
-	<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-	
+	<meta
+		name="robots"
+		content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+	/>
+
 	<!-- Viewport y responsive -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	
+
 	<!-- Idioma -->
 	<meta name="language" content="es-CO" />
-	
+
 	<!-- Tema de color para navegadores móviles -->
 	<meta name="theme-color" content="#2563eb" />
-	
+
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="/favicon.png" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -481,7 +513,11 @@
 				</div>
 
 				<!-- CTA Button -->
-				<a href="#contacto" class="group relative hidden overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-2.5 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl md:block" in:fly={{ x: 20, duration: 600, delay: 400, easing: quintOut }}>
+				<a
+					href="#contacto"
+					class="group relative hidden overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-2.5 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl md:block"
+					in:fly={{ x: 20, duration: 600, delay: 400, easing: quintOut }}
+				>
 					<span class="relative z-10">Contáctanos</span>
 					<!-- Efecto de onda al hover -->
 					<span
@@ -821,148 +857,172 @@
 
 {#if mounted}
 	<!-- Gallery Section -->
-	<section class="relative py-24 px-6 bg-linear-to-br from-gray-900 via-gray-800 to-black overflow-hidden">
+	<section
+		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-24"
+	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
-			<div class="absolute inset-0" style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0); background-size: 50px 50px;"></div>
+			<div
+				class="absolute inset-0"
+				style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0); background-size: 50px 50px;"
+			></div>
 		</div>
 
 		<!-- Glow effect desde la imagen actual -->
-		<div 
+		<div
 			class="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"
 			style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"
 		></div>
 
-		<div class="container mx-auto max-w-7xl relative z-10">
+		<div class="relative z-10 container mx-auto max-w-7xl">
 			<!-- Header -->
-			<div in:fly={{ y: 30, duration: 800 }} class="text-center mb-16">
-				<p class="text-sm text-blue-400 uppercase tracking-wide mb-3 font-semibold">
+			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
+				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-400 uppercase">
 					Nuestra experiencia
 				</p>
-				<h2 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
 					Proyectos que <span class="text-blue-400">transforman</span>
 				</h2>
-				<div class="w-24 h-1.5 bg-linear-to-r from-blue-600 to-purple-600 mx-auto rounded-full"></div>
+				<div
+					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+				></div>
 			</div>
 
 			<!-- 3D Carousel Container -->
-			<div 
+			<div
 				class="relative h-[500px] md:h-[600px]"
 				style="perspective: 2000px;"
 				bind:clientWidth={containerWidth}
 			>
 				<!-- Cards -->
-				<div 
-					class="carousel-track absolute inset-0 flex items-center justify-center"
-					style="transform-style: preserve-3d;"
-					on:mousedown={handleDragStart}
-					on:mousemove={handleDragMove}
-					on:mouseup={handleDragEnd}
-					on:mouseleave={handleDragEnd}
-					on:touchstart={handleDragStart}
-					on:touchmove={handleDragMove}
-					on:touchend={handleDragEnd}
-					role="region"
-					aria-label="Galería de imágenes"
-				>
-					{#each images as image, i}
-						{@const relativeIndex = i - currentIndex}
-						{@const isVisible = Math.abs(relativeIndex) <= 3}
-						
-						{#if isVisible}
-							<div
-								class="gallery-card absolute w-[300px] md:w-[500px] h-[400px] md:h-[500px] rounded-3xl overflow-hidden transition-all duration-700 ease-out cursor-pointer"
-								style={getCardStyle(i)}
-								on:click={() => i === currentIndex ? null : goToIndex(i)}
-								role="button"
-								tabindex={i === currentIndex ? 0 : -1}
-							>
-								<!-- Imagen -->
-								<img 
-									src={image.src} 
-									alt={image.title}
-									class="w-full h-full object-cover"
-									loading="lazy"
-								/>
-								
-								<!-- Overlay gradient -->
-								<div class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"></div>
-								
-								<!-- Info (solo visible en card activa) -->
-								{#if i === currentIndex}
-									<div 
-										class="absolute bottom-0 left-0 right-0 p-8 text-white"
-										in:fly={{ y: 20, duration: 600, delay: 300 }}
-									>
-										<h3 class="text-3xl md:text-4xl font-bold mb-3">
-											{image.title}
-										</h3>
-										{#if image.description}
-											<p class="text-gray-300 text-lg">
-												{image.description}
-											</p>
-										{/if}
-									</div>
-								{/if}
+				{#key currentIndex}
+					<div
+						class="carousel-track absolute inset-0 flex items-center justify-center"
+						style="transform-style: preserve-3d;"
+						role="region"
+						aria-label="Galería de imágenes"
+						tabindex="0"
+					>
+						{#each images as image, i}
+							{@const position = (() => {
+								let pos = i - currentIndex;
+								const halfLength = Math.floor(images.length / 2);
+								if (pos > halfLength) pos -= images.length;
+								else if (pos < -halfLength) pos += images.length;
+								return pos;
+							})()}
+							{@const isVisible = Math.abs(position) <= 2}
 
-								<!-- Border glow en card activa -->
-								{#if i === currentIndex}
-									<div class="absolute inset-0 border-4 border-blue-500/50 rounded-3xl pointer-events-none animate-pulse"></div>
-								{/if}
-							</div>
-						{/if}
-					{/each}
-				</div>
+							{#if isVisible}
+								<div
+									class="gallery-card absolute h-[400px] w-[300px] cursor-pointer overflow-hidden rounded-3xl md:h-[500px] md:w-[500px]"
+									style={getCardStyle(i)}
+									on:click={() => (i === currentIndex ? null : goToIndex(i))}
+									on:keydown={(e) => e.key === 'Enter' && i !== currentIndex && goToIndex(i)}
+									on:mousedown={handleDragStart}
+									on:mousemove={handleDragMove}
+									on:mouseup={handleDragEnd}
+									on:mouseleave={handleDragEnd}
+									on:touchstart={handleDragStart}
+									on:touchmove={handleDragMove}
+									on:touchend={handleDragEnd}
+									role="button"
+									tabindex={i === currentIndex ? 0 : -1}
+								>
+									<!-- Imagen -->
+									<img
+										src={image.src}
+										alt={image.title}
+										class="h-full w-full object-cover"
+										loading="lazy"
+									/>
+
+									<!-- Overlay gradient -->
+									<div
+										class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+									></div>
+
+									<!-- Info (solo visible en card activa) -->
+									{#if i === currentIndex}
+										<div
+											class="absolute right-0 bottom-0 left-0 p-8 text-white"
+											in:fly={{ y: 20, duration: 600, delay: 300 }}
+										>
+											<h3 class="mb-3 text-3xl font-bold md:text-4xl">
+												{image.title}
+											</h3>
+											{#if image.description}
+												<p class="text-lg text-gray-300">
+													{image.description}
+												</p>
+											{/if}
+										</div>
+									{/if}
+
+									<!-- Border glow en card activa -->
+									{#if i === currentIndex}
+										<div
+											class="pointer-events-none absolute inset-0 animate-pulse rounded-3xl border-4 border-blue-500/50"
+										></div>
+									{/if}
+								</div>
+							{/if}
+						{/each}
+					</div>
+				{/key}
 
 				<!-- Navigation Arrows -->
 				<button
 					on:click={goToPrev}
-					class="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-50 w-14 h-14 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 border border-white/20"
+					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
 					aria-label="Imagen anterior"
 				>
-					<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/>
+					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="3"
+							d="M15 19l-7-7 7-7"
+						/>
 					</svg>
 				</button>
 
 				<button
 					on:click={goToNext}
-					class="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-50 w-14 h-14 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 border border-white/20"
+					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
 					aria-label="Siguiente imagen"
 				>
-					<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/>
+					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="3"
+							d="M9 5l7 7-7 7"
+						/>
 					</svg>
 				</button>
 			</div>
 
 			<!-- Indicators -->
-			<div class="flex items-center justify-center gap-3 mt-12">
+			<div class="mt-12 flex items-center justify-center gap-3">
 				{#each images as _, i}
 					<button
 						on:click={() => goToIndex(i)}
-						class="transition-all duration-300 rounded-full"
-						class:w-12={i === currentIndex}
-						class:w-3={i !== currentIndex}
-						class:h-3={true}
-						class:bg-blue-500={i === currentIndex}
-						class:bg-white={i !== currentIndex}
-						class:bg-opacity-30={i !== currentIndex}
-						class:hover:bg-white={i !== currentIndex}
-						class:hover:bg-opacity-50={i !== currentIndex}
+						class="rounded-full transition-all duration-300 {i === currentIndex
+							? 'h-3 w-12 bg-blue-500'
+							: 'h-3 w-3 bg-white/30 hover:bg-white/50'}"
 						aria-label={`Ir a imagen ${i + 1}`}
 					></button>
 				{/each}
 			</div>
 
 			<!-- Auto-play indicator -->
-			<div class="text-center mt-8">
+			<div class="mt-8 text-center">
 				<div class="inline-flex items-center gap-3 text-sm text-gray-400">
-					<div 
-						class="w-2 h-2 rounded-full transition-colors duration-300"
-						class:bg-green-500={isAutoPlaying}
-						class:bg-gray-500={!isAutoPlaying}
-						class:animate-pulse={isAutoPlaying}
+					<div
+						class="h-2 w-2 rounded-full transition-colors duration-300 {isAutoPlaying
+							? 'animate-pulse bg-green-500'
+							: 'bg-gray-500'}"
 					></div>
 					<span>
 						{isAutoPlaying ? 'Reproducción automática' : 'Pausado - Usa las flechas ← →'}
@@ -1574,20 +1634,42 @@
 </footer>
 
 <style>
+	/* ===== GLOBAL STYLES ===== */
 	:global(html) {
 		scroll-behavior: smooth;
 	}
 
-	:global(body) {
-		overflow-x: hidden;
+	/* GPU acceleration hints */
+	.video-mask,
+	.gallery-card {
+		box-shadow:
+			0 25px 50px -12px rgba(0, 0, 0, 0.5),
+			0 0 80px rgba(59, 130, 246, 0.2);
+		will-change: transform, filter, opacity;
+		transform-style: preserve-3d;
+		backface-visibility: hidden;
+		/* ESTA ES LA LÍNEA CLAVE */
+		transition:
+			transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+			filter 0.7s ease-out,
+			opacity 0.7s ease-out,
+			box-shadow 0.3s ease;
 	}
 
+	/* Smooth font rendering */
+	:global(body) {
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+
+	/* ===== VIDEO MASK (Hero Section) ===== */
 	.video-mask {
 		clip-path: polygon(10% 0%, 100% 5%, 95% 100%, 0% 90%);
 		box-shadow:
 			0 20px 60px rgba(59, 130, 246, 0.3),
 			0 0 80px rgba(147, 51, 234, 0.2);
 		transition: all 0.5s ease;
+		will-change: transform, clip-path;
 	}
 
 	.video-mask:hover {
@@ -1610,31 +1692,6 @@
 		filter: blur(2px);
 	}
 
-	.carousel-track {
-		transition: transform 0.1s ease-out;
-	}
-
-	.gallery-card {
-		box-shadow: 
-			0 25px 50px -12px rgba(0, 0, 0, 0.5),
-			0 0 80px rgba(59, 130, 246, 0.2);
-	}
-
-	.gallery-card:hover {
-		box-shadow: 
-			0 35px 60px -12px rgba(0, 0, 0, 0.6),
-			0 0 100px rgba(59, 130, 246, 0.4);
-	}
-
-	/* Smooth cursor */
-	.carousel-track {
-		cursor: grab;
-	}
-
-	.carousel-track:active {
-		cursor: grabbing;
-	}
-
 	@keyframes borderGlow {
 		0%,
 		100% {
@@ -1647,11 +1704,49 @@
 		}
 	}
 
-	/* Versión móvil - mostrar video debajo del texto */
+	/* ===== CAROUSEL 3D (Gallery Section) ===== */
+	.carousel-track {
+		cursor: grab;
+		transition: transform 0.1s ease-out;
+	}
+
+	.carousel-track:active {
+		cursor: grabbing;
+	}
+
+	.gallery-card:hover {
+		box-shadow:
+			0 35px 60px -12px rgba(0, 0, 0, 0.6),
+			0 0 100px rgba(59, 130, 246, 0.4);
+	}
+
+	/* ===== RESPONSIVE ===== */
 	@media (max-width: 1023px) {
 		.video-mask {
 			clip-path: polygon(5% 3%, 97% 0%, 100% 97%, 3% 100%);
 			margin-top: 2rem;
+		}
+
+		.gallery-card {
+			/* Reduce sombras en móvil para mejor performance */
+			box-shadow:
+				0 15px 30px -8px rgba(0, 0, 0, 0.5),
+				0 0 50px rgba(59, 130, 246, 0.2);
+		}
+	}
+
+	/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+	@media (prefers-reduced-motion: reduce) {
+		:global(html) {
+			scroll-behavior: auto;
+		}
+
+		.video-mask,
+		.gallery-card,
+		.border-glow,
+		.carousel-track {
+			animation: none !important;
+			transition: none !important;
 		}
 	}
 </style>
