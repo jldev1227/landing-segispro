@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
+	import { resolveRoute } from '$app/paths';
 
 	let mounted = false;
 
@@ -22,7 +23,7 @@
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
-			<a href="/" class="group flex items-center">
+			<a href={resolveRoute('/')} class="group flex items-center">
 				<img
 					src="/assets/logo.png"
 					alt="SEGISPRO Logo"
@@ -30,7 +31,7 @@
 				/>
 			</a>
 			<a
-				href="/"
+				href={resolveRoute('/')}
 				class="flex items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -232,7 +233,7 @@
 			<!-- Back to home button -->
 			<div in:fade={{ duration: 600, delay: 400 }} class="mt-8 text-center">
 				<a
-					href="/"
+					href={resolveRoute('/')}
 					class="inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-blue-600"
 				>
 					<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -147,7 +147,13 @@
 								/>
 								<span class="text-gray-400">Recordarme</span>
 							</label>
-							<a href="#" class="text-blue-400 hover:text-blue-300"> ¿Olvidaste tu contraseña? </a>
+							<button
+								type="button"
+								class="text-blue-400 hover:text-blue-300"
+								on:click={() => alert('Funcionalidad próximamente disponible')}
+							>
+								¿Olvidaste tu contraseña?
+							</button>
 						</div>
 
 						<!-- Botón de login -->
@@ -185,7 +191,13 @@
 				<!-- Registro -->
 				<p class="mt-6 text-center text-sm text-gray-400" in:fade={{ duration: 500, delay: 500 }}>
 					¿No tienes una cuenta?
-					<a href="#" class="font-semibold text-blue-400 hover:text-blue-300"> Regístrate aquí </a>
+					<button
+						type="button"
+						class="font-semibold text-blue-400 hover:text-blue-300"
+						on:click={() => alert('Funcionalidad próximamente disponible')}
+					>
+						Regístrate aquí
+					</button>
 				</p>
 			</div>
 		{/if}

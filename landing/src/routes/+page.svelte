@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+	import { resolveRoute } from '$app/paths';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 
@@ -39,11 +40,16 @@
 	};
 
 	// Función para animar contador
-	function animateCounter(start, end, duration, callback) {
+	function animateCounter(
+		start: number,
+		end: number,
+		duration: number,
+		callback: (value: number) => void
+	) {
 		const startTime = performance.now();
 		const range = end - start;
 
-		function update(currentTime) {
+		function update(currentTime: number) {
 			const elapsed = currentTime - startTime;
 			const progress = Math.min(elapsed / duration, 1);
 
@@ -84,7 +90,7 @@
 				0,
 				statsConfig.profesionales.target,
 				statsConfig.profesionales.duration,
-				(val) => (profesionales = val)
+				(val: number) => (profesionales = val)
 			);
 		}, 0);
 
@@ -93,7 +99,7 @@
 				0,
 				statsConfig.cubrimiento.target,
 				statsConfig.cubrimiento.duration,
-				(val) => (cubrimiento = val)
+				(val: number) => (cubrimiento = val)
 			);
 		}, 200);
 
@@ -102,7 +108,7 @@
 				0,
 				statsConfig.clientes.target,
 				statsConfig.clientes.duration,
-				(val) => (clientesNumber = val)
+				(val: number) => (clientesNumber = val)
 			);
 		}, 400);
 
@@ -111,7 +117,7 @@
 				0,
 				statsConfig.experiencia.target,
 				statsConfig.experiencia.duration,
-				(val) => (experiencia = val)
+				(val: number) => (experiencia = val)
 			);
 		}, 600);
 	}
@@ -570,7 +576,8 @@
 	<link rel="icon" type="image/png" href="/favicon.png" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-	{@html `<script type="application/ld+json">${JSON.stringify(schemaData)}<\/script>`}
+	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
+	{@html `<script type='application/ld+json'>${JSON.stringify(schemaData)}</script>`}
 </svelte:head>
 
 <svelte:window bind:scrollY />
@@ -600,7 +607,7 @@
 
 				<!-- Desktop Menu -->
 				<div class="hidden items-center gap-8 lg:flex">
-					{#each navItems as item}
+					{#each navItems as item (item.id)}
 						<a
 							href="#{item.id}"
 							class="text-sm font-medium transition-colors duration-200"
@@ -617,13 +624,13 @@
 				<!-- Desktop CTA Buttons -->
 				<div class="hidden items-center gap-3 lg:flex">
 					<a
-						href="/capacitaciones"
+						href={resolveRoute('/capacitaciones')}
 						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
 					>
 						Capacitaciones
 					</a>
 					<a
-						href="/validar-certificado"
+						href={resolveRoute('/validar-certificado')}
 						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
 					>
 						Validar
@@ -675,17 +682,19 @@
 {#if mounted && mobileMenuOpen}
 	<!-- Overlay -->
 	<div
-		class="fixed inset-0 z-[60] bg-black/50 lg:hidden"
+		class="fixed inset-0 z-60 bg-black/50 lg:hidden"
 		on:click={() => (mobileMenuOpen = false)}
+		on:keydown={(e) => e.key === 'Escape' && (mobileMenuOpen = false)}
 		in:fade={{ duration: 200 }}
 		out:fade={{ duration: 200 }}
 		role="button"
 		tabindex="-1"
+		aria-label="Cerrar menú"
 	></div>
 
 	<!-- Drawer -->
 	<div
-		class="fixed top-0 right-0 z-[70] h-full w-80 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
+		class="fixed top-0 right-0 z-70 h-full w-80 overflow-hidden bg-linear-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
 		in:fly={{ x: 320, duration: 300, easing: quintOut }}
 		out:fly={{ x: 320, duration: 250 }}
 	>
@@ -695,6 +704,7 @@
 			<button
 				on:click={() => (mobileMenuOpen = false)}
 				class="flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-700"
+				aria-label="Cerrar menú"
 			>
 				<svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
@@ -711,7 +721,7 @@
 		<div class="overflow-y-auto p-6" style="height: calc(100% - 65px);">
 			<!-- Navigation -->
 			<nav class="space-y-1">
-				{#each navItems as item, i}
+				{#each navItems as item, i (item.id)}
 					<a
 						href="#{item.id}"
 						class="block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-200"
@@ -729,21 +739,20 @@
 					</a>
 				{/each}
 			</nav>
-
 			<!-- Divider -->
 			<div class="my-6 border-t border-gray-700"></div>
 
 			<!-- Action Buttons -->
 			<div class="space-y-2">
 				<a
-					href="/capacitaciones"
+					href={resolveRoute('/capacitaciones')}
 					class="block rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
 					on:click={() => (mobileMenuOpen = false)}
 				>
 					📚 Capacitaciones
 				</a>
 				<a
-					href="/validar-certificado"
+					href={resolveRoute('/validar-certificado')}
 					class="block rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-700"
 					on:click={() => (mobileMenuOpen = false)}
 				>
@@ -848,7 +857,7 @@
 
 			<!-- Grid de servicios -->
 			<div class="grid gap-8 md:grid-cols-2">
-				{#each services as service, i}
+				{#each services as service, i (service.slug)}
 					{#if servicesVisible || mounted}
 						<div
 							in:scale={{ duration: 600, delay: i * 150, start: 0.8, easing: quintOut }}
@@ -886,7 +895,7 @@
 
 								<!-- Botón mejorado -->
 								<a
-									href="/servicios/{service.slug}"
+									href={resolveRoute(`/servicios/${service.slug}`)}
 									class="group/btn relative inline-flex transform items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
 								>
 									<span class="relative z-10">Ver más</span>
@@ -929,7 +938,7 @@
 					<!-- Profesionales -->
 					<div class="group relative">
 						<div
-							class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
+							class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-linear-to-br from-blue-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
 						>
 							<!-- Efecto de brillo animado -->
 							<div
@@ -956,7 +965,7 @@
 
 								<!-- Línea decorativa -->
 								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
 								></div>
 
 								<!-- Descripción -->
@@ -969,7 +978,7 @@
 					<!-- Cubrimiento -->
 					<div class="group relative">
 						<div
-							class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
+							class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
 						>
 							<div
 								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
@@ -992,7 +1001,7 @@
 								</div>
 
 								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
 								></div>
 
 								<h4 class="text-base font-semibold text-gray-900">Cubrimiento</h4>
@@ -1004,7 +1013,7 @@
 					<!-- Clientes -->
 					<div class="group relative">
 						<div
-							class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
+							class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
 						>
 							<div
 								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
@@ -1027,7 +1036,7 @@
 								</div>
 
 								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-emerald-500 to-teal-500"
 								></div>
 
 								<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
@@ -1039,7 +1048,7 @@
 					<!-- Años de experiencia -->
 					<div class="group relative">
 						<div
-							class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
+							class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
 						>
 							<div
 								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
@@ -1062,7 +1071,7 @@
 								</div>
 
 								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-500"
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-orange-500 to-amber-500"
 								></div>
 
 								<h4 class="text-base font-semibold text-gray-900">Años de</h4>
@@ -1238,9 +1247,8 @@
 						style="transform-style: preserve-3d;"
 						role="region"
 						aria-label="Galería de imágenes"
-						tabindex="0"
 					>
-						{#each images as image, i}
+						{#each images as image, i (image.title)}
 							{@const position = (() => {
 								let pos = i - currentIndex;
 								const halfLength = Math.floor(images.length / 2);
@@ -1339,7 +1347,7 @@
 
 			<!-- Indicators -->
 			<div class="mt-12 flex items-center justify-center gap-3">
-				{#each images as image, i (image + i)}
+				{#each images as image, i (image.title + i)}
 					<button
 						on:click={() => goToIndex(i)}
 						class="rounded-full transition-all duration-300 {i === currentIndex
@@ -1801,6 +1809,9 @@
 							<a
 								href="https://www.facebook.com/SEGISPRO"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-600"
+								aria-label="Facebook de SEGISPRO"
+								target="_blank"
+								rel="noopener noreferrer"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
 									<path
@@ -1811,6 +1822,9 @@
 							<a
 								href="https://x.com/segispro_ing"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-400"
+								aria-label="X (Twitter) de SEGISPRO"
+								target="_blank"
+								rel="noopener noreferrer"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
 									<path
@@ -1821,6 +1835,9 @@
 							<a
 								href="https://www.linkedin.com/company/segispro-ingenieria-sas/"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-blue-700"
+								aria-label="LinkedIn de SEGISPRO"
+								target="_blank"
+								rel="noopener noreferrer"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
 									<path
@@ -1831,6 +1848,9 @@
 							<a
 								href="https://www.instagram.com/segispro_auditores/"
 								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-pink-600"
+								aria-label="Instagram de SEGISPRO"
+								target="_blank"
+								rel="noopener noreferrer"
 							>
 								<svg class="h-5 w-5 text-white" fill="currentColor" viewBox="0 0 24 24">
 									<path
@@ -1902,7 +1922,7 @@
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
-										class="mr-2 h-4 w-4 flex-shrink-0"
+										class="mr-2 h-4 w-4 shrink-0"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -1923,7 +1943,7 @@
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
-										class="mr-2 h-4 w-4 flex-shrink-0"
+										class="mr-2 h-4 w-4 shrink-0"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -1939,12 +1959,12 @@
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
+								<button
+									type="button"
 									class="group flex items-start text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
-										class="mt-0.5 mr-2 h-4 w-4 flex-shrink-0"
+										class="mt-0.5 mr-2 h-4 w-4 shrink-0"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -1963,7 +1983,7 @@
 										/>
 									</svg>
 									Calle 27 # 27-75<br />Yopal, Casanare, Colombia
-								</a>
+								</button>
 							</li>
 						</ul>
 					</div>
@@ -2044,7 +2064,7 @@
 						</p>
 						<div class="flex items-center gap-6">
 							<a
-								href="/politicas-de-privacidad"
+								href={resolveRoute('/politicas-de-privacidad')}
 								class="text-sm text-gray-400 transition-colors hover:text-blue-400"
 							>
 								Política de Privacidad

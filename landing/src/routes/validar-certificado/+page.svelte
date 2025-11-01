@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { fly, scale } from 'svelte/transition';
 	import type { Certificado } from '$lib/data/certificados';
+	import { resolveRoute } from '$app/paths';
 
 	let mounted = false;
 	let uuid = '';
@@ -68,7 +69,7 @@
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
-			<a href="/" class="group flex items-center">
+			<a href={resolveRoute('/')} class="group flex items-center">
 				<img
 					src="/assets/logo.png"
 					alt="SEGISPRO Logo"
@@ -76,7 +77,7 @@
 				/>
 			</a>
 			<a
-				href="/"
+				href={resolveRoute('/')}
 				class="flex items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
 			>
 				<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -231,7 +232,7 @@
 							Códigos de ejemplo para probar:
 						</h3>
 						<div class="grid gap-2 sm:grid-cols-2">
-							{#each ['a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'c3d4e5f6-a7b8-9012-cdef-123456789012', 'd4e5f6a7-b8c9-0123-def1-234567890123'] as exampleUuid}
+							{#each ['a1b2c3d4-e5f6-7890-abcd-ef1234567890', 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 'c3d4e5f6-a7b8-9012-cdef-123456789012', 'd4e5f6a7-b8c9-0123-def1-234567890123'] as exampleUuid (exampleUuid)}
 								<button
 									type="button"
 									on:click={() => {
@@ -308,79 +309,71 @@
 							<div class="grid gap-6 md:grid-cols-2">
 								<!-- Nombre -->
 								<div class="md:col-span-2">
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
+									<div class="mb-2 block text-sm font-semibold text-gray-600">
 										Nombre del participante
-									</label>
+									</div>
 									<p class="text-xl font-bold text-gray-900">{certificado.nombre}</p>
 								</div>
 
 								<!-- Identificación -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
+									<div class="mb-2 block text-sm font-semibold text-gray-600">
 										Documento de identidad
-									</label>
+									</div>
 									<p class="text-lg text-gray-900">{certificado.identificacion}</p>
 								</div>
 
 								<!-- Código -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
+									<div class="mb-2 block text-sm font-semibold text-gray-600">
 										Código del certificado
-									</label>
+									</div>
 									<p class="font-mono text-lg text-gray-900">{certificado.codigo}</p>
 								</div>
 
 								<!-- Curso -->
 								<div class="md:col-span-2">
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
-										Curso o programa
-									</label>
+									<div class="mb-2 block text-sm font-semibold text-gray-600">Curso o programa</div>
 									<p class="text-lg font-semibold text-blue-600">{certificado.curso}</p>
 								</div>
 
 								<!-- Duración -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600"> Duración </label>
+									<div class="mb-2 block text-sm font-semibold text-gray-600">Duración</div>
 									<p class="text-lg text-gray-900">{certificado.duracion}</p>
 								</div>
 
 								<!-- Instructor -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600"> Instructor </label>
+									<div class="mb-2 block text-sm font-semibold text-gray-600">Instructor</div>
 									<p class="text-lg text-gray-900">{certificado.instructor}</p>
 								</div>
 
 								<!-- Fecha de emisión -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
-										Fecha de emisión
-									</label>
+									<div class="mb-2 block text-sm font-semibold text-gray-600">Fecha de emisión</div>
 									<p class="text-lg text-gray-900">{certificado.fechaEmision}</p>
 								</div>
 
 								<!-- Fecha de vencimiento -->
 								<div>
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
-										Válido hasta
-									</label>
+									<div class="mb-2 block text-sm font-semibold text-gray-600">Válido hasta</div>
 									<p class="text-lg text-gray-900">{certificado.fechaVencimiento}</p>
 								</div>
 
 								<!-- Notas -->
 								{#if certificado.notas}
 									<div class="md:col-span-2">
-										<label class="mb-2 block text-sm font-semibold text-gray-600">
-											Observaciones
-										</label>
+										<div class="mb-2 block text-sm font-semibold text-gray-600">Observaciones</div>
 										<p class="text-lg text-gray-900">{certificado.notas}</p>
 									</div>
 								{/if}
 
 								<!-- UUID -->
 								<div class="md:col-span-2">
-									<label class="mb-2 block text-sm font-semibold text-gray-600">
+									<div class="mb-2 block text-sm font-semibold text-gray-600">
 										Código UUID (único e irrepetible)
-									</label>
+									</div>
 									<div class="flex items-center gap-2">
 										<p
 											class="flex-1 rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700"
@@ -389,7 +382,7 @@
 										</p>
 										<button
 											type="button"
-											on:click={() => copiarUUID(certificado.uuid)}
+											on:click={() => certificado && copiarUUID(certificado.uuid)}
 											class="rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
 											title="Copiar UUID"
 										>

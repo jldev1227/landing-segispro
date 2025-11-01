@@ -4,11 +4,12 @@
 	import { fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
+	import { resolveRoute } from '$app/paths';
 
 	let mounted = false;
 
-	$: slug = $page.params.slug;
-	$: servicio = serviciosData[slug];
+	$: slug = $page.params.slug as string;
+	$: servicio = serviciosData[slug as keyof typeof serviciosData];
 
 	onMount(() => {
 		mounted = true;
@@ -50,7 +51,7 @@
 			<!-- Breadcrumb -->
 			<nav class="mb-8" in:fly={{ y: -20, duration: 500, easing: quintOut }}>
 				<ol class="flex items-center gap-2 text-sm text-gray-400">
-					<li><a href="/" class="hover:text-white">Inicio</a></li>
+					<li><a href={resolveRoute('/')} class="hover:text-white">Inicio</a></li>
 					<li>/</li>
 					<li><a href="/#services" class="hover:text-white">Servicios</a></li>
 					<li>/</li>
@@ -92,12 +93,12 @@
 			<div class="mb-20" in:fly={{ y: 30, duration: 600, delay: 300, easing: quintOut }}>
 				<h2 class="mb-8 text-3xl font-bold text-gray-900">¿Qué logran nuestros clientes?</h2>
 				<div class="grid gap-4 md:grid-cols-2">
-					{#each servicio.benefits as benefit, i}
+					{#each servicio.benefits as benefit, i (i)}
 						<div
 							class="flex gap-4 rounded-xl border border-gray-100 bg-gray-50 p-6 transition-all duration-300 hover:border-blue-200 hover:shadow-lg"
 							in:scale={{ duration: 400, delay: 400 + i * 50, start: 0.9, easing: quintOut }}
 						>
-							<div class="flex-shrink-0">
+							<div class="shrink-0">
 								<div
 									class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600"
 								>
@@ -122,14 +123,14 @@
 				<div class="mb-20" in:fly={{ y: 30, duration: 600, delay: 500, easing: quintOut }}>
 					<h2 class="mb-8 text-3xl font-bold text-gray-900">{servicio.features.title}</h2>
 					<div class="space-y-4">
-						{#each servicio.features.items as item, i}
+						{#each servicio.features.items as item, i (i)}
 							<div
 								class="group rounded-xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:border-blue-300 hover:shadow-lg"
 								in:fly={{ x: -20, duration: 400, delay: 600 + i * 80, easing: quintOut }}
 							>
 								<div class="flex items-start gap-4">
 									<div
-										class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-blue-500 font-bold text-white"
+										class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-blue-500 font-bold text-white"
 									>
 										{i + 1}
 									</div>
@@ -146,7 +147,7 @@
 				<div class="mb-20" in:fly={{ y: 30, duration: 600, delay: 700, easing: quintOut }}>
 					<h2 class="mb-8 text-3xl font-bold text-gray-900">Normas y Estándares</h2>
 					<div class="space-y-6">
-						{#each servicio.standards as standard, i}
+						{#each servicio.standards as standard, i (i)}
 							<div
 								class="group overflow-hidden rounded-2xl border border-gray-200 bg-white transition-all duration-300 hover:border-blue-300 hover:shadow-xl"
 								in:scale={{ duration: 400, delay: 800 + i * 60, start: 0.95, easing: quintOut }}
@@ -178,7 +179,7 @@
 
 			<!-- Additional Sections -->
 			{#if servicio.additionalSections}
-				{#each servicio.additionalSections as section, idx}
+				{#each servicio.additionalSections as section, idx (idx)}
 					<div
 						class="mb-20"
 						in:fly={{ y: 30, duration: 600, delay: 900 + idx * 100, easing: quintOut }}
@@ -189,9 +190,9 @@
 						{/if}
 						{#if section.items}
 							<div class="grid gap-4 md:grid-cols-2">
-								{#each section.items as item}
+								{#each section.items as item (item)}
 									<div class="flex gap-3 rounded-xl border border-gray-100 bg-gray-50 p-4">
-										<div class="flex-shrink-0">
+										<div class="shrink-0">
 											<div
 												class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-600"
 											>

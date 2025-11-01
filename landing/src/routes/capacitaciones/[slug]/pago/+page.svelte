@@ -4,6 +4,7 @@
 	import { page } from '$app/stores';
 	import { capacitaciones } from '$lib/data/capacitaciones';
 	import { goto } from '$app/navigation';
+	import { resolveRoute } from '$app/paths';
 
 	// Obtener el curso por slug
 	$: slug = $page.params.slug;
@@ -97,11 +98,9 @@
 
 		// Redirigir a confirmación después de 2 segundos
 		setTimeout(() => {
-			goto('/capacitaciones');
+			goto(resolveRoute('/capacitaciones'));
 		}, 3000);
-	}
-
-	// Formatear número de tarjeta
+	} // Formatear número de tarjeta
 	function formatearNumeroTarjeta(valor: string) {
 		const limpio = valor.replace(/\s/g, '');
 		const grupos = limpio.match(/.{1,4}/g);
@@ -140,14 +139,19 @@
 		<!-- Breadcrumb -->
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 			<nav class="mb-8 flex items-center gap-2 text-sm" in:fade>
-				<a href="/" class="text-gray-500 transition-colors hover:text-blue-600">Inicio</a>
+				<a href={resolveRoute('/')} class="text-gray-500 transition-colors hover:text-blue-600"
+					>Inicio</a
+				>
 				<span class="text-gray-400">/</span>
-				<a href="/capacitaciones" class="text-gray-500 transition-colors hover:text-blue-600">
+				<a
+					href={resolveRoute('/capacitaciones')}
+					class="text-gray-500 transition-colors hover:text-blue-600"
+				>
 					Capacitaciones
 				</a>
 				<span class="text-gray-400">/</span>
 				<a
-					href="/capacitaciones/{curso.slug}"
+					href={resolveRoute(`/capacitaciones/${curso.slug}`)}
 					class="text-gray-500 transition-colors hover:text-blue-600"
 				>
 					{curso.titulo}
@@ -501,7 +505,7 @@
 												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											>
 												<option value="">Selecciona un banco</option>
-												{#each bancos as banco}
+												{#each bancos as banco (banco)}
 													<option value={banco}>{banco}</option>
 												{/each}
 											</select>

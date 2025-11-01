@@ -254,8 +254,13 @@
 				on:touchmove={handleDragMove}
 				on:touchend={handleDragEnd}
 				on:mouseenter={resetAutoScroll}
+				on:keydown={(e) => {
+					if (e.key === 'ArrowLeft') goToPrev();
+					if (e.key === 'ArrowRight') goToNext();
+				}}
 				role="region"
 				aria-label="Carrusel de características"
+				tabindex="0"
 			>
 				{#each extendedCharacteristics as char, i}
 					<div
@@ -272,7 +277,7 @@
 						>
 							<!-- Gradiente de profundidad -->
 							<div
-								class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute inset-0 rounded-2xl bg-linear-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<!-- Contenido -->
@@ -280,7 +285,7 @@
 								<div class="mb-4 flex items-start space-x-4">
 									<!-- Icono con efecto 3D -->
 									<div
-										class="icon-3d flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-3xl shadow-lg"
+										class="icon-3d flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-700 text-3xl shadow-lg"
 									>
 										<span
 											class="icon-inner block transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
@@ -318,7 +323,7 @@
 
 							<!-- Sombra 3D mejorada -->
 							<div
-								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-linear-to-br from-blue-500/20 to-purple-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<!-- Brillo que sigue al mouse -->
@@ -326,7 +331,7 @@
 								class="card-shine pointer-events-none absolute inset-0 overflow-hidden rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 							>
 								<div
-									class="shine-layer absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent"
+									class="shine-layer absolute inset-0 bg-linear-to-br from-white/30 via-transparent to-transparent"
 								></div>
 							</div>
 						</div>
@@ -461,6 +466,7 @@
 	.line-clamp-2 {
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
@@ -468,6 +474,7 @@
 	.line-clamp-4 {
 		display: -webkit-box;
 		-webkit-line-clamp: 4;
+		line-clamp: 4;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}

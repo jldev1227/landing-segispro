@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
+	import { resolveRoute } from '$app/paths';
 	import { capacitaciones, categorias, modalidades, niveles } from '$lib/data/capacitaciones';
 
 	let mounted = false;
@@ -64,7 +65,7 @@
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
-			<a href="/" class="group flex items-center">
+			<a href={resolveRoute('/')} class="group flex items-center">
 				<img
 					src="/assets/logo.png"
 					alt="SEGISPRO Logo"
@@ -73,13 +74,13 @@
 			</a>
 			<div class="flex items-center gap-4">
 				<a
-					href="/validar-certificado"
+					href={resolveRoute('/validar-certificado')}
 					class="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 sm:block"
 				>
 					Validar certificado
 				</a>
 				<a
-					href="/"
+					href={resolveRoute('/')}
 					class="flex items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
 				>
 					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -170,7 +171,7 @@
 							bind:value={filtroCategoria}
 							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 						>
-							{#each categorias as categoria}
+							{#each categorias as categoria (categoria)}
 								<option value={categoria}>{categoria}</option>
 							{/each}
 						</select>
@@ -186,7 +187,7 @@
 							bind:value={filtroModalidad}
 							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 						>
-							{#each modalidades as modalidad}
+							{#each modalidades as modalidad (modalidad)}
 								<option value={modalidad}>{modalidad}</option>
 							{/each}
 						</select>
@@ -202,7 +203,7 @@
 							bind:value={filtroNivel}
 							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 						>
-							{#each niveles as nivel}
+							{#each niveles as nivel (nivel)}
 								<option value={nivel}>{nivel}</option>
 							{/each}
 						</select>
@@ -410,7 +411,7 @@
 								<!-- Botones -->
 								<div class="grid gap-2">
 									<a
-										href="/capacitaciones/{curso.slug}"
+										href={resolveRoute(`/capacitaciones/${curso.slug}`)}
 										class="flex items-center justify-center gap-2 rounded-lg border-2 border-blue-600 bg-blue-600 px-4 py-3 font-semibold text-white transition-all duration-300 hover:bg-blue-700 hover:shadow-lg"
 									>
 										Ver detalles
@@ -424,7 +425,7 @@
 										</svg>
 									</a>
 									<a
-										href="/capacitaciones/{curso.slug}?inscribirse=true"
+										href={resolveRoute(`/capacitaciones/${curso.slug}?inscribirse=true`)}
 										class="flex items-center justify-center gap-2 rounded-lg border-2 border-blue-600 bg-white px-4 py-3 font-semibold text-blue-600 transition-all duration-300 hover:bg-blue-50"
 									>
 										<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

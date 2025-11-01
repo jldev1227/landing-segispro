@@ -2,6 +2,7 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { page } from '$app/stores';
+	import { resolveRoute } from '$app/paths';
 	import { capacitaciones } from '$lib/data/capacitaciones';
 
 	// Obtener el curso por slug
@@ -41,9 +42,14 @@
 		<div class="border-b bg-white">
 			<div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
 				<nav class="flex items-center gap-2 text-sm" in:fade>
-					<a href="/" class="text-gray-500 transition-colors hover:text-blue-600">Inicio</a>
+					<a href={resolveRoute('/')} class="text-gray-500 transition-colors hover:text-blue-600"
+						>Inicio</a
+					>
 					<span class="text-gray-400">/</span>
-					<a href="/capacitaciones" class="text-gray-500 transition-colors hover:text-blue-600">
+					<a
+						href={resolveRoute('/capacitaciones')}
+						class="text-gray-500 transition-colors hover:text-blue-600"
+					>
 						Capacitaciones
 					</a>
 					<span class="text-gray-400">/</span>
@@ -164,12 +170,11 @@
 							</div>
 
 							<a
-								href="/capacitaciones/{curso.slug}/pago"
+								href={resolveRoute(`/capacitaciones/${curso.slug}/pago`)}
 								class="mb-4 block w-full rounded-lg bg-linear-to-r from-blue-600 to-blue-800 py-4 text-center font-bold text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
 							>
 								Inscribirme ahora
 							</a>
-
 							<!-- Incluye -->
 							<div class="space-y-3 border-t pt-4">
 								<h3 class="font-bold text-gray-900">Este curso incluye:</h3>
@@ -314,7 +319,7 @@
 
 								<h3 class="mt-8 mb-4 text-xl font-bold text-gray-900">¿Qué aprenderás?</h3>
 								<div class="grid gap-3 md:grid-cols-2">
-									{#each curso.temario.slice(0, 6) as item}
+									{#each curso.temario.slice(0, 6) as item, i (i)}
 										<div class="flex items-start gap-2">
 											<svg
 												class="mt-1 h-5 w-5 shrink-0 text-blue-600"
@@ -334,7 +339,7 @@
 
 								<h3 class="mt-8 mb-4 text-xl font-bold text-gray-900">Requisitos</h3>
 								<ul class="space-y-2">
-									{#each curso.requisitos as requisito}
+									{#each curso.requisitos as requisito (requisito)}
 										<li class="flex items-start gap-2 text-gray-700">
 											<span class="text-blue-600">•</span>
 											<span>{requisito}</span>
@@ -368,7 +373,7 @@
 								</p>
 
 								<div class="space-y-3">
-									{#each curso.temario as modulo, i}
+									{#each curso.temario as modulo, i (i)}
 										<div
 											class="rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md"
 										>
@@ -459,7 +464,7 @@
 
 										<!-- Barras de distribución -->
 										<div class="flex-1 space-y-2">
-											{#each [5, 4, 3, 2, 1] as stars}
+											{#each [5, 4, 3, 2, 1] as stars (stars)}
 												<div class="flex items-center gap-2">
 													<span class="w-16 text-sm text-gray-600">{stars} estrellas</span>
 													<div class="h-2 flex-1 rounded-full bg-gray-200">
@@ -557,9 +562,9 @@
 				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 					{#each capacitaciones
 						.filter((c) => c.categoria === curso.categoria && c.id !== curso.id)
-						.slice(0, 3) as cursoRelacionado, i}
+						.slice(0, 3) as cursoRelacionado, i (cursoRelacionado.id)}
 						<a
-							href="/capacitaciones/{cursoRelacionado.slug}"
+							href={resolveRoute(`/capacitaciones/${cursoRelacionado.slug}`)}
 							class="group rounded-2xl bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
 							in:fly={{ y: 30, duration: 600, delay: i * 100 }}
 						>

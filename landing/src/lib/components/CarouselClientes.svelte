@@ -25,9 +25,7 @@
 			<h3 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl">
 				Nuestros <span class="text-blue-600">Clientes</span>
 			</h3>
-			<div
-				class="mx-auto h-1.5 w-24 rounded-full bg-gradient-to-r from-blue-600 to-purple-600"
-			></div>
+			<div class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-purple-600"></div>
 		</div>
 
 		<!-- Grid flotante con animaciones alternadas -->
@@ -56,12 +54,12 @@
 							>
 								<!-- Gradiente animado en hover -->
 								<div
-									class="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute inset-0 bg-linear-to-br from-blue-500/10 via-purple-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 
 								<!-- Brillo superior -->
 								<div
-									class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute top-0 right-0 left-0 h-1 bg-linear-to-r from-transparent via-blue-500 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 
 								<!-- Contenido -->
@@ -83,7 +81,7 @@
 
 								<!-- Esquina decorativa -->
 								<div
-									class="absolute right-0 bottom-0 h-20 w-20 rounded-tl-full bg-gradient-to-tl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute right-0 bottom-0 h-20 w-20 rounded-tl-full bg-linear-to-tl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 							</div>
 						</div>
@@ -106,12 +104,12 @@
 							>
 								<!-- Gradiente animado en hover -->
 								<div
-									class="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute inset-0 bg-linear-to-br from-purple-500/10 via-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 
 								<!-- Brillo superior -->
 								<div
-									class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute top-0 right-0 left-0 h-1 bg-linear-to-r from-transparent via-purple-500 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 
 								<!-- Contenido -->
@@ -133,7 +131,7 @@
 
 								<!-- Esquina decorativa -->
 								<div
-									class="absolute right-0 bottom-0 h-20 w-20 rounded-tl-full bg-gradient-to-tl from-purple-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+									class="absolute right-0 bottom-0 h-20 w-20 rounded-tl-full bg-linear-to-tl from-purple-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 								></div>
 							</div>
 						</div>
