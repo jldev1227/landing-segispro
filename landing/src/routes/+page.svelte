@@ -10,6 +10,18 @@
 	let mobileMenuOpen = false;
 	let activeSection = 'inicio';
 
+	// Modal de trabajo
+	let cvModalOpen = false;
+	let cvFile: File | null = null;
+	let cvFileName = '';
+	let cvUploading = false;
+	let cvUploadSuccess = false;
+	let cvUploadError = '';
+	let nombreCompleto = '';
+	let emailContacto = '';
+	let telefonoContacto = '';
+	let cargoInteres = '';
+
 	$: isScrolled = scrollY > 50;
 
 	const navItems = [
@@ -446,6 +458,83 @@
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'ArrowLeft') goToPrev();
 		if (e.key === 'ArrowRight') goToNext();
+	}
+
+	// Funciones del modal de CV
+	function openCvModal() {
+		cvModalOpen = true;
+		cvUploadSuccess = false;
+		cvUploadError = '';
+		document.body.style.overflow = 'hidden';
+	}
+
+	function closeCvModal() {
+		cvModalOpen = false;
+		cvFile = null;
+		cvFileName = '';
+		cvUploading = false;
+		cvUploadSuccess = false;
+		cvUploadError = '';
+		nombreCompleto = '';
+		emailContacto = '';
+		telefonoContacto = '';
+		cargoInteres = '';
+		document.body.style.overflow = '';
+	}
+
+	function handleFileSelect(event: Event) {
+		const input = event.target as HTMLInputElement;
+		const file = input.files?.[0];
+
+		if (file) {
+			// Validar que sea PDF
+			if (file.type !== 'application/pdf') {
+				cvUploadError = 'Por favor, selecciona solo archivos PDF';
+				cvFile = null;
+				cvFileName = '';
+				return;
+			}
+
+			// Validar tamaño (máximo 5MB)
+			if (file.size > 5 * 1024 * 1024) {
+				cvUploadError = 'El archivo no debe superar los 5MB';
+				cvFile = null;
+				cvFileName = '';
+				return;
+			}
+
+			cvFile = file;
+			cvFileName = file.name;
+			cvUploadError = '';
+		}
+	}
+
+	async function submitCV() {
+		if (!cvFile || !nombreCompleto || !emailContacto || !telefonoContacto) {
+			cvUploadError = 'Por favor completa todos los campos obligatorios';
+			return;
+		}
+
+		cvUploading = true;
+		cvUploadError = '';
+
+		try {
+			// Aquí se implementaría la lógica real de subida
+			// Por ahora simulamos un delay
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+
+			// Simular envío exitoso
+			cvUploadSuccess = true;
+			cvUploading = false;
+
+			// Cerrar modal después de 2 segundos
+			setTimeout(() => {
+				closeCvModal();
+			}, 2000);
+		} catch (error) {
+			cvUploading = false;
+			cvUploadError = 'Ocurrió un error al enviar tu hoja de vida. Por favor intenta nuevamente.';
+		}
 	}
 
 	// Datos estructurados JSON-LD para Google
@@ -1301,7 +1390,7 @@
 				<!-- Navigation Arrows -->
 				<button
 					on:click={goToPrev}
-					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8 cursor-pointer" 
+					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
 					aria-label="Imagen anterior"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1316,7 +1405,7 @@
 
 				<button
 					on:click={goToNext}
-					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8 cursor-pointer"
+					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
 					aria-label="Siguiente imagen"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1366,6 +1455,111 @@
 		<CarouselClientes visible={mounted} {clientes} speed={35} />
 	</div>
 </section>
+
+<!-- Trabaja con Nosotros Section -->
+{#if mounted}
+	<section
+		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 px-6 py-24"
+		in:fly={{ y: 50, duration: 800, delay: 200 }}
+	>
+		<!-- Elementos decorativos -->
+		<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-white/5 blur-3xl"></div>
+		<div class="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl"></div>
+
+		<!-- Patrón de fondo -->
+		<div class="absolute inset-0 opacity-[0.03]">
+			<div
+				class="absolute inset-0"
+				style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"
+			></div>
+		</div>
+
+		<div class="relative z-10 container mx-auto max-w-4xl">
+			<div class="text-center">
+				<!-- Icono -->
+				<div class="mb-6 flex justify-center">
+					<div
+						class="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm"
+					>
+						<span class="text-5xl">👥</span>
+					</div>
+				</div>
+
+				<!-- Título -->
+				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Trabaja con Nosotros</h2>
+
+				<!-- Descripción -->
+				<p class="mx-auto mb-8 max-w-2xl text-lg text-blue-100 md:text-xl">
+					¿Eres un profesional apasionado por la seguridad, la calidad y el mejoramiento continuo?
+					Únete a nuestro equipo de expertos y haz parte de una empresa líder en consultoría,
+					auditoría y formación.
+				</p>
+
+				<!-- Beneficios -->
+				<div class="mb-12 grid gap-6 md:grid-cols-3">
+					<div
+						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+					>
+						<div class="mb-3 text-3xl">🎯</div>
+						<h3 class="mb-2 text-lg font-semibold text-white">Proyectos Desafiantes</h3>
+						<p class="text-sm text-blue-100">
+							Trabaja en proyectos innovadores con clientes de diversos sectores
+						</p>
+					</div>
+
+					<div
+						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+					>
+						<div class="mb-3 text-3xl">📚</div>
+						<h3 class="mb-2 text-lg font-semibold text-white">Desarrollo Profesional</h3>
+						<p class="text-sm text-blue-100">
+							Capacitaciones constantes y oportunidades de crecimiento
+						</p>
+					</div>
+
+					<div
+						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+					>
+						<div class="mb-3 text-3xl">🤝</div>
+						<h3 class="mb-2 text-lg font-semibold text-white">Ambiente Colaborativo</h3>
+						<p class="text-sm text-blue-100">
+							Equipo multidisciplinario comprometido con la excelencia
+						</p>
+					</div>
+				</div>
+
+				<!-- CTA Button -->
+				<button
+					on:click={openCvModal}
+					class="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl bg-white px-8 py-4 text-lg font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+				>
+					<span class="relative z-10">Enviar mi Hoja de Vida</span>
+					<svg
+						class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+						/>
+					</svg>
+
+					<!-- Efecto hover -->
+					<div
+						class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+					></div>
+				</button>
+
+				<!-- Nota -->
+				<p class="mt-6 text-sm text-blue-200">Solo aceptamos archivos PDF · Tamaño máximo: 5MB</p>
+			</div>
+		</div>
+	</section>
+{/if}
 
 <!-- Contact Section -->
 <section
@@ -2061,6 +2255,277 @@
 		{/if}
 	</div>
 </footer>
+
+<!-- Modal de Hoja de Vida -->
+{#if cvModalOpen}
+	<div
+		class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+		on:click={closeCvModal}
+		on:keydown={(e) => e.key === 'Escape' && closeCvModal()}
+		role="button"
+		tabindex="0"
+		transition:fade={{ duration: 200 }}
+	>
+		<div
+			class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"
+			on:click|stopPropagation
+			on:keydown|stopPropagation
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="modal-title"
+			tabindex="-1"
+			transition:scale={{ duration: 300, start: 0.9 }}
+		>
+			<!-- Header -->
+			<div class="sticky top-0 z-10 bg-linear-to-r from-blue-600 to-blue-700 px-6 py-5">
+				<div class="flex items-center justify-between">
+					<div class="flex items-center gap-3">
+						<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
+							<span class="text-2xl">📄</span>
+						</div>
+						<h3 id="modal-title" class="text-xl font-bold text-white">Enviar Hoja de Vida</h3>
+					</div>
+					<button
+						on:click={closeCvModal}
+						class="flex h-8 w-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20"
+						aria-label="Cerrar modal"
+					>
+						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						</svg>
+					</button>
+				</div>
+			</div>
+
+			<!-- Body -->
+			<div class="p-6">
+				{#if cvUploadSuccess}
+					<!-- Success Message -->
+					<div class="py-12 text-center">
+						<div
+							class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100"
+						>
+							<svg
+								class="h-10 w-10 text-green-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M5 13l4 4L19 7"
+								/>
+							</svg>
+						</div>
+						<h4 class="mb-2 text-2xl font-bold text-gray-900">¡Hoja de vida recibida!</h4>
+						<p class="text-gray-600">
+							Gracias por tu interés. Revisaremos tu perfil y nos pondremos en contacto contigo
+							pronto.
+						</p>
+					</div>
+				{:else}
+					<!-- Form -->
+					<form on:submit|preventDefault={submitCV} class="space-y-6">
+						<!-- Nombre Completo -->
+						<div>
+							<label for="nombreCompleto" class="mb-2 block text-sm font-semibold text-gray-700">
+								Nombre Completo <span class="text-red-500">*</span>
+							</label>
+							<input
+								type="text"
+								id="nombreCompleto"
+								bind:value={nombreCompleto}
+								required
+								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+								placeholder="Ej: Juan Pérez González"
+							/>
+						</div>
+
+						<!-- Email -->
+						<div>
+							<label for="emailContacto" class="mb-2 block text-sm font-semibold text-gray-700">
+								Email <span class="text-red-500">*</span>
+							</label>
+							<input
+								type="email"
+								id="emailContacto"
+								bind:value={emailContacto}
+								required
+								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+								placeholder="tucorreo@ejemplo.com"
+							/>
+						</div>
+
+						<!-- Teléfono -->
+						<div>
+							<label for="telefonoContacto" class="mb-2 block text-sm font-semibold text-gray-700">
+								Teléfono <span class="text-red-500">*</span>
+							</label>
+							<input
+								type="tel"
+								id="telefonoContacto"
+								bind:value={telefonoContacto}
+								required
+								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+								placeholder="Ej: +57 300 123 4567"
+							/>
+						</div>
+
+						<!-- Cargo de Interés -->
+						<div>
+							<label for="cargoInteres" class="mb-2 block text-sm font-semibold text-gray-700">
+								Cargo de Interés
+							</label>
+							<input
+								type="text"
+								id="cargoInteres"
+								bind:value={cargoInteres}
+								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+								placeholder="Ej: Auditor SST, Consultor HSEQ, etc."
+							/>
+						</div>
+
+						<!-- File Upload -->
+						<div>
+							<label class="mb-2 block text-sm font-semibold text-gray-700">
+								Hoja de Vida (PDF) <span class="text-red-500">*</span>
+							</label>
+							<div class="relative">
+								<input
+									type="file"
+									id="cvFile"
+									accept=".pdf"
+									on:change={handleFileSelect}
+									required
+									class="hidden"
+								/>
+								<label
+									for="cvFile"
+									class="flex cursor-pointer items-center justify-center gap-3 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-all hover:border-blue-500 hover:bg-blue-50"
+								>
+									<svg
+										class="h-8 w-8 text-gray-400"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+										/>
+									</svg>
+									<div class="text-center">
+										<p class="text-sm font-medium text-gray-700">
+											{cvFileName || 'Haz clic para seleccionar tu CV'}
+										</p>
+										<p class="mt-1 text-xs text-gray-500">Solo archivos PDF (máx. 5MB)</p>
+									</div>
+								</label>
+							</div>
+							{#if cvFileName}
+								<div
+									class="mt-2 flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-700"
+								>
+									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+										<path
+											fill-rule="evenodd"
+											d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
+											clip-rule="evenodd"
+										/>
+									</svg>
+									<span class="flex-1">{cvFileName}</span>
+									<button
+										type="button"
+										on:click={() => {
+											cvFile = null;
+											cvFileName = '';
+										}}
+										class="text-blue-600 hover:text-blue-800"
+									>
+										<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+									</button>
+								</div>
+							{/if}
+						</div>
+
+						<!-- Error Message -->
+						{#if cvUploadError}
+							<div
+								class="flex items-start gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
+								transition:fly={{ y: -10, duration: 200 }}
+							>
+								<svg class="mt-0.5 h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+									<path
+										fill-rule="evenodd"
+										d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+								<span>{cvUploadError}</span>
+							</div>
+						{/if}
+
+						<!-- Submit Button -->
+						<div class="flex gap-3 pt-4">
+							<button
+								type="button"
+								on:click={closeCvModal}
+								class="flex-1 rounded-lg border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-all hover:bg-gray-50"
+								disabled={cvUploading}
+							>
+								Cancelar
+							</button>
+							<button
+								type="submit"
+								disabled={cvUploading || !cvFile}
+								class="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								{#if cvUploading}
+									<span class="flex items-center justify-center gap-2">
+										<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+											<circle
+												class="opacity-25"
+												cx="12"
+												cy="12"
+												r="10"
+												stroke="currentColor"
+												stroke-width="4"
+											/>
+											<path
+												class="opacity-75"
+												fill="currentColor"
+												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+											/>
+										</svg>
+										Enviando...
+									</span>
+								{:else}
+									Enviar Hoja de Vida
+								{/if}
+							</button>
+						</div>
+					</form>
+				{/if}
+			</div>
+		</div>
+	</div>
+{/if}
 
 <style>
 	/* ===== GLOBAL STYLES ===== */
