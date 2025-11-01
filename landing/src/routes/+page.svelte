@@ -199,32 +199,58 @@
 		title: string;
 		description: string;
 		icon: string;
+		slug: string;
 	}
 
 	const services: Service[] = [
 		{
 			title: 'CONSULTORÍA',
 			description:
-				'Acompañamiento experto en sistemas de gestión, cumplimiento normativo y mejora continua para fortalecer la seguridad y el desempeño de tu organización.',
-			icon: '🎯'
+				'Brindamos acompañamiento estratégico y técnico para diseñar, implementar y fortalecer sistemas de gestión adaptados a cada organización.',
+			icon: '🎯',
+			slug: 'consultoria'
 		},
 		{
 			title: 'AUDITORÍA',
 			description:
-				'Auditorías precisas y confiables para garantizar el cumplimiento normativo y la excelencia operacional.',
-			icon: '📊'
+				'Realizamos auditorías internas, combinadas y a proveedores con enfoque práctico, formativo y orientado al mejoramiento continuo.',
+			icon: '📊',
+			slug: 'auditoria'
+		},
+		{
+			title: 'FORMACIÓN',
+			description:
+				'Ofrecemos cursos, diplomados y capacitaciones personalizadas para fortalecer competencias técnicas, normativas y humanas.',
+			icon: '📚',
+			slug: 'formacion'
+		},
+		{
+			title: 'CAMPAÑAS Y ESTUDIOS',
+			description:
+				'Diseñamos intervenciones que promueven la cultura preventiva, evalúan condiciones laborales y aseguran el cumplimiento legal.',
+			icon: '🔬',
+			slug: 'campanas-estudios'
+		},
+		{
+			title: 'DIGITALIZACIÓN',
+			description:
+				'Integración de herramientas tecnológicas, apps y automatización para una gestión más ágil, trazable y eficiente.',
+			icon: '⚙️',
+			slug: 'digitalizacion'
+		},
+		{
+			title: 'PROYECTOS ESPECIALES',
+			description:
+				'Desarrollamos soluciones innovadoras y flexibles adaptadas a necesidades específicas.',
+			icon: '🛠️',
+			slug: 'proyectos-especiales'
 		},
 		{
 			title: 'INTERVENTORÍA',
 			description:
-				'Supervisión técnica diseñada para asegurar la calidad y el éxito en proyectos y procesos estratégicos.',
-			icon: '🔍'
-		},
-		{
-			title: 'CAPACITACIÓN',
-			description:
-				'Conocimiento especializado para potenciar habilidades y generar objetivos del progreso profesional y empresarial.',
-			icon: '📚'
+				'Realizamos interventorías técnicas que verifican el cumplimiento de requisitos, normativas y estándares en proyectos clave.',
+			icon: '🔍',
+			slug: 'interventoria'
 		}
 	];
 
@@ -859,7 +885,8 @@
 								</p>
 
 								<!-- Botón mejorado -->
-								<button
+								<a
+									href="/servicios/{service.slug}"
 									class="group/btn bg-linear-to-r relative inline-flex transform items-center gap-2 overflow-hidden rounded-full from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
 								>
 									<span class="relative z-10">Ver más</span>
@@ -880,7 +907,7 @@
 									<div
 										class="bg-linear-to-r absolute inset-0 -translate-x-full from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
 									></div>
-								</button>
+								</a>
 							</div>
 
 							<!-- Efecto de esquina decorativa -->
@@ -1963,24 +1990,48 @@
 					</div>
 				</div>
 
+				<!-- CTA: Agenda tu cita -->
+				<div class="my-8 border-t border-white/10 py-8">
+					<div class="flex flex-col items-center justify-between gap-6 md:flex-row">
+						<!-- Texto -->
+						<div class="text-center md:text-left">
+							<p class="mb-1 text-xl font-semibold text-blue-400">Agenda tu cita</p>
+							<p class="text-lg text-gray-300">
+								Únete a nosotros para explorar nuevas oportunidades<br class="hidden md:inline" />
+								y alcanzar juntos grandes logros
+							</p>
+						</div>
+
+						<!-- Botón -->
+						<a
+							href="https://wa.me/573104853340?text=Hola,%20me%20gustaría%20agendar%20una%20cita"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="group inline-flex transform items-center gap-2 rounded-lg bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-lg"
+						>
+							<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+								<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+							</svg>
+							<span>Agendar cita</span>
+							<svg class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+							</svg>
+						</a>
+					</div>
+				</div>
+
 				<!-- Sección inferior -->
 				<div class="border-t border-white/10 pt-8">
 					<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
 						<p class="text-sm text-gray-400">
-							© 2025 <a
+							© {new Date().getFullYear()} <a
 								href="https://www.segispro.co"
 								class="text-blue-400 transition-colors hover:text-blue-300">SEGISPRO</a
 							>. Todos los derechos reservados.
 						</p>
 						<div class="flex items-center gap-6">
-							<a href="#" class="text-sm text-gray-400 transition-colors hover:text-blue-400">
+							<a href="/politicas-de-privacidad" class="text-sm text-gray-400 transition-colors hover:text-blue-400">
 								Política de Privacidad
-							</a>
-							<a href="#" class="text-sm text-gray-400 transition-colors hover:text-blue-400">
-								Términos de Servicio
-							</a>
-							<a href="#" class="text-sm text-gray-400 transition-colors hover:text-blue-400">
-								Cookies
 							</a>
 						</div>
 					</div>
