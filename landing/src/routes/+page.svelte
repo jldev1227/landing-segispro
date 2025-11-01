@@ -69,21 +69,6 @@
 
 	// Iniciar animación
 	function startAnimation() {
-		// Reproducir sonido
-		const audio = new Audio('/sounds/counter-sound.mp3'); // Cambia este path por tu archivo
-		audio.volume = 0.8;
-		audio.currentTime = 0; // Reinicia el audio desde el inicio
-		audio.playbackRate = 1; // Velocidad normal
-		const playPromise = audio.play();
-		if (playPromise !== undefined) {
-			playPromise.catch((err) => console.log('Audio play prevented:', err));
-		}
-		// Detener el audio después de 200ms
-		setTimeout(() => {
-			audio.pause();
-			audio.currentTime = 0;
-		}, 2000);
-
 		// Animar contadores con delays escalonados
 		setTimeout(() => {
 			animateCounter(
@@ -1316,7 +1301,7 @@
 				<!-- Navigation Arrows -->
 				<button
 					on:click={goToPrev}
-					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
+					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8 cursor-pointer" 
 					aria-label="Imagen anterior"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1331,7 +1316,7 @@
 
 				<button
 					on:click={goToNext}
-					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
+					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8 cursor-pointer"
 					aria-label="Siguiente imagen"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

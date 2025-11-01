@@ -243,9 +243,9 @@
 			"
 		>
 			<!-- Track del carrusel -->
-			<div
+			<button
 				bind:this={carouselTrack}
-				class="carousel-track flex gap-8 px-4"
+				class="carousel-track flex gap-8 px-4 bg-transparent border-none w-full"
 				on:mousedown={handleDragStart}
 				on:mousemove={handleDragMove}
 				on:mouseup={handleDragEnd}
@@ -258,9 +258,7 @@
 					if (e.key === 'ArrowLeft') goToPrev();
 					if (e.key === 'ArrowRight') goToNext();
 				}}
-				role="region"
 				aria-label="Carrusel de características"
-				tabindex="0"
 			>
 				{#each extendedCharacteristics as char, i}
 					<div
@@ -337,12 +335,10 @@
 						</div>
 					</div>
 				{/each}
-			</div>
-
-			<!-- Navigation Arrows -->
+			</button>
 			<button
 				on:click={goToPrev}
-				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
 				aria-label="Anterior"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -357,7 +353,7 @@
 
 			<button
 				on:click={goToNext}
-				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
 				aria-label="Siguiente"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

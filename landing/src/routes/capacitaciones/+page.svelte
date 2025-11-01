@@ -80,7 +80,7 @@
 					Validar certificado
 				</a>
 				<a
-					href={resolveRoute('/')}
+					href={'/'}
 					class="flex items-center gap-2 text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
 				>
 					<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
