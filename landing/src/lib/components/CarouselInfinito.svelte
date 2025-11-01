@@ -236,16 +236,16 @@
 	<div class="relative mt-16" in:fly={{ y: 50, duration: 800, delay: 400 }}>
 		<!-- Contenedor con mask CSS -->
 		<div
-			class="relative overflow-hidden py-8 carousel-container"
+			class="carousel-container relative overflow-hidden py-8"
 			style="
 				-webkit-mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
 				mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
 			"
 		>
 			<!-- Track del carrusel -->
-			<div
+			<button
 				bind:this={carouselTrack}
-				class="carousel-track flex gap-8 px-4"
+				class="carousel-track flex gap-8 px-4 bg-transparent border-none w-full"
 				on:mousedown={handleDragStart}
 				on:mousemove={handleDragMove}
 				on:mouseup={handleDragEnd}
@@ -254,12 +254,15 @@
 				on:touchmove={handleDragMove}
 				on:touchend={handleDragEnd}
 				on:mouseenter={resetAutoScroll}
-				role="region"
+				on:keydown={(e) => {
+					if (e.key === 'ArrowLeft') goToPrev();
+					if (e.key === 'ArrowRight') goToNext();
+				}}
 				aria-label="Carrusel de características"
 			>
 				{#each extendedCharacteristics as char, i}
 					<div
-						class="card-3d-wrapper h-64 w-80 shrink-0 cursor-pointer perspective-container"
+						class="card-3d-wrapper perspective-container h-64 w-80 shrink-0 cursor-pointer"
 						on:mousemove={(e) => handleMouseMove(e, e.currentTarget)}
 						on:mouseleave={(e) => handleMouseLeave(e.currentTarget)}
 						on:click={() => goToIndex(i)}
@@ -272,7 +275,7 @@
 						>
 							<!-- Gradiente de profundidad -->
 							<div
-								class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute inset-0 rounded-2xl bg-linear-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<!-- Contenido -->
@@ -280,7 +283,7 @@
 								<div class="mb-4 flex items-start space-x-4">
 									<!-- Icono con efecto 3D -->
 									<div
-										class="icon-3d flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 text-3xl shadow-lg"
+										class="icon-3d flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-700 text-3xl shadow-lg"
 									>
 										<span
 											class="icon-inner block transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
@@ -318,7 +321,7 @@
 
 							<!-- Sombra 3D mejorada -->
 							<div
-								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-linear-to-br from-blue-500/20 to-purple-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<!-- Brillo que sigue al mouse -->
@@ -326,32 +329,40 @@
 								class="card-shine pointer-events-none absolute inset-0 overflow-hidden rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 							>
 								<div
-									class="shine-layer absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent"
+									class="shine-layer absolute inset-0 bg-linear-to-br from-white/30 via-transparent to-transparent"
 								></div>
 							</div>
 						</div>
 					</div>
 				{/each}
-			</div>
-
-			<!-- Navigation Arrows -->
+			</button>
 			<button
 				on:click={goToPrev}
-				class="absolute left-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
 				aria-label="Anterior"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M15 19l-7-7 7-7"
+					/>
 				</svg>
 			</button>
 
 			<button
 				on:click={goToNext}
-				class="absolute right-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
 				aria-label="Siguiente"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M9 5l7 7-7 7"
+					/>
 				</svg>
 			</button>
 		</div>
@@ -360,10 +371,12 @@
 		<div class="mt-8 space-y-2 text-center">
 			<!-- Dots -->
 			<div class="flex items-center justify-center gap-2">
-				{#each characteristics as _, i}
+				{#each characteristics as characteristic, i (characteristic.title + i)}
 					<button
 						on:click={() => goToIndex(i + characteristics.length)}
-						class="h-2 rounded-full transition-all duration-300 {(currentIndex % characteristics.length) === i
+						class="h-2 rounded-full transition-all duration-300 {currentIndex %
+							characteristics.length ===
+						i
 							? 'w-8 bg-blue-500'
 							: 'w-2 bg-gray-300 hover:bg-gray-400'}"
 						aria-label={`Ir a característica ${i + 1}`}
@@ -372,7 +385,7 @@
 			</div>
 
 			<!-- Texto indicador -->
-			<p class="flex items-center justify-center gap-2 text-sm italic text-gray-500">
+			<p class="flex items-center justify-center gap-2 text-sm text-gray-500 italic">
 				<span class="text-lg">🎴</span>
 				Mueve el cursor sobre las tarjetas para ver el efecto 3D
 			</p>
@@ -449,6 +462,7 @@
 	.line-clamp-2 {
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
@@ -456,6 +470,7 @@
 	.line-clamp-4 {
 		display: -webkit-box;
 		-webkit-line-clamp: 4;
+		line-clamp: 4;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
