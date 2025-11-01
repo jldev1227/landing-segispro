@@ -12,8 +12,7 @@
 
 	$: cursosFiltrados = capacitaciones
 		.filter((curso) => {
-			const cumpleCategoria =
-				filtroCategoria === 'Todas' || curso.categoria === filtroCategoria;
+			const cumpleCategoria = filtroCategoria === 'Todas' || curso.categoria === filtroCategoria;
 			const cumpleModalidad = filtroModalidad === 'Todas' || curso.modalidad === filtroModalidad;
 			const cumpleNivel = filtroNivel === 'Todos' || curso.nivel === filtroNivel;
 			const cumpleBusqueda =
@@ -62,7 +61,7 @@
 </svelte:head>
 
 <!-- Header Simple -->
-<header class="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
+<header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
 			<a href="/" class="group flex items-center">
@@ -99,7 +98,9 @@
 </header>
 
 <!-- Main Content -->
-<main class="bg-linear-to-br min-h-screen from-white via-gray-50 to-blue-50 px-4 pb-20 pt-24 sm:px-6">
+<main
+	class="min-h-screen bg-linear-to-br from-white via-gray-50 to-blue-50 px-4 pt-24 pb-20 sm:px-6"
+>
 	<div class="container mx-auto max-w-7xl">
 		{#if mounted}
 			<!-- Hero Section -->
@@ -119,11 +120,12 @@
 					Capacitaciones <span class="text-blue-600">Certificadas</span>
 				</h1>
 				<p class="mx-auto max-w-2xl text-lg text-gray-600">
-					Impulsa tu carrera profesional con nuestros cursos especializados en seguridad
-					industrial, auditorías y sistemas de gestión.
+					Impulsa tu carrera profesional con nuestros cursos especializados en seguridad industrial,
+					auditorías y sistemas de gestión.
 				</p>
-				<div class="bg-linear-to-r mx-auto mt-6 h-1.5 w-24 rounded-full from-blue-600 to-orange-600">
-				</div>
+				<div
+					class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+				></div>
 			</div>
 
 			<!-- Filtros y Búsqueda -->
@@ -135,7 +137,7 @@
 				<div class="mb-6">
 					<div class="relative">
 						<svg
-							class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400"
+							class="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-gray-400"
 							fill="none"
 							stroke="currentColor"
 							viewBox="0 0 24 24"
@@ -151,80 +153,89 @@
 							type="text"
 							bind:value={busqueda}
 							placeholder="Buscar cursos..."
-							class="w-full rounded-lg border-2 border-gray-200 py-3 pl-12 pr-4 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+							class="w-full rounded-lg border-2 border-gray-200 py-3 pr-4 pl-12 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 						/>
 					</div>
 				</div>
 
-			<!-- Filtros -->
-			<div class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
-				<!-- Categoría -->
-				<div>
-					<label for="filtro-categoria" class="mb-2 block text-sm font-semibold text-gray-700">Categoría</label>
-					<select
-						id="filtro-categoria"
-						bind:value={filtroCategoria}
-						class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-					>
-						{#each categorias as categoria}
-							<option value={categoria}>{categoria}</option>
-						{/each}
-					</select>
-				</div>
+				<!-- Filtros -->
+				<div class="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
+					<!-- Categoría -->
+					<div>
+						<label for="filtro-categoria" class="mb-2 block text-sm font-semibold text-gray-700"
+							>Categoría</label
+						>
+						<select
+							id="filtro-categoria"
+							bind:value={filtroCategoria}
+							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+						>
+							{#each categorias as categoria}
+								<option value={categoria}>{categoria}</option>
+							{/each}
+						</select>
+					</div>
 
-				<!-- Modalidad -->
-				<div>
-					<label for="filtro-modalidad" class="mb-2 block text-sm font-semibold text-gray-700">Modalidad</label>
-					<select
-						id="filtro-modalidad"
-						bind:value={filtroModalidad}
-						class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-					>
-						{#each modalidades as modalidad}
-							<option value={modalidad}>{modalidad}</option>
-						{/each}
-					</select>
-				</div>
+					<!-- Modalidad -->
+					<div>
+						<label for="filtro-modalidad" class="mb-2 block text-sm font-semibold text-gray-700"
+							>Modalidad</label
+						>
+						<select
+							id="filtro-modalidad"
+							bind:value={filtroModalidad}
+							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+						>
+							{#each modalidades as modalidad}
+								<option value={modalidad}>{modalidad}</option>
+							{/each}
+						</select>
+					</div>
 
-				<!-- Nivel -->
-				<div>
-					<label for="filtro-nivel" class="mb-2 block text-sm font-semibold text-gray-700">Nivel</label>
-					<select
-						id="filtro-nivel"
-						bind:value={filtroNivel}
-						class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-					>
-						{#each niveles as nivel}
-							<option value={nivel}>{nivel}</option>
-						{/each}
-					</select>
-				</div>
+					<!-- Nivel -->
+					<div>
+						<label for="filtro-nivel" class="mb-2 block text-sm font-semibold text-gray-700"
+							>Nivel</label
+						>
+						<select
+							id="filtro-nivel"
+							bind:value={filtroNivel}
+							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+						>
+							{#each niveles as nivel}
+								<option value={nivel}>{nivel}</option>
+							{/each}
+						</select>
+					</div>
 
-				<!-- Ordenamiento -->
-				<div>
-					<label for="ordenamiento" class="mb-2 block text-sm font-semibold text-gray-700">Ordenar por</label>
-					<select
-						id="ordenamiento"
-						bind:value={ordenamiento}
-						class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-					>
-						<option value="destacado">Destacados</option>
-						<option value="calificacion">Mejor calificados</option>
-					<option value="precio-asc">Menor precio</option>
-					<option value="precio-desc">Mayor precio</option>
-				</select>
+					<!-- Ordenamiento -->
+					<div>
+						<label for="ordenamiento" class="mb-2 block text-sm font-semibold text-gray-700"
+							>Ordenar por</label
+						>
+						<select
+							id="ordenamiento"
+							bind:value={ordenamiento}
+							class="w-full rounded-lg border-2 border-gray-200 px-4 py-2 transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+						>
+							<option value="destacado">Destacados</option>
+							<option value="calificacion">Mejor calificados</option>
+							<option value="precio-asc">Menor precio</option>
+							<option value="precio-desc">Mayor precio</option>
+						</select>
+					</div>
+				</div>
+				<!-- Contador de resultados -->
+				<div class="mt-4 text-sm text-gray-600">
+					Mostrando <span class="font-semibold text-gray-900">{cursosFiltrados.length}</span>
+					{cursosFiltrados.length === 1 ? 'curso' : 'cursos'}
+				</div>
 			</div>
-		</div>				<!-- Contador de resultados -->
-			<div class="mt-4 text-sm text-gray-600">
-				Mostrando <span class="font-semibold text-gray-900">{cursosFiltrados.length}</span>
-				{cursosFiltrados.length === 1 ? 'curso' : 'cursos'}
-			</div>
-		</div>
 
-		<!-- Grid de Cursos -->
-		{#if cursosFiltrados.length > 0}
-			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{#each cursosFiltrados as curso, i (curso.id)}
+			<!-- Grid de Cursos -->
+			{#if cursosFiltrados.length > 0}
+				<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+					{#each cursosFiltrados as curso, i (curso.id)}
 						<div
 							in:scale={{ duration: 400, delay: i * 50, start: 0.9 }}
 							class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
@@ -232,7 +243,7 @@
 							<!-- Badge destacado -->
 							{#if curso.destacado}
 								<div
-									class="absolute left-4 top-4 z-10 rounded-full bg-linear-to-r from-orange-500 to-red-500 p-2 text-xs font-bold text-white shadow-lg"
+									class="absolute top-4 left-4 z-10 rounded-full bg-linear-to-r from-orange-500 to-red-500 p-2 text-xs font-bold text-white shadow-lg"
 								>
 									⭐ Destacado
 								</div>
@@ -241,7 +252,7 @@
 							<!-- Badge cupo limitado -->
 							{#if curso.cupoLimitado}
 								<div
-									class="absolute right-4 top-4 z-10 rounded-full bg-linear-to-r from-red-600 to-red-700 p-2 text-xs font-bold text-white shadow-lg"
+									class="absolute top-4 right-4 z-10 rounded-full bg-linear-to-r from-red-600 to-red-700 p-2 text-xs font-bold text-white shadow-lg"
 								>
 									🔥 Cupo limitado
 								</div>
@@ -253,7 +264,12 @@
 								<div
 									class="flex h-full w-full items-center justify-center bg-linear-to-br from-blue-600 to-blue-800 text-white"
 								>
-									<svg class="h-20 w-20 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-20 w-20 opacity-30"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -302,7 +318,12 @@
 
 								<!-- Instructor -->
 								<p class="mb-3 flex items-center gap-2 text-sm text-gray-700">
-									<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-4 w-4 text-gray-400"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -345,7 +366,7 @@
 								<!-- Calificación -->
 								<div class="mb-4 flex items-center gap-2">
 									<div class="flex items-center">
-										{#each Array(5) as _, index}
+										{#each Array(5) as _star, index (index)}
 											<svg
 												class="h-4 w-4"
 												class:text-yellow-400={index < Math.floor(curso.calificacion)}
@@ -422,7 +443,10 @@
 					{/each}
 				</div>
 			{:else}
-				<div in:fade={{ duration: 400 }} class="rounded-2xl border-2 border-dashed border-gray-300 bg-white p-12 text-center">
+				<div
+					in:fade={{ duration: 400 }}
+					class="rounded-2xl border-2 border-dashed border-gray-300 bg-white p-12 text-center"
+				>
 					<svg
 						class="mx-auto mb-4 h-16 w-16 text-gray-400"
 						fill="none"
@@ -442,7 +466,10 @@
 			{/if}
 
 			<!-- CTA Bottom -->
-			<div in:fly={{ y: 30, duration: 800, delay: 400 }} class="mt-16 rounded-3xl bg-linear-to-r from-blue-600 to-blue-800 p-8 text-center text-white shadow-2xl md:p-12">
+			<div
+				in:fly={{ y: 30, duration: 800, delay: 400 }}
+				class="mt-16 rounded-3xl bg-linear-to-r from-blue-600 to-blue-800 p-8 text-center text-white shadow-2xl md:p-12"
+			>
 				<h2 class="mb-4 text-3xl font-bold md:text-4xl">¿No encuentras lo que buscas?</h2>
 				<p class="mb-8 text-lg opacity-90">
 					Contáctanos para diseñar una capacitación personalizada para tu empresa

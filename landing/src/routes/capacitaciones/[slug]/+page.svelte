@@ -43,10 +43,7 @@
 				<nav class="flex items-center gap-2 text-sm" in:fade>
 					<a href="/" class="text-gray-500 transition-colors hover:text-blue-600">Inicio</a>
 					<span class="text-gray-400">/</span>
-					<a
-						href="/capacitaciones"
-						class="text-gray-500 transition-colors hover:text-blue-600"
-					>
+					<a href="/capacitaciones" class="text-gray-500 transition-colors hover:text-blue-600">
 						Capacitaciones
 					</a>
 					<span class="text-gray-400">/</span>
@@ -87,7 +84,7 @@
 						<div class="flex flex-wrap items-center gap-6 text-sm">
 							<div class="flex items-center gap-1">
 								<div class="flex">
-									{#each Array(5) as _, i}
+									{#each Array(5) as _star, i (i)}
 										<svg
 											class="h-5 w-5 {i < Math.floor(curso.calificacion)
 												? 'text-yellow-400'
@@ -145,9 +142,7 @@
 
 					<!-- Card de inscripción (sticky en desktop) -->
 					<div class="lg:col-span-1" in:scale={{ duration: 600, delay: 200 }}>
-						<div
-							class="sticky top-4 rounded-2xl border-4 border-white/20 bg-white p-6 shadow-2xl"
-						>
+						<div class="sticky top-4 rounded-2xl border-4 border-white/20 bg-white p-6 shadow-2xl">
 							<div class="mb-4">
 								{#if curso.precioDescuento}
 									<div class="mb-2 flex items-center gap-2">
@@ -180,7 +175,11 @@
 								<h3 class="font-bold text-gray-900">Este curso incluye:</h3>
 
 								<div class="flex items-start gap-3 text-sm text-gray-700">
-									<svg class="h-5 w-5 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+									<svg
+										class="h-5 w-5 shrink-0 text-green-500"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
 										<path
 											fill-rule="evenodd"
 											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -191,7 +190,11 @@
 								</div>
 
 								<div class="flex items-start gap-3 text-sm text-gray-700">
-									<svg class="h-5 w-5 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+									<svg
+										class="h-5 w-5 shrink-0 text-green-500"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
 										<path
 											fill-rule="evenodd"
 											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -203,7 +206,11 @@
 
 								{#if curso.certificacion}
 									<div class="flex items-start gap-3 text-sm text-gray-700">
-										<svg class="h-5 w-5 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+										<svg
+											class="h-5 w-5 shrink-0 text-green-500"
+											fill="currentColor"
+											viewBox="0 0 20 20"
+										>
 											<path
 												fill-rule="evenodd"
 												d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -215,7 +222,11 @@
 								{/if}
 
 								<div class="flex items-start gap-3 text-sm text-gray-700">
-									<svg class="h-5 w-5 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+									<svg
+										class="h-5 w-5 shrink-0 text-green-500"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
 										<path
 											fill-rule="evenodd"
 											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -226,7 +237,11 @@
 								</div>
 
 								<div class="flex items-start gap-3 text-sm text-gray-700">
-									<svg class="h-5 w-5 shrink-0 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+									<svg
+										class="h-5 w-5 shrink-0 text-green-500"
+										fill="currentColor"
+										viewBox="0 0 20 20"
+									>
 										<path
 											fill-rule="evenodd"
 											d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -254,7 +269,7 @@
 					>
 						<button
 							on:click={() => (tabActivo = 'descripcion')}
-							class="whitespace-nowrap border-b-2 px-4 py-2 font-semibold transition-all {tabActivo ===
+							class="border-b-2 px-4 py-2 font-semibold whitespace-nowrap transition-all {tabActivo ===
 							'descripcion'
 								? 'border-blue-600 text-blue-600'
 								: 'border-transparent text-gray-500 hover:text-gray-700'}"
@@ -263,7 +278,7 @@
 						</button>
 						<button
 							on:click={() => (tabActivo = 'temario')}
-							class="whitespace-nowrap border-b-2 px-4 py-2 font-semibold transition-all {tabActivo ===
+							class="border-b-2 px-4 py-2 font-semibold whitespace-nowrap transition-all {tabActivo ===
 							'temario'
 								? 'border-blue-600 text-blue-600'
 								: 'border-transparent text-gray-500 hover:text-gray-700'}"
@@ -272,7 +287,7 @@
 						</button>
 						<button
 							on:click={() => (tabActivo = 'instructor')}
-							class="whitespace-nowrap border-b-2 px-4 py-2 font-semibold transition-all {tabActivo ===
+							class="border-b-2 px-4 py-2 font-semibold whitespace-nowrap transition-all {tabActivo ===
 							'instructor'
 								? 'border-blue-600 text-blue-600'
 								: 'border-transparent text-gray-500 hover:text-gray-700'}"
@@ -281,7 +296,7 @@
 						</button>
 						<button
 							on:click={() => (tabActivo = 'resenas')}
-							class="whitespace-nowrap border-b-2 px-4 py-2 font-semibold transition-all {tabActivo ===
+							class="border-b-2 px-4 py-2 font-semibold whitespace-nowrap transition-all {tabActivo ===
 							'resenas'
 								? 'border-blue-600 text-blue-600'
 								: 'border-transparent text-gray-500 hover:text-gray-700'}"
@@ -295,17 +310,17 @@
 						{#if tabActivo === 'descripcion'}
 							<div in:fade={{ duration: 300 }}>
 								<h2 class="mb-4 text-2xl font-bold text-gray-900">Descripción del curso</h2>
-								<p class="mb-6 text-gray-700 leading-relaxed">{curso.descripcion}</p>
+								<p class="mb-6 leading-relaxed text-gray-700">{curso.descripcion}</p>
 
-								<h3 class="mb-4 mt-8 text-xl font-bold text-gray-900">¿Qué aprenderás?</h3>
+								<h3 class="mt-8 mb-4 text-xl font-bold text-gray-900">¿Qué aprenderás?</h3>
 								<div class="grid gap-3 md:grid-cols-2">
-								{#each curso.temario.slice(0, 6) as item}
-									<div class="flex items-start gap-2">
-										<svg
-											class="mt-1 h-5 w-5 shrink-0 text-blue-600"
-											fill="currentColor"
-											viewBox="0 0 20 20"
-										>
+									{#each curso.temario.slice(0, 6) as item}
+										<div class="flex items-start gap-2">
+											<svg
+												class="mt-1 h-5 w-5 shrink-0 text-blue-600"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+											>
 												<path
 													fill-rule="evenodd"
 													d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -317,7 +332,7 @@
 									{/each}
 								</div>
 
-								<h3 class="mb-4 mt-8 text-xl font-bold text-gray-900">Requisitos</h3>
+								<h3 class="mt-8 mb-4 text-xl font-bold text-gray-900">Requisitos</h3>
 								<ul class="space-y-2">
 									{#each curso.requisitos as requisito}
 										<li class="flex items-start gap-2 text-gray-700">
@@ -327,9 +342,14 @@
 									{/each}
 								</ul>
 
-								<h3 class="mb-4 mt-8 text-xl font-bold text-gray-900">Nivel</h3>
+								<h3 class="mt-8 mb-4 text-xl font-bold text-gray-900">Nivel</h3>
 								<div class="inline-flex items-center gap-2 rounded-lg bg-blue-50 px-4 py-2">
-									<svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-5 w-5 text-blue-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -337,7 +357,7 @@
 											d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
 										/>
 									</svg>
-									<span class="font-semibold capitalize text-blue-900">{curso.nivel}</span>
+									<span class="font-semibold text-blue-900 capitalize">{curso.nivel}</span>
 								</div>
 							</div>
 						{:else if tabActivo === 'temario'}
@@ -352,10 +372,10 @@
 										<div
 											class="rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-blue-300 hover:shadow-md"
 										>
-										<div class="flex items-start gap-3">
-											<div
-												class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
-											>
+											<div class="flex items-start gap-3">
+												<div
+													class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-600"
+												>
 													{i + 1}
 												</div>
 												<div class="flex-1">
@@ -403,7 +423,7 @@
 										</div>
 									</div>
 
-									<p class="text-gray-700 leading-relaxed">
+									<p class="leading-relaxed text-gray-700">
 										Profesional certificado con más de 10 años de experiencia en el sector. Ha
 										capacitado a cientos de profesionales y empresas en {curso.categoria.toLowerCase()},
 										con un enfoque práctico y orientado a resultados.
@@ -420,7 +440,7 @@
 										<div class="text-center">
 											<div class="text-5xl font-bold text-gray-900">{curso.calificacion}</div>
 											<div class="mt-2 flex justify-center">
-												{#each Array(5) as _, i}
+												{#each Array(5) as _star, i (i)}
 													<svg
 														class="h-5 w-5 {i < Math.floor(curso.calificacion)
 															? 'text-yellow-400'
@@ -457,7 +477,15 @@
 														></div>
 													</div>
 													<span class="w-12 text-sm text-gray-600">
-														{stars === 5 ? 75 : stars === 4 ? 20 : stars === 3 ? 3 : stars === 2 ? 1 : 1}%
+														{stars === 5
+															? 75
+															: stars === 4
+																? 20
+																: stars === 3
+																	? 3
+																	: stars === 2
+																		? 1
+																		: 1}%
 													</span>
 												</div>
 											{/each}
@@ -467,7 +495,7 @@
 
 								<!-- Reseñas individuales -->
 								<div class="space-y-6">
-									{#each Array(3) as _, i}
+									{#each Array(3) as _review, i (i)}
 										<div class="rounded-lg border border-gray-200 bg-white p-6">
 											<div class="mb-3 flex items-center justify-between">
 												<div class="flex items-center gap-3">
@@ -484,8 +512,12 @@
 													</div>
 												</div>
 												<div class="flex">
-													{#each Array(5) as _}
-														<svg class="h-4 w-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+													{#each Array(5) as _star, j (j)}
+														<svg
+															class="h-4 w-4 text-yellow-400"
+															fill="currentColor"
+															viewBox="0 0 20 20"
+														>
 															<path
 																d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
 															/>
@@ -509,7 +541,7 @@
 				</div>
 
 				<!-- Sidebar (vacío en mobile, sticky en desktop) -->
-				<div class="hidden lg:block lg:col-span-1">
+				<div class="hidden lg:col-span-1 lg:block">
 					<!-- El espacio se mantiene para el card sticky del hero -->
 				</div>
 			</div>
@@ -535,7 +567,12 @@
 								<div
 									class="flex h-40 items-center justify-center bg-linear-to-br from-blue-600 to-blue-800 text-white"
 								>
-									<svg class="h-16 w-16 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-16 w-16 opacity-30"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -547,13 +584,13 @@
 							</div>
 
 							<div class="p-6">
-								<h3 class="mb-2 font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600">
+								<h3 class="mb-2 line-clamp-2 font-bold text-gray-900 group-hover:text-blue-600">
 									{cursoRelacionado.titulo}
 								</h3>
 
 								<div class="mb-3 flex items-center gap-1 text-sm">
 									<div class="flex">
-										{#each Array(5) as _, j}
+										{#each Array(5) as _star, j (j)}
 											<svg
 												class="h-4 w-4 {j < Math.floor(cursoRelacionado.calificacion)
 													? 'text-yellow-400'

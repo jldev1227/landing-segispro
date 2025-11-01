@@ -7,6 +7,7 @@ Sistema completo de validación de certificados para SEGISPRO que permite verifi
 ## 🏗️ Arquitectura
 
 ### Frontend
+
 - **Ruta**: `/validar-certificado`
 - **Archivo**: `src/routes/validar-certificado/+page.svelte`
 - **Features**:
@@ -17,6 +18,7 @@ Sistema completo de validación de certificados para SEGISPRO que permite verifi
   - Responsive design
 
 ### Backend (API Route)
+
 - **Endpoint**: `/api/validar-certificado`
 - **Archivo**: `src/routes/api/validar-certificado/+server.ts`
 - **Método**: GET
@@ -27,6 +29,7 @@ Sistema completo de validación de certificados para SEGISPRO que permite verifi
   - 404: Certificado no encontrado
 
 ### Base de Datos (Fake)
+
 - **Archivo**: `src/lib/data/certificados.ts`
 - **Contenido**: 8 certificados de ejemplo
 - **Servicios incluidos**: Formación, Auditoría, Consultoría
@@ -72,6 +75,7 @@ landing/
 ## 🎨 Diseño
 
 El sistema mantiene la coherencia visual con el resto del proyecto:
+
 - Colores corporativos (azul #2563eb, naranja)
 - Tipografía consistente
 - Animaciones suaves (fade, fly, scale)
@@ -81,6 +85,7 @@ El sistema mantiene la coherencia visual con el resto del proyecto:
 ## ✨ Características
 
 ### Validación
+
 - ✅ Validación de formato UUID
 - ✅ Búsqueda en base de datos
 - ✅ Mensajes de error descriptivos
@@ -88,6 +93,7 @@ El sistema mantiene la coherencia visual con el resto del proyecto:
 - ✅ Ejemplos de UUIDs para testing
 
 ### Certificado Digital
+
 - ✅ Diseño profesional
 - ✅ Información completa del participante
 - ✅ Código UUID único
@@ -96,6 +102,7 @@ El sistema mantiene la coherencia visual con el resto del proyecto:
 - ✅ Función de impresión
 
 ### UX/UI
+
 - ✅ Interfaz intuitiva
 - ✅ Animaciones fluidas
 - ✅ Feedback visual inmediato
@@ -110,20 +117,20 @@ Edita `src/lib/data/certificados.ts`:
 
 ```typescript
 export const certificadosDB: Certificado[] = [
-  // ... certificados existentes
-  {
-    uuid: 'nuevo-uuid-aqui',
-    nombre: 'Nombre Completo',
-    identificacion: 'CC 123456789',
-    servicio: 'formacion',
-    curso: 'Nombre del Curso',
-    fechaEmision: '1 de enero de 2025',
-    fechaVencimiento: '1 de enero de 2028',
-    duracion: '40 horas',
-    instructor: 'Ing. Nombre Instructor',
-    notas: 'Observaciones',
-    codigo: 'CERT-2025-XXX'
-  }
+	// ... certificados existentes
+	{
+		uuid: 'nuevo-uuid-aqui',
+		nombre: 'Nombre Completo',
+		identificacion: 'CC 123456789',
+		servicio: 'formacion',
+		curso: 'Nombre del Curso',
+		fechaEmision: '1 de enero de 2025',
+		fechaVencimiento: '1 de enero de 2028',
+		duracion: '40 horas',
+		instructor: 'Ing. Nombre Instructor',
+		notas: 'Observaciones',
+		codigo: 'CERT-2025-XXX'
+	}
 ];
 ```
 
@@ -157,6 +164,7 @@ python -c "import uuid; print(uuid.uuid4())"
 ## 🖨️ Impresión
 
 El certificado está optimizado para impresión:
+
 - Ocultación de elementos no necesarios (header, botones)
 - Layout adaptado para papel
 - Márgenes apropiados

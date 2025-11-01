@@ -236,7 +236,7 @@
 	<div class="relative mt-16" in:fly={{ y: 50, duration: 800, delay: 400 }}>
 		<!-- Contenedor con mask CSS -->
 		<div
-			class="relative overflow-hidden py-8 carousel-container"
+			class="carousel-container relative overflow-hidden py-8"
 			style="
 				-webkit-mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
 				mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
@@ -259,7 +259,7 @@
 			>
 				{#each extendedCharacteristics as char, i}
 					<div
-						class="card-3d-wrapper h-64 w-80 shrink-0 cursor-pointer perspective-container"
+						class="card-3d-wrapper perspective-container h-64 w-80 shrink-0 cursor-pointer"
 						on:mousemove={(e) => handleMouseMove(e, e.currentTarget)}
 						on:mouseleave={(e) => handleMouseLeave(e.currentTarget)}
 						on:click={() => goToIndex(i)}
@@ -337,21 +337,31 @@
 			<!-- Navigation Arrows -->
 			<button
 				on:click={goToPrev}
-				class="absolute left-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
 				aria-label="Anterior"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M15 19l-7-7 7-7"
+					/>
 				</svg>
 			</button>
 
 			<button
 				on:click={goToNext}
-				class="absolute right-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 backdrop-blur-md shadow-lg transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
+				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
 				aria-label="Siguiente"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2.5"
+						d="M9 5l7 7-7 7"
+					/>
 				</svg>
 			</button>
 		</div>
@@ -360,10 +370,12 @@
 		<div class="mt-8 space-y-2 text-center">
 			<!-- Dots -->
 			<div class="flex items-center justify-center gap-2">
-				{#each characteristics as _, i}
+				{#each characteristics as characteristic, i (characteristic.title + i)}
 					<button
 						on:click={() => goToIndex(i + characteristics.length)}
-						class="h-2 rounded-full transition-all duration-300 {(currentIndex % characteristics.length) === i
+						class="h-2 rounded-full transition-all duration-300 {currentIndex %
+							characteristics.length ===
+						i
 							? 'w-8 bg-blue-500'
 							: 'w-2 bg-gray-300 hover:bg-gray-400'}"
 						aria-label={`Ir a característica ${i + 1}`}
@@ -372,7 +384,7 @@
 			</div>
 
 			<!-- Texto indicador -->
-			<p class="flex items-center justify-center gap-2 text-sm italic text-gray-500">
+			<p class="flex items-center justify-center gap-2 text-sm text-gray-500 italic">
 				<span class="text-lg">🎴</span>
 				Mueve el cursor sobre las tarjetas para ver el efecto 3D
 			</p>

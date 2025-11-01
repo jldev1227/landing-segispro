@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fade, fly, scale } from 'svelte/transition';
-	import { quintOut } from 'svelte/easing';
+	import { fly, scale } from 'svelte/transition';
 	import type { Certificado } from '$lib/data/certificados';
 
 	let mounted = false;
@@ -66,7 +65,7 @@
 </svelte:head>
 
 <!-- Header Simple -->
-<header class="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
+<header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
 			<a href="/" class="group flex items-center">
@@ -95,7 +94,7 @@
 </header>
 
 <!-- Main Content -->
-<main class="bg-linear-to-br min-h-screen from-white via-gray-50 to-blue-50 px-6 pb-20 pt-32">
+<main class="min-h-screen bg-linear-to-br from-white via-gray-50 to-blue-50 px-6 pt-32 pb-20">
 	<div class="container mx-auto max-w-4xl">
 		{#if mounted}
 			<!-- Header -->
@@ -118,8 +117,9 @@
 					Ingresa el código UUID de tu certificado para verificar su autenticidad y obtener los
 					detalles completos.
 				</p>
-				<div class="bg-linear-to-r mx-auto mt-6 h-1.5 w-24 rounded-full from-blue-600 to-orange-600">
-				</div>
+				<div
+					class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+				></div>
 			</div>
 
 			<!-- Formulario de Validación -->
@@ -140,7 +140,7 @@
 								type="text"
 								bind:value={uuid}
 								placeholder="Ej: a1b2c3d4-e5f6-7890-abcd-ef1234567890"
-								class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 font-mono text-sm transition-all duration-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+								class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 font-mono text-sm transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 								disabled={loading}
 							/>
 							<p class="mt-2 text-sm text-gray-500">
@@ -177,7 +177,7 @@
 							<button
 								type="submit"
 								disabled={loading || !uuid.trim()}
-								class="bg-linear-to-r flex-1 transform rounded-lg from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
+								class="flex-1 transform rounded-lg bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100"
 							>
 								{#if loading}
 									<span class="flex items-center justify-center gap-2">
@@ -237,7 +237,7 @@
 									on:click={() => {
 										uuid = exampleUuid;
 									}}
-									class="group flex items-center gap-2 rounded-lg bg-white p-2 text-left text-xs font-mono text-gray-700 transition-all hover:bg-blue-100 hover:text-blue-700"
+									class="group flex items-center gap-2 rounded-lg bg-white p-2 text-left font-mono text-xs text-gray-700 transition-all hover:bg-blue-100 hover:text-blue-700"
 								>
 									<svg
 										class="h-4 w-4 shrink-0 text-blue-600"
@@ -273,7 +273,12 @@
 								<div
 									class="flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-green-500 to-emerald-600 shadow-lg"
 								>
-									<svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-10 w-10 text-white"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"
@@ -377,7 +382,9 @@
 										Código UUID (único e irrepetible)
 									</label>
 									<div class="flex items-center gap-2">
-										<p class="flex-1 rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700">
+										<p
+											class="flex-1 rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm text-gray-700"
+										>
 											{certificado.uuid}
 										</p>
 										<button
@@ -407,7 +414,9 @@
 						class="overflow-hidden rounded-3xl border-4 border-blue-600 bg-white shadow-2xl"
 					>
 						<!-- Encabezado del certificado -->
-						<div class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-800 p-8 text-white">
+						<div
+							class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-800 p-8 text-white"
+						>
 							<!-- Patrón de fondo -->
 							<div class="absolute inset-0 opacity-10">
 								<div
@@ -429,8 +438,12 @@
 								<p class="mb-4 text-lg text-gray-600">Se certifica que</p>
 								<h3 class="mb-6 text-4xl font-bold text-gray-900">{certificado.nombre}</h3>
 								<p class="mb-2 text-lg text-gray-600">identificado(a) con documento N°</p>
-								<p class="mb-6 text-2xl font-semibold text-gray-800">{certificado.identificacion}</p>
-								<p class="mb-4 text-lg text-gray-600">Ha completado satisfactoriamente el programa</p>
+								<p class="mb-6 text-2xl font-semibold text-gray-800">
+									{certificado.identificacion}
+								</p>
+								<p class="mb-4 text-lg text-gray-600">
+									Ha completado satisfactoriamente el programa
+								</p>
 								<h4 class="mb-8 text-3xl font-bold text-blue-600">{certificado.curso}</h4>
 								<p class="text-lg text-gray-600">
 									con una intensidad horaria de <span class="font-semibold text-gray-900"
@@ -470,8 +483,8 @@
 								<div class="border-t border-gray-300 pt-4">
 									<p class="mb-2 text-xs font-semibold text-gray-700">Código de verificación:</p>
 									<p class="font-mono text-xs text-gray-600">{certificado.codigo}</p>
-									<p class="mb-2 mt-2 text-xs font-semibold text-gray-700">UUID:</p>
-									<p class="break-all font-mono text-xs text-gray-600">{certificado.uuid}</p>
+									<p class="mt-2 mb-2 text-xs font-semibold text-gray-700">UUID:</p>
+									<p class="font-mono text-xs break-all text-gray-600">{certificado.uuid}</p>
 								</div>
 								<p class="mt-4 text-xs text-gray-500">
 									Válido en www.segispro.com/validar-certificado
@@ -483,7 +496,12 @@
 								<div
 									class="flex h-24 w-24 items-center justify-center rounded-full border-4 border-blue-600 bg-blue-50"
 								>
-									<svg class="h-12 w-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<svg
+										class="h-12 w-12 text-blue-600"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
 										<path
 											stroke-linecap="round"
 											stroke-linejoin="round"

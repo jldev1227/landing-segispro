@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { serviciosData } from '$lib/data/servicios';
-	import { fly, scale, fade } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
 
 	let mounted = false;
-	
+
 	$: slug = $page.params.slug;
 	$: servicio = serviciosData[slug];
 
@@ -30,7 +30,9 @@
 	</div>
 {:else if mounted}
 	<!-- Hero Section -->
-	<section class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 pt-32 pb-20">
+	<section
+		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 pt-32 pb-20"
+	>
 		<!-- Grid pattern -->
 		<div class="absolute inset-0 opacity-5">
 			<div
@@ -40,9 +42,11 @@
 		</div>
 
 		<!-- Gradiente -->
-		<div class="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl"></div>
+		<div
+			class="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl"
+		></div>
 
-		<div class="container relative z-10 mx-auto max-w-5xl">
+		<div class="relative z-10 container mx-auto max-w-5xl">
 			<!-- Breadcrumb -->
 			<nav class="mb-8" in:fly={{ y: -20, duration: 500, easing: quintOut }}>
 				<ol class="flex items-center gap-2 text-sm text-gray-400">
@@ -55,8 +59,13 @@
 			</nav>
 
 			<!-- Header -->
-			<div class="text-center" in:scale={{ duration: 600, delay: 100, start: 0.9, easing: quintOut }}>
-				<div class="mb-6 inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 text-5xl shadow-2xl">
+			<div
+				class="text-center"
+				in:scale={{ duration: 600, delay: 100, start: 0.9, easing: quintOut }}
+			>
+				<div
+					class="mb-6 inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 text-5xl shadow-2xl"
+				>
 					{servicio.icon}
 				</div>
 				<h1 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
@@ -89,9 +98,16 @@
 							in:scale={{ duration: 400, delay: 400 + i * 50, start: 0.9, easing: quintOut }}
 						>
 							<div class="flex-shrink-0">
-								<div class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+								<div
+									class="flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 text-blue-600"
+								>
 									<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M5 13l4 4L19 7"
+										/>
 									</svg>
 								</div>
 							</div>
@@ -112,7 +128,9 @@
 								in:fly={{ x: -20, duration: 400, delay: 600 + i * 80, easing: quintOut }}
 							>
 								<div class="flex items-start gap-4">
-									<div class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-blue-500 text-white font-bold">
+									<div
+										class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-blue-500 font-bold text-white"
+									>
 										{i + 1}
 									</div>
 									<p class="pt-1 text-gray-700">{item}</p>
@@ -135,14 +153,18 @@
 							>
 								<div class="flex flex-col md:flex-row">
 									<!-- Code Badge -->
-									<div class="flex items-center justify-center bg-linear-to-br from-blue-600 to-blue-500 p-8 md:w-48">
+									<div
+										class="flex items-center justify-center bg-linear-to-br from-blue-600 to-blue-500 p-8 md:w-48"
+									>
 										<span class="text-center text-lg font-bold text-white">
 											{standard.code}
 										</span>
 									</div>
 									<!-- Content -->
 									<div class="flex-1 p-6">
-										<h3 class="mb-2 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600">
+										<h3
+											class="mb-2 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600"
+										>
 											{standard.name}
 										</h3>
 										<p class="text-gray-600">{standard.description}</p>
@@ -157,7 +179,10 @@
 			<!-- Additional Sections -->
 			{#if servicio.additionalSections}
 				{#each servicio.additionalSections as section, idx}
-					<div class="mb-20" in:fly={{ y: 30, duration: 600, delay: 900 + idx * 100, easing: quintOut }}>
+					<div
+						class="mb-20"
+						in:fly={{ y: 30, duration: 600, delay: 900 + idx * 100, easing: quintOut }}
+					>
 						<h2 class="mb-6 text-3xl font-bold text-gray-900">{section.title}</h2>
 						{#if section.content}
 							<p class="mb-8 text-lg leading-relaxed text-gray-700">{section.content}</p>
@@ -167,9 +192,16 @@
 								{#each section.items as item}
 									<div class="flex gap-3 rounded-xl border border-gray-100 bg-gray-50 p-4">
 										<div class="flex-shrink-0">
-											<div class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+											<div
+												class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-blue-600"
+											>
 												<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+													<path
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														stroke-width="2"
+														d="M5 13l4 4L19 7"
+													/>
 												</svg>
 											</div>
 										</div>
@@ -183,11 +215,12 @@
 			{/if}
 
 			<!-- CTA -->
-			<div class="mt-20 rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 p-10 text-center text-white shadow-2xl" in:scale={{ duration: 600, delay: 1000, start: 0.9, easing: quintOut }}>
+			<div
+				class="mt-20 rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 p-10 text-center text-white shadow-2xl"
+				in:scale={{ duration: 600, delay: 1000, start: 0.9, easing: quintOut }}
+			>
 				<h2 class="mb-4 text-3xl font-bold">¿Listo para transformar tu organización?</h2>
-				<p class="mb-8 text-lg text-blue-100">
-					Contáctanos y descubre cómo podemos ayudarte
-				</p>
+				<p class="mb-8 text-lg text-blue-100">Contáctanos y descubre cómo podemos ayudarte</p>
 				<div class="flex flex-col gap-4 sm:flex-row sm:justify-center">
 					<a
 						href="/#contacto"
@@ -195,7 +228,12 @@
 					>
 						Contáctanos
 						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M13 7l5 5m0 0l-5 5m5-5H6"
+							/>
 						</svg>
 					</a>
 					<a

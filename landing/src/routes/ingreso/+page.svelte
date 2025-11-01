@@ -17,16 +17,18 @@
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
 		isLoading = true;
-		
+
 		// Simular login
-		await new Promise(resolve => setTimeout(resolve, 2000));
-		
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+
 		isLoading = false;
 		console.log('Login:', { email, password });
 	}
 </script>
 
-<div class="relative min-h-screen overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black">
+<div
+	class="relative min-h-screen overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black"
+>
 	<!-- Grid pattern de fondo -->
 	<div class="absolute inset-0 opacity-5">
 		<div
@@ -37,7 +39,7 @@
 
 	<!-- Gradiente radial -->
 	<div
-		class="absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl"
+		class="absolute top-1/2 left-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/10 blur-3xl"
 	></div>
 
 	<!-- Container principal -->
@@ -48,12 +50,11 @@
 				in:scale={{ duration: 500, delay: 100, start: 0.95, easing: quintOut }}
 			>
 				<!-- Logo -->
-				<div class="mb-10 text-center" in:fly={{ y: -30, duration: 500, delay: 200, easing: quintOut }}>
-					<img
-						src="/assets/logo-white.png"
-						alt="SEGISPRO Logo"
-						class="mx-auto mb-6 h-12 w-auto"
-					/>
+				<div
+					class="mb-10 text-center"
+					in:fly={{ y: -30, duration: 500, delay: 200, easing: quintOut }}
+				>
+					<img src="/assets/logo-white.png" alt="SEGISPRO Logo" class="mx-auto mb-6 h-12 w-auto" />
 					<h1 class="mb-2 text-2xl font-bold text-white">Bienvenido de nuevo</h1>
 					<p class="text-sm text-gray-400">Ingresa a tu cuenta para continuar</p>
 				</div>
@@ -76,7 +77,7 @@
 								on:focus={() => (focusedField = 'email')}
 								on:blur={() => (focusedField = null)}
 								placeholder="tu@email.com"
-								class="w-full rounded-lg border bg-gray-900/50 px-4 py-3 text-white placeholder-gray-500 transition-all duration-200 focus:outline-none focus:ring-2"
+								class="w-full rounded-lg border bg-gray-900/50 px-4 py-3 text-white placeholder-gray-500 transition-all duration-200 focus:ring-2 focus:outline-none"
 								class:border-gray-700={focusedField !== 'email'}
 								class:border-blue-500={focusedField === 'email'}
 								class:ring-blue-500={focusedField === 'email'}
@@ -97,7 +98,7 @@
 									on:focus={() => (focusedField = 'password')}
 									on:blur={() => (focusedField = null)}
 									placeholder="••••••••"
-									class="w-full rounded-lg border bg-gray-900/50 px-4 py-3 pr-12 text-white placeholder-gray-500 transition-all duration-200 focus:outline-none focus:ring-2"
+									class="w-full rounded-lg border bg-gray-900/50 px-4 py-3 pr-12 text-white placeholder-gray-500 transition-all duration-200 focus:ring-2 focus:outline-none"
 									class:border-gray-700={focusedField !== 'password'}
 									class:border-blue-500={focusedField === 'password'}
 									class:ring-blue-500={focusedField === 'password'}
@@ -106,7 +107,7 @@
 								<button
 									type="button"
 									on:click={() => (showPassword = !showPassword)}
-									class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-300"
+									class="absolute top-1/2 right-4 -translate-y-1/2 text-gray-400 transition-colors hover:text-gray-300"
 								>
 									{#if showPassword}
 										<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -139,16 +140,14 @@
 
 						<!-- Recordar y Olvidaste -->
 						<div class="flex items-center justify-between text-sm">
-							<label class="flex items-center gap-2 cursor-pointer">
+							<label class="flex cursor-pointer items-center gap-2">
 								<input
 									type="checkbox"
 									class="h-4 w-4 rounded border-gray-600 bg-gray-900 text-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-0"
 								/>
 								<span class="text-gray-400">Recordarme</span>
 							</label>
-							<a href="#" class="text-blue-400 hover:text-blue-300">
-								¿Olvidaste tu contraseña?
-							</a>
+							<a href="#" class="text-blue-400 hover:text-blue-300"> ¿Olvidaste tu contraseña? </a>
 						</div>
 
 						<!-- Botón de login -->
@@ -160,7 +159,14 @@
 							{#if isLoading}
 								<span class="flex items-center justify-center gap-2">
 									<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-										<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+										<circle
+											class="opacity-25"
+											cx="12"
+											cy="12"
+											r="10"
+											stroke="currentColor"
+											stroke-width="4"
+										></circle>
 										<path
 											class="opacity-75"
 											fill="currentColor"
@@ -179,9 +185,7 @@
 				<!-- Registro -->
 				<p class="mt-6 text-center text-sm text-gray-400" in:fade={{ duration: 500, delay: 500 }}>
 					¿No tienes una cuenta?
-					<a href="#" class="font-semibold text-blue-400 hover:text-blue-300">
-						Regístrate aquí
-					</a>
+					<a href="#" class="font-semibold text-blue-400 hover:text-blue-300"> Regístrate aquí </a>
 				</p>
 			</div>
 		{/if}

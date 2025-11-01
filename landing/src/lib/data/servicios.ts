@@ -39,77 +39,92 @@ export const serviciosData: Record<string, ServiceDetail> = {
 			{
 				code: 'ISO 9001',
 				name: 'Sistema de gestión de la calidad',
-				description: 'Mejoramos la eficiencia operativa y la satisfacción del cliente mediante procesos estandarizados, trazables y orientados al valor.'
+				description:
+					'Mejoramos la eficiencia operativa y la satisfacción del cliente mediante procesos estandarizados, trazables y orientados al valor.'
 			},
 			{
 				code: 'ISO 14001',
 				name: 'Sistema de gestión ambiental',
-				description: 'Reducimos impactos ambientales, fortalecemos el cumplimiento legal y proyectamos una imagen responsable y sostenible.'
+				description:
+					'Reducimos impactos ambientales, fortalecemos el cumplimiento legal y proyectamos una imagen responsable y sostenible.'
 			},
 			{
 				code: 'ISO 45001',
 				name: 'Sistema de gestión de la seguridad y salud en el trabajo',
-				description: 'Prevenimos riesgos laborales, protegemos a los trabajadores y consolidamos una cultura organizacional segura y comprometida.'
+				description:
+					'Prevenimos riesgos laborales, protegemos a los trabajadores y consolidamos una cultura organizacional segura y comprometida.'
 			},
 			{
 				code: 'ISO 39001',
 				name: 'Sistema de gestión de la seguridad vial',
-				description: 'Diseñamos estrategias que disminuyen siniestros, mejoran la movilidad corporativa y fortalecen la responsabilidad vial.'
+				description:
+					'Diseñamos estrategias que disminuyen siniestros, mejoran la movilidad corporativa y fortalecen la responsabilidad vial.'
 			},
 			{
 				code: 'ISO 22000',
 				name: 'Sistema de gestión de la inocuidad alimentaria',
-				description: 'Aseguramos la calidad sanitaria en toda la cadena productiva, protegiendo al consumidor y cumpliendo con exigencias internacionales.'
+				description:
+					'Aseguramos la calidad sanitaria en toda la cadena productiva, protegiendo al consumidor y cumpliendo con exigencias internacionales.'
 			},
 			{
 				code: 'ISO 27001',
 				name: 'Sistema de gestión de la seguridad de la información',
-				description: 'Protegemos datos sensibles, reducimos riesgos tecnológicos y generamos confianza en clientes, aliados y entes reguladores.'
+				description:
+					'Protegemos datos sensibles, reducimos riesgos tecnológicos y generamos confianza en clientes, aliados y entes reguladores.'
 			},
 			{
 				code: 'ISO 14064',
 				name: 'Medición de huella de carbono',
-				description: 'Cuantificamos emisiones, trazamos metas de reducción y acompañamos la transición hacia una gestión climáticamente responsable.'
+				description:
+					'Cuantificamos emisiones, trazamos metas de reducción y acompañamos la transición hacia una gestión climáticamente responsable.'
 			},
 			{
 				code: 'ISO 50001',
 				name: 'Sistema de gestión de la energía',
-				description: 'Optimizamos el uso de la energía, reducimos costos operativos y mejoramos el desempeño ambiental con soluciones digitales.'
+				description:
+					'Optimizamos el uso de la energía, reducimos costos operativos y mejoramos el desempeño ambiental con soluciones digitales.'
 			},
 			{
 				code: 'ISO 55001',
 				name: 'Sistema de gestión de activos',
-				description: 'Maximizamos el valor de los activos físicos, mejoramos la planificación y extendemos su vida útil con trazabilidad y eficiencia.'
+				description:
+					'Maximizamos el valor de los activos físicos, mejoramos la planificación y extendemos su vida útil con trazabilidad y eficiencia.'
 			},
 			{
 				code: 'ISO 28000',
 				name: 'Sistema de gestión de la seguridad en la cadena de suministro',
-				description: 'Fortalecemos la trazabilidad, prevenimos riesgos logísticos y mejoramos la confianza comercial en entornos exigentes.'
+				description:
+					'Fortalecemos la trazabilidad, prevenimos riesgos logísticos y mejoramos la confianza comercial en entornos exigentes.'
 			},
 			{
 				code: 'BASC',
 				name: 'Comercio seguro internacional',
-				description: 'Prevenimos actividades ilícitas, fortalecemos la seguridad logística y facilitamos el acceso a mercados internacionales.'
+				description:
+					'Prevenimos actividades ilícitas, fortalecemos la seguridad logística y facilitamos el acceso a mercados internacionales.'
 			},
 			{
 				code: 'NORSOK S-006',
 				name: 'Gestión HSE para contratistas',
-				description: 'Estandarizamos requisitos en sectores de alto riesgo, mejoramos la evaluación de contratistas y fortalecemos la gestión HSE.'
+				description:
+					'Estandarizamos requisitos en sectores de alto riesgo, mejoramos la evaluación de contratistas y fortalecemos la gestión HSE.'
 			},
 			{
 				code: 'RUC / RUC Transporte',
 				name: 'Evaluación de contratistas en SST y ambiente',
-				description: 'Facilitamos el cumplimiento legal, mejoramos el desempeño en seguridad y ambiente, y fortalecemos la relación con empresas contratantes.'
+				description:
+					'Facilitamos el cumplimiento legal, mejoramos el desempeño en seguridad y ambiente, y fortalecemos la relación con empresas contratantes.'
 			},
 			{
 				code: 'ISO 26000',
 				name: 'Guía de responsabilidad social empresarial',
-				description: 'Fortalecemos el compromiso ético, mejoramos la relación con grupos de interés y proyectamos una imagen institucional responsable.'
+				description:
+					'Fortalecemos el compromiso ético, mejoramos la relación con grupos de interés y proyectamos una imagen institucional responsable.'
 			},
 			{
 				code: 'Resolución 40595',
 				name: 'PESV',
-				description: 'Diseñamos e implementamos planes viales efectivos que reducen siniestros y dinamizan la gestión de flotas con soluciones digitales.'
+				description:
+					'Diseñamos e implementamos planes viales efectivos que reducen siniestros y dinamizan la gestión de flotas con soluciones digitales.'
 			}
 		]
 	},
@@ -131,43 +146,51 @@ export const serviciosData: Record<string, ServiceDetail> = {
 			{
 				code: 'ISO 9001',
 				name: 'Sistema de gestión de la calidad',
-				description: 'Establece requisitos para mejorar procesos, aumentar la satisfacción del cliente y asegurar la calidad en productos y servicios.'
+				description:
+					'Establece requisitos para mejorar procesos, aumentar la satisfacción del cliente y asegurar la calidad en productos y servicios.'
 			},
 			{
 				code: 'ISO 14001',
 				name: 'Sistema de gestión ambiental',
-				description: 'Permite controlar los impactos ambientales, cumplir con la legislación vigente y proyectar una imagen responsable y sostenible.'
+				description:
+					'Permite controlar los impactos ambientales, cumplir con la legislación vigente y proyectar una imagen responsable y sostenible.'
 			},
 			{
 				code: 'ISO 45001',
 				name: 'Sistema de gestión de la seguridad y salud en el trabajo',
-				description: 'Ayuda a prevenir accidentes, proteger la salud de los trabajadores y fortalecer la cultura preventiva en la organización.'
+				description:
+					'Ayuda a prevenir accidentes, proteger la salud de los trabajadores y fortalecer la cultura preventiva en la organización.'
 			},
 			{
 				code: 'Resolución 40595',
 				name: 'Plan Estratégico de Seguridad Vial (PESV)',
-				description: 'Obliga a implementar medidas para reducir la siniestralidad vial en empresas con flota, promoviendo movilidad segura y responsable.'
+				description:
+					'Obliga a implementar medidas para reducir la siniestralidad vial en empresas con flota, promoviendo movilidad segura y responsable.'
 			},
 			{
 				code: 'ISO 39001',
 				name: 'Sistema de gestión de la seguridad vial',
-				description: 'Establece un marco para reducir muertes y lesiones por accidentes de tránsito, especialmente en organizaciones con operación vehicular.'
+				description:
+					'Establece un marco para reducir muertes y lesiones por accidentes de tránsito, especialmente en organizaciones con operación vehicular.'
 			},
 			{
 				code: 'ISO 22000',
 				name: 'Sistema de gestión de la inocuidad alimentaria',
-				description: 'Asegura la seguridad de los alimentos en toda la cadena productiva, protegiendo al consumidor y cumpliendo con exigencias internacionales.'
+				description:
+					'Asegura la seguridad de los alimentos en toda la cadena productiva, protegiendo al consumidor y cumpliendo con exigencias internacionales.'
 			},
 			{
 				code: 'ISO 27001',
 				name: 'Sistema de gestión de la seguridad de la información',
-				description: 'Protege la confidencialidad, integridad y disponibilidad de la información, reduciendo riesgos tecnológicos y fortaleciendo la confianza.'
+				description:
+					'Protege la confidencialidad, integridad y disponibilidad de la información, reduciendo riesgos tecnológicos y fortaleciendo la confianza.'
 			}
 		],
 		additionalSections: [
 			{
 				title: 'Auditoría a proveedores',
-				content: 'Confianza que se construye desde la verificación. Evaluamos el desempeño de proveedores y contratistas frente a requisitos técnicos, normativos y estratégicos. Nuestras auditorías fortalecen la cadena de valor, previenen riesgos y aseguran que cada aliado esté alineado con los estándares de la organización.',
+				content:
+					'Confianza que se construye desde la verificación. Evaluamos el desempeño de proveedores y contratistas frente a requisitos técnicos, normativos y estratégicos. Nuestras auditorías fortalecen la cadena de valor, previenen riesgos y aseguran que cada aliado esté alineado con los estándares de la organización.',
 				items: [
 					'Seleccionar proveedores confiables y competentes',
 					'Prevenir incumplimientos que afecten la operación',
@@ -205,7 +228,8 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		slug: 'campanas-estudios',
 		title: 'Campañas y Estudios',
 		icon: '🔬',
-		tagline: 'Intervenciones que movilizan la cultura preventiva y fortalecen la gestión organizacional.',
+		tagline:
+			'Intervenciones que movilizan la cultura preventiva y fortalecen la gestión organizacional.',
 		description: `En Segispro Ingeniería SAS diseñamos campañas, estudios y diagnósticos que conectan con las personas, transforman comportamientos y aseguran el cumplimiento legal. Cada intervención se adapta al contexto del cliente, integrando recursos visuales, herramientas digitales, gamificación y narrativas institucionales que inspiran acción.`,
 		benefits: [
 			'Ambientes de trabajo más seguros, saludables y conectados',
@@ -289,7 +313,8 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		additionalSections: [
 			{
 				title: 'Proyecto Integral de Seguridad Vial',
-				content: 'Una estrategia completa para transformar la cultura vial y reducir riesgos operacionales. Este proyecto combina consultoría, auditoría, formación, campañas y control técnico, alineado con la norma ISO 39001 y la Resolución 40595 (PESV).',
+				content:
+					'Una estrategia completa para transformar la cultura vial y reducir riesgos operacionales. Este proyecto combina consultoría, auditoría, formación, campañas y control técnico, alineado con la norma ISO 39001 y la Resolución 40595 (PESV).',
 				items: [
 					'Plan Estratégico de Seguridad Vial – ISO 39001',
 					'Auditoría de Seguridad Vial',

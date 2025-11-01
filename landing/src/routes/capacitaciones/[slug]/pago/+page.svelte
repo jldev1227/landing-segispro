@@ -158,16 +158,20 @@
 
 			<!-- Modal de éxito -->
 			{#if pagoExitoso}
-				<div
-					class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-					in:fade
-				>
+				<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" in:fade>
 					<div
 						class="w-full max-w-md rounded-2xl bg-white p-8 text-center shadow-2xl"
 						in:scale={{ duration: 500, easing: quintOut }}
 					>
-						<div class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
-							<svg class="h-10 w-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<div
+							class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100"
+						>
+							<svg
+								class="h-10 w-10 text-green-600"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
@@ -184,8 +188,8 @@
 						<div class="rounded-lg bg-blue-50 p-4">
 							<p class="text-sm font-semibold text-blue-900">Información importante:</p>
 							<p class="mt-2 text-sm text-blue-700">
-								Te hemos enviado un email a <strong>{email}</strong> con las instrucciones para
-								acceder al curso.
+								Te hemos enviado un email a <strong>{email}</strong> con las instrucciones para acceder
+								al curso.
 							</p>
 						</div>
 					</div>
@@ -212,7 +216,7 @@
 											type="text"
 											bind:value={nombre}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="Juan"
 										/>
 									</div>
@@ -226,7 +230,7 @@
 											type="text"
 											bind:value={apellido}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="Pérez"
 										/>
 									</div>
@@ -240,7 +244,7 @@
 											type="email"
 											bind:value={email}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="juan.perez@email.com"
 										/>
 									</div>
@@ -254,7 +258,7 @@
 											type="tel"
 											bind:value={telefono}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="300 123 4567"
 										/>
 									</div>
@@ -268,7 +272,7 @@
 											type="text"
 											bind:value={documento}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="1234567890"
 										/>
 									</div>
@@ -282,7 +286,7 @@
 											type="text"
 											bind:value={ciudad}
 											required
-											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+											class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											placeholder="Bogotá"
 										/>
 									</div>
@@ -302,7 +306,14 @@
 											? 'border-blue-500 bg-blue-50'
 											: 'border-gray-200 hover:border-gray-300'}"
 									>
-										<svg class="mx-auto mb-2 h-8 w-8 {metodoPago === 'tarjeta' ? 'text-blue-600' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg
+											class="mx-auto mb-2 h-8 w-8 {metodoPago === 'tarjeta'
+												? 'text-blue-600'
+												: 'text-gray-400'}"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -310,7 +321,11 @@
 												d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
 											/>
 										</svg>
-										<span class="font-semibold {metodoPago === 'tarjeta' ? 'text-blue-900' : 'text-gray-700'}">
+										<span
+											class="font-semibold {metodoPago === 'tarjeta'
+												? 'text-blue-900'
+												: 'text-gray-700'}"
+										>
 											Tarjeta
 										</span>
 									</button>
@@ -322,7 +337,14 @@
 											? 'border-blue-500 bg-blue-50'
 											: 'border-gray-200 hover:border-gray-300'}"
 									>
-										<svg class="mx-auto mb-2 h-8 w-8 {metodoPago === 'pse' ? 'text-blue-600' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg
+											class="mx-auto mb-2 h-8 w-8 {metodoPago === 'pse'
+												? 'text-blue-600'
+												: 'text-gray-400'}"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -330,7 +352,11 @@
 												d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z"
 											/>
 										</svg>
-										<span class="font-semibold {metodoPago === 'pse' ? 'text-blue-900' : 'text-gray-700'}">
+										<span
+											class="font-semibold {metodoPago === 'pse'
+												? 'text-blue-900'
+												: 'text-gray-700'}"
+										>
 											PSE
 										</span>
 									</button>
@@ -342,7 +368,14 @@
 											? 'border-blue-500 bg-blue-50'
 											: 'border-gray-200 hover:border-gray-300'}"
 									>
-										<svg class="mx-auto mb-2 h-8 w-8 {metodoPago === 'transferencia' ? 'text-blue-600' : 'text-gray-400'}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<svg
+											class="mx-auto mb-2 h-8 w-8 {metodoPago === 'transferencia'
+												? 'text-blue-600'
+												: 'text-gray-400'}"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
 											<path
 												stroke-linecap="round"
 												stroke-linejoin="round"
@@ -350,7 +383,11 @@
 												d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
 											/>
 										</svg>
-										<span class="font-semibold {metodoPago === 'transferencia' ? 'text-blue-900' : 'text-gray-700'}">
+										<span
+											class="font-semibold {metodoPago === 'transferencia'
+												? 'text-blue-900'
+												: 'text-gray-700'}"
+										>
 											Transferencia
 										</span>
 									</button>
@@ -360,7 +397,10 @@
 								{#if metodoPago === 'tarjeta'}
 									<div class="space-y-4" in:fade>
 										<div>
-											<label for="numero-tarjeta" class="mb-2 block text-sm font-semibold text-gray-700">
+											<label
+												for="numero-tarjeta"
+												class="mb-2 block text-sm font-semibold text-gray-700"
+											>
 												Número de tarjeta *
 											</label>
 											<input
@@ -370,13 +410,16 @@
 												on:input={(e) => formatearNumeroTarjeta(e.currentTarget.value)}
 												maxlength="19"
 												required
-												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 												placeholder="1234 5678 9012 3456"
 											/>
 										</div>
 
 										<div>
-											<label for="nombre-tarjeta" class="mb-2 block text-sm font-semibold text-gray-700">
+											<label
+												for="nombre-tarjeta"
+												class="mb-2 block text-sm font-semibold text-gray-700"
+											>
 												Nombre en la tarjeta *
 											</label>
 											<input
@@ -384,14 +427,17 @@
 												type="text"
 												bind:value={nombreTarjeta}
 												required
-												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 uppercase transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 uppercase transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 												placeholder="JUAN PEREZ"
 											/>
 										</div>
 
 										<div class="grid gap-4 md:grid-cols-2">
 											<div>
-												<label for="vencimiento" class="mb-2 block text-sm font-semibold text-gray-700">
+												<label
+													for="vencimiento"
+													class="mb-2 block text-sm font-semibold text-gray-700"
+												>
 													Vencimiento *
 												</label>
 												<input
@@ -401,7 +447,7 @@
 													on:input={(e) => formatearVencimiento(e.currentTarget.value)}
 													maxlength="5"
 													required
-													class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+													class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 													placeholder="MM/AA"
 												/>
 											</div>
@@ -416,7 +462,7 @@
 													bind:value={cvv}
 													maxlength="3"
 													required
-													class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+													class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 													placeholder="123"
 												/>
 											</div>
@@ -428,13 +474,16 @@
 								{#if metodoPago === 'pse'}
 									<div class="space-y-4" in:fade>
 										<div>
-											<label for="tipo-persona" class="mb-2 block text-sm font-semibold text-gray-700">
+											<label
+												for="tipo-persona"
+												class="mb-2 block text-sm font-semibold text-gray-700"
+											>
 												Tipo de persona *
 											</label>
 											<select
 												id="tipo-persona"
 												bind:value={tipoPersona}
-												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											>
 												<option value="natural">Persona Natural</option>
 												<option value="juridica">Persona Jurídica</option>
@@ -449,7 +498,7 @@
 												id="banco"
 												bind:value={bancoSeleccionado}
 												required
-												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+												class="w-full rounded-lg border-2 border-gray-200 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
 											>
 												<option value="">Selecciona un banco</option>
 												{#each bancos as banco}
@@ -587,7 +636,12 @@
 						<!-- Garantía -->
 						<div class="mt-6 rounded-lg bg-green-50 p-4">
 							<div class="flex items-start gap-3">
-								<svg class="h-6 w-6 shrink-0 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<svg
+									class="h-6 w-6 shrink-0 text-green-600"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
 									<path
 										stroke-linecap="round"
 										stroke-linejoin="round"

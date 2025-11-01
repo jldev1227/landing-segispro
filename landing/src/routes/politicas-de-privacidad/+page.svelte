@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import { quintOut } from 'svelte/easing';
 
 	let mounted = false;
 
@@ -20,7 +19,7 @@
 </svelte:head>
 
 <!-- Header Simple -->
-<header class="fixed left-0 right-0 top-0 z-50 bg-white shadow-md">
+<header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
 	<nav class="container mx-auto px-4 py-4 sm:px-6">
 		<div class="flex items-center justify-between">
 			<a href="/" class="group flex items-center">
@@ -49,7 +48,7 @@
 </header>
 
 <!-- Main Content -->
-<main class="bg-linear-to-br from-white via-gray-50 to-blue-50 px-6 pb-20 pt-32">
+<main class="bg-linear-to-br from-white via-gray-50 to-blue-50 px-6 pt-32 pb-20">
 	<div class="container mx-auto max-w-4xl">
 		{#if mounted}
 			<!-- Header -->
@@ -68,8 +67,9 @@
 				<h1 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					Política de <span class="text-blue-600">Privacidad</span>
 				</h1>
-				<div class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600">
-				</div>
+				<div
+					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+				></div>
 			</div>
 
 			<!-- Content Card -->
@@ -105,15 +105,15 @@
 						<h2 class="mb-4 text-2xl font-bold text-gray-900">Cookies</h2>
 						<div class="space-y-4 text-gray-700">
 							<p class="leading-relaxed">
-								Si dejas un comentario en nuestro sitio puedes elegir guardar tu nombre, dirección de
-								correo electrónico y web en cookies. Esto es para tu comodidad, para que no tengas que
-								volver a rellenar tus datos cuando dejes otro comentario. Estas cookies tendrán una
-								duración de un año.
+								Si dejas un comentario en nuestro sitio puedes elegir guardar tu nombre, dirección
+								de correo electrónico y web en cookies. Esto es para tu comodidad, para que no
+								tengas que volver a rellenar tus datos cuando dejes otro comentario. Estas cookies
+								tendrán una duración de un año.
 							</p>
 							<p class="leading-relaxed">
-								Si tienes una cuenta y te conectas a este sitio, instalaremos una cookie temporal para
-								determinar si tu navegador acepta cookies. Esta cookie no contiene datos personales y
-								se elimina al cerrar el navegador.
+								Si tienes una cuenta y te conectas a este sitio, instalaremos una cookie temporal
+								para determinar si tu navegador acepta cookies. Esta cookie no contiene datos
+								personales y se elimina al cerrar el navegador.
 							</p>
 							<p class="leading-relaxed">
 								Cuando accedas, también instalaremos varias cookies para guardar tu información de
@@ -137,15 +137,16 @@
 						</h2>
 						<div class="space-y-4 text-gray-700">
 							<p class="leading-relaxed">
-								Los artículos de este sitio pueden incluir contenido incrustado (por ejemplo, vídeos,
-								imágenes, artículos, etc.). El contenido incrustado de otras webs se comporta
-								exactamente de la misma manera que si el visitante hubiera visitado la otra web.
+								Los artículos de este sitio pueden incluir contenido incrustado (por ejemplo,
+								vídeos, imágenes, artículos, etc.). El contenido incrustado de otras webs se
+								comporta exactamente de la misma manera que si el visitante hubiera visitado la otra
+								web.
 							</p>
 							<p class="leading-relaxed">
-								Estas web pueden recopilar datos sobre ti, utilizar cookies, incrustar un seguimiento
-								adicional de terceros, y supervisar tu interacción con ese contenido incrustado,
-								incluido el seguimiento de tu interacción con el contenido incrustado si tienes una
-								cuenta y estás conectado a esa web.
+								Estas web pueden recopilar datos sobre ti, utilizar cookies, incrustar un
+								seguimiento adicional de terceros, y supervisar tu interacción con ese contenido
+								incrustado, incluido el seguimiento de tu interacción con el contenido incrustado si
+								tienes una cuenta y estás conectado a esa web.
 							</p>
 						</div>
 					</section>
@@ -167,28 +168,30 @@
 						<div class="space-y-4 text-gray-700">
 							<p class="leading-relaxed">
 								Si dejas un comentario, el comentario y sus metadatos se conservan indefinidamente.
-								Esto es para que podamos reconocer y aprobar comentarios sucesivos automáticamente, en
-								lugar de mantenerlos en una cola de moderación.
+								Esto es para que podamos reconocer y aprobar comentarios sucesivos automáticamente,
+								en lugar de mantenerlos en una cola de moderación.
 							</p>
 							<p class="leading-relaxed">
 								De los usuarios que se registran en nuestra web (si los hay), también almacenamos la
 								información personal que proporcionan en su perfil de usuario. Todos los usuarios
-								pueden ver, editar o eliminar su información personal en cualquier momento (excepto que
-								no pueden cambiar su nombre de usuario). Los administradores de la web también pueden
-								ver y editar esa información.
+								pueden ver, editar o eliminar su información personal en cualquier momento (excepto
+								que no pueden cambiar su nombre de usuario). Los administradores de la web también
+								pueden ver y editar esa información.
 							</p>
 						</div>
 					</section>
 
 					<!-- Qué derechos tienes -->
 					<section class="mb-10">
-						<h2 class="mb-4 text-2xl font-bold text-gray-900">Qué derechos tienes sobre tus datos</h2>
+						<h2 class="mb-4 text-2xl font-bold text-gray-900">
+							Qué derechos tienes sobre tus datos
+						</h2>
 						<p class="leading-relaxed text-gray-700">
 							Si tienes una cuenta o has dejado comentarios en esta web, puedes solicitar recibir un
-							archivo de exportación de los datos personales que tenemos sobre ti, incluyendo cualquier
-							dato que nos hayas proporcionado. También puedes solicitar que eliminemos cualquier dato
-							personal que tengamos sobre ti. Esto no incluye ningún dato que estemos obligados a
-							conservar con fines administrativos, legales o de seguridad.
+							archivo de exportación de los datos personales que tenemos sobre ti, incluyendo
+							cualquier dato que nos hayas proporcionado. También puedes solicitar que eliminemos
+							cualquier dato personal que tengamos sobre ti. Esto no incluye ningún dato que estemos
+							obligados a conservar con fines administrativos, legales o de seguridad.
 						</p>
 					</section>
 

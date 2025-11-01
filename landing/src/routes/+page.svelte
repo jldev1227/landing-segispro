@@ -578,7 +578,7 @@
 <!-- Header/Navbar -->
 <!-- Header/Navbar -->
 <header
-	class="fixed left-0 right-0 top-0 z-50 transition-all duration-300"
+	class="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
 	class:bg-white={isScrolled}
 	class:backdrop-blur-md={isScrolled}
 	class:shadow-md={isScrolled}
@@ -685,7 +685,7 @@
 
 	<!-- Drawer -->
 	<div
-		class="fixed right-0 top-0 z-[70] h-full w-80 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
+		class="fixed top-0 right-0 z-[70] h-full w-80 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
 		in:fly={{ x: 320, duration: 300, easing: quintOut }}
 		out:fly={{ x: 320, duration: 250 }}
 	>
@@ -764,7 +764,7 @@
 <!-- Hero Section -->
 <section
 	id="inicio"
-	class="bg-linear-to-br relative overflow-hidden from-white via-gray-50 to-blue-100 px-6 pb-20 pt-32"
+	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-100 px-6 pt-32 pb-20"
 >
 	<div class="container mx-auto max-w-6xl">
 		<div class="grid items-center gap-12 lg:grid-cols-2">
@@ -772,10 +772,10 @@
 			<div class="relative z-10">
 				{#if heroVisible}
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<p class="mb-4 text-sm font-semibold uppercase tracking-wide text-blue-600">
+						<p class="mb-4 text-sm font-semibold tracking-wide text-blue-600 uppercase">
 							Capacitaciones y auditorías para un trabajo más seguro
 						</p>
-						<h1 class="mb-6 text-5xl font-bold leading-tight md:text-6xl lg:text-7xl">
+						<h1 class="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
 							<span class="text-gray-900">tu aliado</span><br />
 							<span class="text-gray-900">estratégico.</span>
@@ -810,7 +810,7 @@
 
 						<!-- Elementos decorativos flotantes -->
 						<div
-							class="absolute -right-6 -top-6 h-24 w-24 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
+							class="absolute -top-6 -right-6 h-24 w-24 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
 						></div>
 						<div
 							class="absolute -bottom-8 -left-8 h-32 w-32 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
@@ -826,23 +826,23 @@
 <!-- Services Section con Stats -->
 <section
 	id="services"
-	class="bg-linear-to-b relative overflow-hidden from-white via-gray-50 to-white px-6 py-20"
+	class="relative overflow-hidden bg-linear-to-b from-white via-gray-50 to-white px-6 py-20"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute right-10 top-20 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute top-20 right-10 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-20 left-10 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
-	<div class="container relative z-10 mx-auto max-w-6xl space-y-12">
+	<div class="relative z-10 container mx-auto max-w-6xl space-y-12">
 		{#if mounted}
 			<div in:fly={{ y: 30, duration: 600 }} class="text-center">
-				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">
+				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
 					Experiencia y compromiso
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					Nuestros <span class="text-blue-600">servicios</span>
 				</h2>
 				<div
-					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
+					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -856,18 +856,18 @@
 						>
 							<!-- Gradiente de fondo animado -->
 							<div
-								class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<!-- Borde brillante en hover -->
 							<div
-								class="bg-linear-to-r absolute inset-0 rounded-3xl from-blue-500/20 via-orange-500/20 to-blue-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-500/20 via-orange-500/20 to-blue-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
 							<div class="relative z-10">
 								<!-- Icono con fondo -->
 								<div
-									class="bg-linear-to-br mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+									class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 								>
 									<div class="text-3xl text-white">
 										{service.icon}
@@ -887,7 +887,7 @@
 								<!-- Botón mejorado -->
 								<a
 									href="/servicios/{service.slug}"
-									class="group/btn bg-linear-to-r relative inline-flex transform items-center gap-2 overflow-hidden rounded-full from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
+									class="group/btn relative inline-flex transform items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
 								>
 									<span class="relative z-10">Ver más</span>
 									<svg
@@ -905,14 +905,14 @@
 									</svg>
 									<!-- Efecto de brillo al hover -->
 									<div
-										class="bg-linear-to-r absolute inset-0 -translate-x-full from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
+										class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
 									></div>
 								</a>
 							</div>
 
 							<!-- Efecto de esquina decorativa -->
 							<div
-								class="bg-linear-to-br absolute right-0 top-0 h-32 w-32 rounded-bl-full from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 						</div>
 					{/if}
@@ -939,7 +939,7 @@
 							<!-- Partículas decorativas -->
 							{#if hasAnimated}
 								<div
-									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
+									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
 									in:scale={{ duration: 600, delay: 0 }}
 								></div>
 							{/if}
@@ -977,7 +977,7 @@
 
 							{#if hasAnimated}
 								<div
-									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
+									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
 									in:scale={{ duration: 600, delay: 200 }}
 								></div>
 							{/if}
@@ -1012,7 +1012,7 @@
 
 							{#if hasAnimated}
 								<div
-									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
+									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
 									in:scale={{ duration: 600, delay: 400 }}
 								></div>
 							{/if}
@@ -1047,7 +1047,7 @@
 
 							{#if hasAnimated}
 								<div
-									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
+									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
 									in:scale={{ duration: 600, delay: 600 }}
 								></div>
 							{/if}
@@ -1079,10 +1079,10 @@
 <!-- Characteristics Section -->
 <section
 	id="nosotros"
-	class="bg-linear-to-br relative overflow-hidden from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
@@ -1093,18 +1093,18 @@
 		></div>
 	</div>
 
-	<div class="container relative z-10 mx-auto max-w-6xl">
+	<div class="relative z-10 container mx-auto max-w-6xl">
 		{#if characteristicsVisible || mounted}
 			<!-- Encabezado mejorado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">
+				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
 					Nuestro compromiso
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					<span class="text-blue-600">Características</span> que nos definen
 				</h2>
 				<div
-					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
+					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -1115,12 +1115,12 @@
 				>
 					<!-- Gradiente de fondo animado -->
 					<div
-						class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Número decorativo grande -->
 					<div
-						class="absolute -left-6 -top-6 select-none text-[200px] font-bold leading-none text-blue-500/5"
+						class="absolute -top-6 -left-6 text-[200px] leading-none font-bold text-blue-500/5 select-none"
 					>
 						01
 					</div>
@@ -1128,7 +1128,7 @@
 					<div class="relative z-10">
 						<!-- Badge con número -->
 						<div
-							class="bg-linear-to-r mb-6 inline-flex items-center gap-3 rounded-full from-blue-500 to-blue-600 px-5 py-2 text-white shadow-lg"
+							class="mb-6 inline-flex items-center gap-3 rounded-full bg-linear-to-r from-blue-500 to-blue-600 px-5 py-2 text-white shadow-lg"
 						>
 							<span class="text-sm font-bold">01</span>
 							<div class="h-4 w-px bg-white/30"></div>
@@ -1170,7 +1170,7 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="bg-linear-to-br absolute right-0 top-0 h-40 w-40 rounded-bl-[100px] from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-40 w-40 rounded-bl-[100px] bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 			</div>
@@ -1195,7 +1195,7 @@
 	<!-- Gallery Section (sin stats) -->
 	<section
 		id="experience"
-		class="bg-linear-to-br relative overflow-hidden from-gray-900 via-gray-800 to-black px-6 py-24"
+		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-24"
 	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
@@ -1211,17 +1211,17 @@
 			style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"
 		></div>
 
-		<div class="container relative z-10 mx-auto max-w-7xl">
+		<div class="relative z-10 container mx-auto max-w-7xl">
 			<!-- Header -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-400">
+				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-400 uppercase">
 					Nuestra experiencia
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
 					Proyectos que <span class="text-blue-400">transforman</span>
 				</h2>
 				<div
-					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
+					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -1276,13 +1276,13 @@
 
 									<!-- Overlay gradient -->
 									<div
-										class="bg-linear-to-t absolute inset-0 from-black/80 via-black/20 to-transparent"
+										class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
 									></div>
 
 									<!-- Info (solo visible en card activa) -->
 									{#if i === currentIndex}
 										<div
-											class="absolute bottom-0 left-0 right-0 p-8 text-white"
+											class="absolute right-0 bottom-0 left-0 p-8 text-white"
 											in:fly={{ y: 20, duration: 600, delay: 300 }}
 										>
 											{#if image.description}
@@ -1308,7 +1308,7 @@
 				<!-- Navigation Arrows -->
 				<button
 					on:click={goToPrev}
-					class="absolute left-4 top-1/2 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
+					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
 					aria-label="Imagen anterior"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1323,7 +1323,7 @@
 
 				<button
 					on:click={goToNext}
-					class="absolute right-4 top-1/2 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
+					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
 					aria-label="Siguiente imagen"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1339,7 +1339,7 @@
 
 			<!-- Indicators -->
 			<div class="mt-12 flex items-center justify-center gap-3">
-				{#each images as _, i}
+				{#each images as image, i (image + i)}
 					<button
 						on:click={() => goToIndex(i)}
 						class="rounded-full transition-all duration-300 {i === currentIndex
@@ -1377,11 +1377,11 @@
 <!-- Contact Section -->
 <section
 	id="contacto"
-	class="bg-linear-to-br relative overflow-hidden from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute left-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
-	<div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
+	<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
 	<div class="absolute inset-0 opacity-[0.02]">
@@ -1391,11 +1391,11 @@
 		></div>
 	</div>
 
-	<div class="container relative z-10 mx-auto max-w-6xl">
+	<div class="relative z-10 container mx-auto max-w-6xl">
 		{#if mounted}
 			<!-- Encabezado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">Hablemos</p>
+				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">Hablemos</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					¿Listo para <span class="text-blue-600">transformar</span> tu empresa?
 				</h2>
@@ -1404,7 +1404,7 @@
 					nosotros.
 				</p>
 				<div
-					class="bg-linear-to-r mx-auto mt-6 h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
+					class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -1417,13 +1417,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="bg-linear-to-br absolute inset-0 from-green-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute inset-0 bg-linear-to-br from-green-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1449,7 +1449,7 @@
 								href="https://wa.me/573104853340?text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20sus%20servicios"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
+								class="inline-flex transform items-center justify-center gap-2 rounded-full bg-linear-to-r from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
 							>
 								<span>+57 310 485 3340</span>
 								<svg
@@ -1471,7 +1471,7 @@
 								href="https://wa.me/573112076203?text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20sus%20servicios"
 								target="_blank"
 								rel="noopener noreferrer"
-								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
+								class="inline-flex transform items-center justify-center gap-2 rounded-full bg-linear-to-r from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
 							>
 								<span>+57 311 207 6203</span>
 								<svg
@@ -1493,7 +1493,7 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 
@@ -1504,13 +1504,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1535,7 +1535,7 @@
 
 						<a
 							href="mailto:administracion@segispro.com?subject=Consulta%20sobre%20servicios&body=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre..."
-							class="bg-linear-to-r inline-flex transform items-center gap-2 rounded-full from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
+							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
 						>
 							<span>Enviar email</span>
 							<svg
@@ -1557,7 +1557,7 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 
@@ -1568,13 +1568,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="bg-linear-to-br absolute inset-0 from-orange-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute inset-0 bg-linear-to-br from-orange-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-orange-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1601,7 +1601,7 @@
 						<div class="mb-4 flex flex-col gap-3">
 							<a
 								href="tel:+573104853340"
-								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
+								class="inline-flex transform items-center justify-center gap-2 rounded-full bg-linear-to-r from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
 							>
 								<span>+57 310 485 3340</span>
 								<svg
@@ -1620,7 +1620,7 @@
 							</a>
 							<a
 								href="tel:+573112076203"
-								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
+								class="inline-flex transform items-center justify-center gap-2 rounded-full bg-linear-to-r from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
 							>
 								<span>+57 311 207 6203</span>
 								<svg
@@ -1642,7 +1642,7 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-orange-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-orange-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 			</div>
@@ -1656,11 +1656,11 @@
 				<!-- Preview estático (se muestra mientras carga el mapa) -->
 				{#if !mapLoaded}
 					<div
-						class="bg-linear-to-br relative flex h-96 w-full items-center justify-center from-gray-100 to-gray-200"
+						class="relative flex h-96 w-full items-center justify-center bg-linear-to-br from-gray-100 to-gray-200"
 					>
 						<div class="text-center">
 							<div
-								class="bg-linear-to-br mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl from-orange-500 to-orange-600 shadow-lg"
+								class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg"
 							>
 								<svg
 									class="h-8 w-8 text-white"
@@ -1708,7 +1708,7 @@
 							href="https://maps.app.goo.gl/vfxgQyrYaEJQdGP1A"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="absolute bottom-6 right-6 inline-flex transform items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 font-semibold text-gray-900 shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gray-50 hover:shadow-2xl active:scale-95"
+							class="absolute right-6 bottom-6 inline-flex transform items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 font-semibold text-gray-900 shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gray-50 hover:shadow-2xl active:scale-95"
 						>
 							<svg
 								class="h-5 w-5 text-orange-600"
@@ -1767,10 +1767,10 @@
 
 <!-- Footer -->
 <footer
-	class="bg-linear-to-br relative overflow-hidden from-gray-900 via-gray-800 to-gray-900 px-6 py-16 text-white"
+	class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 px-6 py-16 text-white"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
@@ -1781,7 +1781,7 @@
 		></div>
 	</div>
 
-	<div class="container relative z-10 mx-auto max-w-6xl">
+	<div class="relative z-10 container mx-auto max-w-6xl">
 		{#if mounted}
 			<div in:fade={{ duration: 600, delay: 200 }}>
 				<!-- Sección principal del footer -->
@@ -1944,7 +1944,7 @@
 									class="group flex items-start text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
-										class="mr-2 mt-0.5 h-4 w-4 flex-shrink-0"
+										class="mt-0.5 mr-2 h-4 w-4 flex-shrink-0"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -1978,11 +1978,11 @@
 							<input
 								type="email"
 								placeholder="Tu email"
-								class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+								class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
 							/>
 							<button
 								type="submit"
-								class="bg-linear-to-r w-full transform rounded-lg from-blue-600 to-blue-500 px-4 py-2.5 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 active:scale-95"
+								class="w-full transform rounded-lg bg-linear-to-r from-blue-600 to-blue-500 px-4 py-2.5 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 active:scale-95"
 							>
 								Suscribirse
 							</button>
@@ -2010,11 +2010,23 @@
 							class="group inline-flex transform items-center gap-2 rounded-lg bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-blue-600 hover:shadow-lg"
 						>
 							<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-								<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+								<path
+									d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+								/>
 							</svg>
 							<span>Agendar cita</span>
-							<svg class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+							<svg
+								class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 5l7 7-7 7"
+								/>
 							</svg>
 						</a>
 					</div>
@@ -2024,13 +2036,17 @@
 				<div class="border-t border-white/10 pt-8">
 					<div class="flex flex-col items-center justify-between gap-4 md:flex-row">
 						<p class="text-sm text-gray-400">
-							© {new Date().getFullYear()} <a
+							© {new Date().getFullYear()}
+							<a
 								href="https://www.segispro.co"
 								class="text-blue-400 transition-colors hover:text-blue-300">SEGISPRO</a
 							>. Todos los derechos reservados.
 						</p>
 						<div class="flex items-center gap-6">
-							<a href="/politicas-de-privacidad" class="text-sm text-gray-400 transition-colors hover:text-blue-400">
+							<a
+								href="/politicas-de-privacidad"
+								class="text-sm text-gray-400 transition-colors hover:text-blue-400"
+							>
 								Política de Privacidad
 							</a>
 						</div>
