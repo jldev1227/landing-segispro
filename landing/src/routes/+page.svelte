@@ -22,11 +22,105 @@
 	let servicesVisible = false;
 	let characteristicsVisible = false;
 
+	// Estados para los contadores
+	let hasAnimated = false;
+	let statsSection: HTMLElement;
+	let profesionales = 0;
+	let cubrimiento = 0;
+	let clientesNumber = 0;
+	let experiencia = 0;
+
+	// Configuración de las estadísticas
+	const statsConfig = {
+		profesionales: { target: 20, duration: 2000, suffix: '+' },
+		cubrimiento: { target: 15, duration: 2000, suffix: '+' },
+		clientes: { target: 125, duration: 2500, suffix: '+' },
+		experiencia: { target: 15, duration: 2000, suffix: '+' }
+	};
+
+	// Función para animar contador
+	function animateCounter(start, end, duration, callback) {
+		const startTime = performance.now();
+		const range = end - start;
+
+		function update(currentTime) {
+			const elapsed = currentTime - startTime;
+			const progress = Math.min(elapsed / duration, 1);
+
+			// Easing personalizado para efecto más natural
+			const easeProgress = 1 - Math.pow(1 - progress, 4);
+			const current = Math.floor(start + range * easeProgress);
+
+			callback(current);
+
+			if (progress < 1) {
+				requestAnimationFrame(update);
+			}
+		}
+
+		requestAnimationFrame(update);
+	}
+
+	// Iniciar animación
+	function startAnimation() {
+		// Reproducir sonido
+		const audio = new Audio('/sounds/counter-sound.mp3'); // Cambia este path por tu archivo
+		audio.volume = 0.8;
+		audio.currentTime = 0; // Reinicia el audio desde el inicio
+		audio.playbackRate = 1; // Velocidad normal
+		const playPromise = audio.play();
+		if (playPromise !== undefined) {
+			playPromise.catch((err) => console.log('Audio play prevented:', err));
+		}
+		// Detener el audio después de 200ms
+		setTimeout(() => {
+			audio.pause();
+			audio.currentTime = 0;
+		}, 2000);
+
+		// Animar contadores con delays escalonados
+		setTimeout(() => {
+			animateCounter(
+				0,
+				statsConfig.profesionales.target,
+				statsConfig.profesionales.duration,
+				(val) => (profesionales = val)
+			);
+		}, 0);
+
+		setTimeout(() => {
+			animateCounter(
+				0,
+				statsConfig.cubrimiento.target,
+				statsConfig.cubrimiento.duration,
+				(val) => (cubrimiento = val)
+			);
+		}, 200);
+
+		setTimeout(() => {
+			animateCounter(
+				0,
+				statsConfig.clientes.target,
+				statsConfig.clientes.duration,
+				(val) => (clientesNumber = val)
+			);
+		}, 400);
+
+		setTimeout(() => {
+			animateCounter(
+				0,
+				statsConfig.experiencia.target,
+				statsConfig.experiencia.duration,
+				(val) => (experiencia = val)
+			);
+		}, 600);
+	}
+
 	onMount(() => {
 		mounted = true;
 
-		// Observer para animaciones al hacer scroll
-		const observer = new IntersectionObserver(
+		// Observer general para animaciones al hacer scroll
+		const generalObserver = new IntersectionObserver(
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
@@ -42,17 +136,44 @@
 			{ threshold: 0.1 }
 		);
 
-		// Observar secciones
+		// Observer ESPECÍFICO para las estadísticas con threshold más alto
+		const statsObserver = new IntersectionObserver(
+			(entries) => {
+				entries.forEach((entry) => {
+					// Solo activar cuando la sección es realmente visible (50% o más)
+					if (entry.isIntersecting && !hasAnimated) {
+						hasAnimated = true;
+						startAnimation();
+					}
+				});
+			},
+			{
+				threshold: 0.3, // La sección debe estar al menos 30% visible (ajustado para mejor UX)
+				rootMargin: '0px' // Sin margen para mejor control
+			}
+		);
+
+		// Observar secciones con el observer general
 		const sections = document.querySelectorAll('section[id]');
-		sections.forEach((section) => observer.observe(section));
+		sections.forEach((section) => {
+			generalObserver.observe(section);
+		});
 
 		// Animación inicial del héroe
 		setTimeout(() => {
 			heroVisible = true;
 		}, 100);
 
+		// Observar sección de estadísticas con el observer específico
+		// IMPORTANTE: Usar setTimeout para asegurar que el elemento esté completamente montado
+		setTimeout(() => {
+			if (statsSection) {
+				statsObserver.observe(statsSection);
+			}
+		}, 100);
+
 		if (mapContainer) {
-			observer.observe(mapContainer);
+			generalObserver.observe(mapContainer);
 		}
 
 		// Auto-play interval
@@ -66,9 +187,10 @@
 		window.addEventListener('keydown', handleKeydown);
 
 		return () => {
-			observer.disconnect();
+			generalObserver.disconnect();
+			statsObserver.disconnect();
 			clearInterval(interval);
-			clearTimeout(autoPlayTimer);
+			if (autoPlayTimer) clearTimeout(autoPlayTimer);
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
@@ -114,52 +236,34 @@
 
 	const characteristics: Characteristic[] = [
 		{
-			icon: '✓',
-			title: 'Soluciones a la medida',
+			icon: '🎯',
+			title: 'Excelencia Operativa',
 			description:
-				'Diseñamos estrategias personalizadas que se adaptan específicamente a las necesidades de tu organización.'
+				'Expertos éticos, con trayectoria y resultados medibles. Cada servicio se ejecuta con planes claros, seguimiento riguroso e informes conformes que impulsan decisiones efectivas.'
 		},
 		{
 			icon: '⚡',
-			title: 'Soluciones prácticas',
+			title: 'Agilidad y Tecnología',
 			description:
-				'Implementamos acciones concretas y efectivas que generan resultados tangibles en el corto plazo.'
-		},
-		{
-			icon: '🎯',
-			title: 'Experiencia comprobada',
-			description:
-				'Más de 10 años respaldando empresas en el cumplimiento normativo y mejora continua.'
+				'Simplificamos procesos, optimizamos tiempos y conectamos equipos mediante herramientas digitales, automatización y plataformas modernas.'
 		},
 		{
 			icon: '💡',
-			title: 'Innovación constante',
+			title: 'Innovación Continua',
 			description:
-				'Utilizamos las últimas metodologías y tecnologías para optimizar tus procesos empresariales.'
+				'Nos actualizamos permanentemente para dinamizar sistemas de gestión, adaptándonos a normativas, tendencias y contextos cambiantes.'
 		},
 		{
-			icon: '🛡️',
-			title: 'Seguridad garantizada',
+			icon: '🌍',
+			title: 'Visión Global',
 			description:
-				'Protección total de la información y cumplimiento estricto de estándares internacionales.'
+				'Acción Local: Entendemos la diversidad del mercado y actuamos con flexibilidad estratégica en empresas públicas y privadas de múltiples sectores.'
 		},
 		{
-			icon: '🤝',
-			title: 'Compromiso total',
+			icon: '🔒',
+			title: 'Confidencialidad y Proyección',
 			description:
-				'Acompañamiento integral en cada etapa del proyecto hasta alcanzar tus objetivos.'
-		},
-		{
-			icon: '📈',
-			title: 'Resultados medibles',
-			description:
-				'KPIs claros y reportes detallados para evaluar el impacto de nuestras intervenciones.'
-		},
-		{
-			icon: '🌟',
-			title: 'Excelencia operativa',
-			description:
-				'Optimización de procesos para lograr la máxima eficiencia y calidad en tu operación.'
+				'Protegemos la información con protocolos éticos, proyectándola con claridad, impacto y propósito.'
 		}
 	];
 
@@ -328,7 +432,6 @@
 	}
 
 	// Datos estructurados JSON-LD para Google
-
 	const schemaData = {
 		'@context': 'https://schema.org',
 		'@type': 'ProfessionalService',
@@ -336,8 +439,8 @@
 		image: 'https://www.segispro.com/assets/logo.png',
 		'@id': 'https://www.segispro.com',
 		url: 'https://www.segispro.com',
-		telephone: '+573105031316',
-		email: 'gerencia@segispro.com',
+		telephone: '+573104853340',
+		email: 'administracion@segispro.com',
 		address: {
 			'@type': 'PostalAddress',
 			streetAddress: 'Yopal',
@@ -447,145 +550,195 @@
 <svelte:window bind:scrollY />
 
 <!-- Header/Navbar -->
+<!-- Header/Navbar -->
 <header
-	class="fixed top-0 right-0 left-0 z-50 transition-all duration-500"
+	class="fixed left-0 right-0 top-0 z-50 transition-all duration-300"
 	class:bg-white={isScrolled}
-	class:backdrop-blur-lg={isScrolled}
-	class:shadow-lg={isScrolled}
-	class:py-4={!isScrolled}
-	class:py-2={isScrolled}
+	class:backdrop-blur-md={isScrolled}
+	class:shadow-md={isScrolled}
 >
 	{#if mounted}
-		<nav class="container mx-auto px-6" in:fly={{ y: -20, duration: 800, easing: quintOut }}>
+		<nav
+			class="container mx-auto px-4 py-4 sm:px-6"
+			in:fly={{ y: -20, duration: 600, easing: quintOut }}
+		>
 			<div class="flex items-center justify-between">
-				<!-- Logo con efecto hover -->
-				<a href="#inicio" class="group flex items-center space-x-2">
-					<div class="relative overflow-hidden rounded-lg">
-						<img
-							src="/assets/logo.png"
-							alt="SEGISPRO Logo"
-							class="h-8 w-32 transition-transform duration-500 group-hover:scale-110"
-						/>
-						<!-- Brillo animado al hover -->
-						<div
-							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-						></div>
-					</div>
+				<!-- Logo -->
+				<a href="#inicio" class="group flex items-center">
+					<img
+						src="/assets/logo.png"
+						alt="SEGISPRO Logo"
+						class="h-8 w-32 transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-36"
+					/>
 				</a>
 
 				<!-- Desktop Menu -->
-				<div class="hidden items-center space-x-1 rounded-full bg-gray-100/50 px-2 py-2 md:flex">
-					{#each navItems as item, i}
+				<div class="hidden items-center gap-8 lg:flex">
+					{#each navItems as item}
 						<a
 							href="#{item.id}"
-							class="group relative rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-300"
-							class:text-white={activeSection === item.id}
-							class:text-gray-600={activeSection !== item.id}
+							class="text-sm font-medium transition-colors duration-200"
+							class:text-blue-600={activeSection === item.id}
+							class:text-gray-700={activeSection !== item.id}
+							class:hover:text-blue-600={activeSection !== item.id}
 							on:click={() => (activeSection = item.id)}
-							in:fly={{ x: -20, duration: 600, delay: i * 100, easing: quintOut }}
-						>
-							<!-- Background activo con animación -->
-							{#if activeSection === item.id}
-								<span
-									class="absolute inset-0 rounded-full bg-linear-to-r from-blue-600 to-blue-500 shadow-lg"
-									in:fly={{ duration: 400 }}
-								></span>
-							{/if}
-
-							<!-- Texto -->
-							<span
-								class="relative z-10 inline-block transition-transform duration-300 group-hover:scale-105"
-							>
-								{item.label}
-							</span>
-
-							<!-- Indicador hover para items inactivos -->
-							{#if activeSection !== item.id}
-								<span
-									class="absolute inset-0 scale-0 rounded-full bg-gray-200/50 transition-transform duration-300 group-hover:scale-100"
-								></span>
-							{/if}
-						</a>
-					{/each}
-				</div>
-
-				<!-- CTA Button -->
-				<a
-					href="#contacto"
-					class="group relative hidden overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-2.5 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl md:block"
-					in:fly={{ x: 20, duration: 600, delay: 400, easing: quintOut }}
-				>
-					<span class="relative z-10">Contáctanos</span>
-					<!-- Efecto de onda al hover -->
-					<span
-						class="absolute inset-0 translate-y-full bg-linear-to-r from-blue-500 to-orange-600 transition-transform duration-300 group-hover:translate-y-0"
-					></span>
-				</a>
-
-				<!-- Mobile Menu Button -->
-				<button
-					class="relative flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-gray-100 md:hidden"
-					on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
-					aria-label="Toggle menu"
-				>
-					<div class="flex h-5 w-6 flex-col justify-between">
-						<span
-							class="h-0.5 w-full rounded-full bg-gray-800 transition-all duration-300"
-							class:rotate-45={mobileMenuOpen}
-							class:translate-y-2={mobileMenuOpen}
-						></span>
-						<span
-							class="h-0.5 w-full rounded-full bg-gray-800 transition-all duration-300"
-							class:opacity-0={mobileMenuOpen}
-						></span>
-						<span
-							class="h-0.5 w-full rounded-full bg-gray-800 transition-all duration-300"
-							class:-rotate-45={mobileMenuOpen}
-							class:-translate-y-2={mobileMenuOpen}
-						></span>
-					</div>
-				</button>
-			</div>
-		</nav>
-
-		<!-- Mobile Menu -->
-		{#if mobileMenuOpen}
-			<div
-				class="border-t bg-white md:hidden"
-				in:fly={{ y: -20, duration: 400, easing: quintOut }}
-				out:fly={{ y: -20, duration: 300 }}
-			>
-				<div class="container mx-auto space-y-2 px-6 py-6">
-					{#each navItems as item, i}
-						<a
-							href="#{item.id}"
-							class="block rounded-xl px-6 py-3 font-medium text-gray-600 transition-all duration-300 hover:bg-blue-50 hover:text-blue-600"
-							on:click={() => {
-								activeSection = item.id;
-								mobileMenuOpen = false;
-							}}
-							in:fly={{ x: -20, duration: 400, delay: i * 50 }}
 						>
 							{item.label}
 						</a>
 					{/each}
+				</div>
+
+				<!-- Desktop CTA Buttons -->
+				<div class="hidden items-center gap-3 lg:flex">
+					<a
+						href="/capacitacion"
+						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
+					>
+						Capacitación
+					</a>
+					<a
+						href="#validar-certificado"
+						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
+					>
+						Validar
+					</a>
 					<a
 						href="#contacto"
-						class="w-full rounded-xl bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl"
-						in:fly={{ x: -20, duration: 400, delay: navItems.length * 50 }}
+						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700"
 					>
-						Contáctanos
+						Contacto
 					</a>
 				</div>
+
+				<!-- Mobile Menu Button -->
+				<button
+					class="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-100 lg:hidden"
+					on:click={() => (mobileMenuOpen = !mobileMenuOpen)}
+					aria-label="Toggle menu"
+				>
+					<svg
+						class="h-6 w-6 text-gray-700 transition-transform duration-300"
+						class:rotate-90={mobileMenuOpen}
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						{#if mobileMenuOpen}
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M6 18L18 6M6 6l12 12"
+							/>
+						{:else}
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M4 6h16M4 12h16M4 18h16"
+							/>
+						{/if}
+					</svg>
+				</button>
 			</div>
-		{/if}
+		</nav>
 	{/if}
 </header>
+
+<!-- Mobile Menu Drawer (fuera del header para z-index correcto) -->
+{#if mounted && mobileMenuOpen}
+	<!-- Overlay -->
+	<div
+		class="fixed inset-0 z-[60] bg-black/50 lg:hidden"
+		on:click={() => (mobileMenuOpen = false)}
+		in:fade={{ duration: 200 }}
+		out:fade={{ duration: 200 }}
+		role="button"
+		tabindex="-1"
+	></div>
+
+	<!-- Drawer -->
+	<div
+		class="fixed right-0 top-0 z-[70] h-full w-80 overflow-hidden bg-gradient-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
+		in:fly={{ x: 320, duration: 300, easing: quintOut }}
+		out:fly={{ x: 320, duration: 250 }}
+	>
+		<!-- Header -->
+		<div class="flex items-center justify-between border-b border-gray-700 px-6 py-4">
+			<span class="text-lg font-semibold text-white">Menú</span>
+			<button
+				on:click={() => (mobileMenuOpen = false)}
+				class="flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-700"
+			>
+				<svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M6 18L18 6M6 6l12 12"
+					/>
+				</svg>
+			</button>
+		</div>
+
+		<!-- Content -->
+		<div class="overflow-y-auto p-6" style="height: calc(100% - 65px);">
+			<!-- Navigation -->
+			<nav class="space-y-1">
+				{#each navItems as item, i}
+					<a
+						href="#{item.id}"
+						class="block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-200"
+						class:bg-blue-600={activeSection === item.id}
+						class:text-white={activeSection === item.id}
+						class:text-gray-300={activeSection !== item.id}
+						class:hover:bg-gray-700={activeSection !== item.id}
+						on:click={() => {
+							activeSection = item.id;
+							mobileMenuOpen = false;
+						}}
+						in:fly={{ x: 50, duration: 200, delay: i * 50 }}
+					>
+						{item.label}
+					</a>
+				{/each}
+			</nav>
+
+			<!-- Divider -->
+			<div class="my-6 border-t border-gray-700"></div>
+
+			<!-- Action Buttons -->
+			<div class="space-y-2">
+				<a
+					href="/capacitacion"
+					class="block rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
+					on:click={() => (mobileMenuOpen = false)}
+				>
+					📚 Capacitación
+				</a>
+				<a
+					href="#validar-certificado"
+					class="block rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-700"
+					on:click={() => (mobileMenuOpen = false)}
+				>
+					✓ Validar Certificado
+				</a>
+				<a
+					href="#contacto"
+					class="block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700"
+					on:click={() => (mobileMenuOpen = false)}
+				>
+					Contáctanos
+				</a>
+			</div>
+		</div>
+	</div>
+{/if}
 
 <!-- Hero Section -->
 <section
 	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-100 px-6 pt-32 pb-20"
+	class="bg-linear-to-br relative overflow-hidden from-white via-gray-50 to-blue-100 px-6 pb-20 pt-32"
 >
 	<div class="container mx-auto max-w-6xl">
 		<div class="grid items-center gap-12 lg:grid-cols-2">
@@ -593,10 +746,10 @@
 			<div class="relative z-10">
 				{#if heroVisible}
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<p class="mb-4 text-sm font-semibold tracking-wide text-blue-600 uppercase">
+						<p class="mb-4 text-sm font-semibold uppercase tracking-wide text-blue-600">
 							Capacitaciones y auditorías para un trabajo más seguro
 						</p>
-						<h1 class="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl">
+						<h1 class="mb-6 text-5xl font-bold leading-tight md:text-6xl lg:text-7xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
 							<span class="text-gray-900">tu aliado</span><br />
 							<span class="text-gray-900">estratégico.</span>
@@ -631,7 +784,7 @@
 
 						<!-- Elementos decorativos flotantes -->
 						<div
-							class="absolute -top-6 -right-6 h-24 w-24 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
+							class="absolute -right-6 -top-6 h-24 w-24 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
 						></div>
 						<div
 							class="absolute -bottom-8 -left-8 h-32 w-32 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
@@ -644,110 +797,265 @@
 	</div>
 </section>
 
-<!-- Services Section -->
+<!-- Services Section con Stats -->
 <section
 	id="services"
-	class="relative overflow-hidden bg-linear-to-b from-white via-gray-50 to-white px-6 py-20"
+	class="bg-linear-to-b relative overflow-hidden from-white via-gray-50 to-white px-6 py-20"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute top-20 right-10 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute right-10 top-20 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-20 left-10 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
-	<div class="relative z-10 container mx-auto max-w-6xl">
+	<div class="container relative z-10 mx-auto max-w-6xl space-y-12">
 		{#if mounted}
-			<div in:fly={{ y: 30, duration: 600 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
+			<div in:fly={{ y: 30, duration: 600 }} class="text-center">
+				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">
 					Experiencia y compromiso
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					Nuestros <span class="text-blue-600">servicios</span>
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
 				></div>
 			</div>
-		{/if}
 
-		<div class="grid gap-8 md:grid-cols-2">
-			{#each services as service, i}
-				{#if servicesVisible || mounted}
-					<div
-						in:scale={{ duration: 600, delay: i * 150, start: 0.8, easing: quintOut }}
-						class="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
-					>
-						<!-- Gradiente de fondo animado -->
+			<!-- Grid de servicios -->
+			<div class="grid gap-8 md:grid-cols-2">
+				{#each services as service, i}
+					{#if servicesVisible || mounted}
 						<div
-							class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-						></div>
-
-						<!-- Borde brillante en hover -->
-						<div
-							class="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-500/20 via-orange-500/20 to-blue-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
-						></div>
-
-						<div class="relative z-10">
-							<!-- Icono con fondo -->
+							in:scale={{ duration: 600, delay: i * 150, start: 0.8, easing: quintOut }}
+							class="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+						>
+							<!-- Gradiente de fondo animado -->
 							<div
-								class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
-							>
-								<div class="text-3xl text-white">
-									{service.icon}
+								class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+							></div>
+
+							<!-- Borde brillante en hover -->
+							<div
+								class="bg-linear-to-r absolute inset-0 rounded-3xl from-blue-500/20 via-orange-500/20 to-blue-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
+							></div>
+
+							<div class="relative z-10">
+								<!-- Icono con fondo -->
+								<div
+									class="bg-linear-to-br mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+								>
+									<div class="text-3xl text-white">
+										{service.icon}
+									</div>
 								</div>
+
+								<h3
+									class="mb-4 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600"
+								>
+									{service.title}
+								</h3>
+
+								<p class="mb-6 leading-relaxed text-gray-600">
+									{service.description}
+								</p>
+
+								<!-- Botón mejorado -->
+								<button
+									class="group/btn bg-linear-to-r relative inline-flex transform items-center gap-2 overflow-hidden rounded-full from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
+								>
+									<span class="relative z-10">Ver más</span>
+									<svg
+										class="relative z-10 h-4 w-4 transform transition-transform duration-300 group-hover/btn:translate-x-1"
+										fill="none"
+										stroke="currentColor"
+										viewBox="0 0 24 24"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											stroke-width="2"
+											d="M9 5l7 7-7 7"
+										/>
+									</svg>
+									<!-- Efecto de brillo al hover -->
+									<div
+										class="bg-linear-to-r absolute inset-0 -translate-x-full from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
+									></div>
+								</button>
 							</div>
 
-							<h3
-								class="mb-4 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600"
-							>
-								{service.title}
-							</h3>
-
-							<p class="mb-6 leading-relaxed text-gray-600">
-								{service.description}
-							</p>
-
-							<!-- Botón mejorado -->
-							<button
-								class="group/btn relative inline-flex transform items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
-							>
-								<span class="relative z-10">Ver más</span>
-								<svg
-									class="relative z-10 h-4 w-4 transform transition-transform duration-300 group-hover/btn:translate-x-1"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M9 5l7 7-7 7"
-									/>
-								</svg>
-								<!-- Efecto de brillo al hover -->
-								<div
-									class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
-								></div>
-							</button>
+							<!-- Efecto de esquina decorativa -->
+							<div
+								class="bg-linear-to-br absolute right-0 top-0 h-32 w-32 rounded-bl-full from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+							></div>
 						</div>
+					{/if}
+				{/each}
+			</div>
 
-						<!-- Efecto de esquina decorativa -->
+			<!-- Stats Section integrada -->
+			<div bind:this={statsSection}>
+				<div class="mb-12 text-center">
+					<h3 class="text-2xl font-bold text-gray-900 md:text-3xl">Deja que los números hablen</h3>
+				</div>
+
+				<div class="mb-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+					<!-- Profesionales -->
+					<div class="group relative">
 						<div
-							class="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-						></div>
+							class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
+						>
+							<!-- Efecto de brillo animado -->
+							<div
+								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+							></div>
+
+							<!-- Partículas decorativas -->
+							{#if hasAnimated}
+								<div
+									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
+									in:scale={{ duration: 600, delay: 0 }}
+								></div>
+							{/if}
+
+							<div class="relative z-10 text-center">
+								<!-- Número -->
+								<div class="mb-3 flex items-center justify-center">
+									<span
+										class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+									>
+										{profesionales}{statsConfig.profesionales.suffix}
+									</span>
+								</div>
+
+								<!-- Línea decorativa -->
+								<div
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"
+								></div>
+
+								<!-- Descripción -->
+								<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
+								<p class="text-sm text-gray-600">especializados</p>
+							</div>
+						</div>
 					</div>
-				{/if}
-			{/each}
-		</div>
+
+					<!-- Cubrimiento -->
+					<div class="group relative">
+						<div
+							class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
+						>
+							<div
+								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+							></div>
+
+							{#if hasAnimated}
+								<div
+									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
+									in:scale={{ duration: 600, delay: 200 }}
+								></div>
+							{/if}
+
+							<div class="relative z-10 text-center">
+								<div class="mb-3 flex items-center justify-center">
+									<span
+										class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+									>
+										{cubrimiento}{statsConfig.cubrimiento.suffix}
+									</span>
+								</div>
+
+								<div
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
+								></div>
+
+								<h4 class="text-base font-semibold text-gray-900">Cubrimiento</h4>
+								<p class="text-sm text-gray-600">normativo</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Clientes -->
+					<div class="group relative">
+						<div
+							class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
+						>
+							<div
+								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+							></div>
+
+							{#if hasAnimated}
+								<div
+									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
+									in:scale={{ duration: 600, delay: 400 }}
+								></div>
+							{/if}
+
+							<div class="relative z-10 text-center">
+								<div class="mb-3 flex items-center justify-center">
+									<span
+										class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+									>
+										{clientesNumber}{statsConfig.clientes.suffix}
+									</span>
+								</div>
+
+								<div
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
+								></div>
+
+								<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
+								<p class="text-sm text-gray-600">satisfechos</p>
+							</div>
+						</div>
+					</div>
+
+					<!-- Años de experiencia -->
+					<div class="group relative">
+						<div
+							class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
+						>
+							<div
+								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+							></div>
+
+							{#if hasAnimated}
+								<div
+									class="absolute right-4 top-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
+									in:scale={{ duration: 600, delay: 600 }}
+								></div>
+							{/if}
+
+							<div class="relative z-10 text-center">
+								<div class="mb-3 flex items-center justify-center">
+									<span
+										class="bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+									>
+										{experiencia}{statsConfig.experiencia.suffix}
+									</span>
+								</div>
+
+								<div
+									class="mx-auto mb-3 h-1 w-12 rounded-full bg-gradient-to-r from-orange-500 to-amber-500"
+								></div>
+
+								<h4 class="text-base font-semibold text-gray-900">Años de</h4>
+								<p class="text-sm text-gray-600">experiencia</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/if}
 	</div>
 </section>
 
 <!-- Characteristics Section -->
 <section
 	id="nosotros"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="bg-linear-to-br relative overflow-hidden from-gray-50 via-white to-blue-50 px-6 py-24"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
@@ -758,18 +1066,18 @@
 		></div>
 	</div>
 
-	<div class="relative z-10 container mx-auto max-w-6xl">
+	<div class="container relative z-10 mx-auto max-w-6xl">
 		{#if characteristicsVisible || mounted}
 			<!-- Encabezado mejorado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
+				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">
 					Nuestro compromiso
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					<span class="text-blue-600">Características</span> que nos definen
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -780,12 +1088,12 @@
 				>
 					<!-- Gradiente de fondo animado -->
 					<div
-						class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Número decorativo grande -->
 					<div
-						class="absolute -top-6 -left-6 text-[200px] leading-none font-bold text-blue-500/5 select-none"
+						class="absolute -left-6 -top-6 select-none text-[200px] font-bold leading-none text-blue-500/5"
 					>
 						01
 					</div>
@@ -793,7 +1101,7 @@
 					<div class="relative z-10">
 						<!-- Badge con número -->
 						<div
-							class="mb-6 inline-flex items-center gap-3 rounded-full bg-linear-to-r from-blue-500 to-blue-600 px-5 py-2 text-white shadow-lg"
+							class="bg-linear-to-r mb-6 inline-flex items-center gap-3 rounded-full from-blue-500 to-blue-600 px-5 py-2 text-white shadow-lg"
 						>
 							<span class="text-sm font-bold">01</span>
 							<div class="h-4 w-px bg-white/30"></div>
@@ -807,9 +1115,9 @@
 						</h3>
 
 						<p class="max-w-3xl text-lg leading-relaxed text-gray-600">
-							Nos dedicamos a guiar las entidades en su búsqueda de mejora continua, ofreciendo
-							soluciones innovadoras, eficientes y sostenibles para impulsar su crecimiento y éxito
-							a largo plazo.
+							Acompañamos a las organizaciones en su búsqueda de mejora continua, optimizando sus
+							procesos con agilidad, con la confianza se garantiza la protección de su información y
+							avanzan con innovación y sostenibilidad para lograr objetivos.
 						</p>
 
 						<!-- Iconos decorativos -->
@@ -820,18 +1128,22 @@
 							</div>
 							<div class="flex items-center gap-2 text-sm text-gray-500">
 								<div class="h-2 w-2 rounded-full bg-orange-500"></div>
-								<span>Eficiencia</span>
+								<span>Sostenibilidad</span>
 							</div>
 							<div class="flex items-center gap-2 text-sm text-gray-500">
 								<div class="h-2 w-2 rounded-full bg-green-500"></div>
-								<span>Sostenibilidad</span>
+								<span>Agilidad</span>
+							</div>
+							<div class="flex items-center gap-2 text-sm text-gray-500">
+								<div class="h-2 w-2 rounded-full bg-purple-500"></div>
+								<span>Confidencialidad</span>
 							</div>
 						</div>
 					</div>
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-40 w-40 rounded-bl-[100px] bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-br absolute right-0 top-0 h-40 w-40 rounded-bl-[100px] from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 			</div>
@@ -853,10 +1165,10 @@
 </section>
 
 {#if mounted}
-	<!-- Gallery Section -->
+	<!-- Gallery Section (sin stats) -->
 	<section
 		id="experience"
-		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-24"
+		class="bg-linear-to-br relative overflow-hidden from-gray-900 via-gray-800 to-black px-6 py-24"
 	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
@@ -866,23 +1178,23 @@
 			></div>
 		</div>
 
-		<!-- Glow effect desde la imagen actual -->
+		<!-- Glow effect -->
 		<div
 			class="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"
 			style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"
 		></div>
 
-		<div class="relative z-10 container mx-auto max-w-7xl">
+		<div class="container relative z-10 mx-auto max-w-7xl">
 			<!-- Header -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-400 uppercase">
+				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-400">
 					Nuestra experiencia
 				</p>
 				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
 					Proyectos que <span class="text-blue-400">transforman</span>
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="bg-linear-to-r mx-auto h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -937,18 +1249,15 @@
 
 									<!-- Overlay gradient -->
 									<div
-										class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent"
+										class="bg-linear-to-t absolute inset-0 from-black/80 via-black/20 to-transparent"
 									></div>
 
 									<!-- Info (solo visible en card activa) -->
 									{#if i === currentIndex}
 										<div
-											class="absolute right-0 bottom-0 left-0 p-8 text-white"
+											class="absolute bottom-0 left-0 right-0 p-8 text-white"
 											in:fly={{ y: 20, duration: 600, delay: 300 }}
 										>
-											<!-- <h3 class="mb-3 text-3xl font-bold md:text-4xl">
-												{image.title}
-											</h3> -->
 											{#if image.description}
 												<p class="text-lg text-gray-300">
 													{image.description}
@@ -972,7 +1281,7 @@
 				<!-- Navigation Arrows -->
 				<button
 					on:click={goToPrev}
-					class="absolute top-1/2 left-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
+					class="absolute left-4 top-1/2 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:left-8"
 					aria-label="Imagen anterior"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -987,7 +1296,7 @@
 
 				<button
 					on:click={goToNext}
-					class="absolute top-1/2 right-4 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
+					class="absolute right-4 top-1/2 z-50 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white/20 md:right-8"
 					aria-label="Siguiente imagen"
 				>
 					<svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1041,11 +1350,11 @@
 <!-- Contact Section -->
 <section
 	id="contacto"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="bg-linear-to-br relative overflow-hidden from-gray-50 via-white to-blue-50 px-6 py-24"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
-	<div class="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
+	<div class="absolute left-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
 	<div class="absolute inset-0 opacity-[0.02]">
@@ -1055,11 +1364,11 @@
 		></div>
 	</div>
 
-	<div class="relative z-10 container mx-auto max-w-6xl">
+	<div class="container relative z-10 mx-auto max-w-6xl">
 		{#if mounted}
 			<!-- Encabezado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">Hablemos</p>
+				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">Hablemos</p>
 				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
 					¿Listo para <span class="text-blue-600">transformar</span> tu empresa?
 				</h2>
@@ -1068,7 +1377,7 @@
 					nosotros.
 				</p>
 				<div
-					class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="bg-linear-to-r mx-auto mt-6 h-1.5 w-24 rounded-full from-blue-600 to-orange-600"
 				></div>
 			</div>
 
@@ -1081,13 +1390,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="absolute inset-0 bg-linear-to-br from-green-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-br absolute inset-0 from-green-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1106,33 +1415,58 @@
 						<p class="mb-6 text-sm leading-relaxed text-gray-600">
 							Chatea con nosotros en tiempo real y obtén respuestas inmediatas
 						</p>
-						<a
-							href="https://wa.me/573105031316?text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20sus%20servicios"
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-green-600 to-green-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
-						>
-							<span>Chatear ahora</span>
-							<svg
-								class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
+
+						<!-- Botones de WhatsApp -->
+						<div class="mb-4 flex flex-col gap-3">
+							<a
+								href="https://wa.me/573104853340?text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20sus%20servicios"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5l7 7-7 7"
-								/>
-							</svg>
-						</a>
-						<p class="mt-4 text-xs text-gray-500">+57 310 503 1316</p>
+								<span>+57 310 485 3340</span>
+								<svg
+									class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</a>
+
+							<a
+								href="https://wa.me/573112076203?text=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre%20sus%20servicios"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-green-600 to-green-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-green-700 hover:to-green-600 hover:shadow-xl active:scale-95"
+							>
+								<span>+57 311 207 6203</span>
+								<svg
+									class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</a>
+						</div>
 					</div>
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 
@@ -1143,13 +1477,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-br absolute inset-0 from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1171,9 +1505,10 @@
 						<p class="mb-6 text-sm leading-relaxed text-gray-600">
 							Envíanos un correo detallado y te responderemos a la brevedad
 						</p>
+
 						<a
-							href="mailto:gerencia@segispro.com?subject=Consulta%20sobre%20servicios&body=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre..."
-							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
+							href="mailto:administracion@segispro.com?subject=Consulta%20sobre%20servicios&body=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre..."
+							class="bg-linear-to-r inline-flex transform items-center gap-2 rounded-full from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
 						>
 							<span>Enviar email</span>
 							<svg
@@ -1190,12 +1525,12 @@
 								/>
 							</svg>
 						</a>
-						<p class="mt-4 text-xs text-gray-500">gerencia@segispro.com</p>
+						<p class="mt-4 text-xs text-gray-500">administracion@segispro.com</p>
 					</div>
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 
@@ -1206,13 +1541,13 @@
 				>
 					<!-- Gradiente animado -->
 					<div
-						class="absolute inset-0 bg-linear-to-br from-orange-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-br absolute inset-0 from-orange-50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
 					<!-- Icono -->
 					<div class="relative z-10 mb-6">
 						<div
-							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="bg-linear-to-br mx-auto flex h-16 w-16 items-center justify-center rounded-2xl from-orange-500 to-orange-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
 						>
 							<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 								<path
@@ -1234,31 +1569,53 @@
 						<p class="mb-6 text-sm leading-relaxed text-gray-600">
 							Llámanos directamente y habla con nuestro equipo
 						</p>
-						<a
-							href="tel:+573105031316"
-							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-orange-600 to-orange-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
-						>
-							<span>Llamar ahora</span>
-							<svg
-								class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
+
+						<!-- Botones de llamada -->
+						<div class="mb-4 flex flex-col gap-3">
+							<a
+								href="tel:+573104853340"
+								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
 							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5l7 7-7 7"
-								/>
-							</svg>
-						</a>
-						<p class="mt-4 text-xs text-gray-500">+57 310 503 1316</p>
+								<span>+57 310 485 3340</span>
+								<svg
+									class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</a>
+							<a
+								href="tel:+573112076203"
+								class="bg-linear-to-r inline-flex transform items-center justify-center gap-2 rounded-full from-orange-600 to-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-orange-700 hover:to-orange-600 hover:shadow-xl active:scale-95"
+							>
+								<span>+57 311 207 6203</span>
+								<svg
+									class="h-4 w-4 transform transition-transform duration-300 group-hover:translate-x-1"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</a>
+						</div>
 					</div>
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-orange-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="bg-linear-to-bl absolute right-0 top-0 h-32 w-32 rounded-bl-[100px] from-orange-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 			</div>
@@ -1272,11 +1629,11 @@
 				<!-- Preview estático (se muestra mientras carga el mapa) -->
 				{#if !mapLoaded}
 					<div
-						class="relative flex h-96 w-full items-center justify-center bg-linear-to-br from-gray-100 to-gray-200"
+						class="bg-linear-to-br relative flex h-96 w-full items-center justify-center from-gray-100 to-gray-200"
 					>
 						<div class="text-center">
 							<div
-								class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-orange-500 to-orange-600 shadow-lg"
+								class="bg-linear-to-br mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl from-orange-500 to-orange-600 shadow-lg"
 							>
 								<svg
 									class="h-8 w-8 text-white"
@@ -1324,7 +1681,7 @@
 							href="https://maps.app.goo.gl/vfxgQyrYaEJQdGP1A"
 							target="_blank"
 							rel="noopener noreferrer"
-							class="absolute right-6 bottom-6 inline-flex transform items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 font-semibold text-gray-900 shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gray-50 hover:shadow-2xl active:scale-95"
+							class="absolute bottom-6 right-6 inline-flex transform items-center gap-2 rounded-full border border-gray-200 bg-white px-6 py-3 font-semibold text-gray-900 shadow-xl transition-all duration-300 hover:scale-105 hover:bg-gray-50 hover:shadow-2xl active:scale-95"
 						>
 							<svg
 								class="h-5 w-5 text-orange-600"
@@ -1371,7 +1728,9 @@
 								d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 							/>
 						</svg>
-						<span class="text-sm font-medium text-gray-700"> Lun - Vie: 8:00 AM - 6:00 PM </span>
+						<span class="text-sm font-medium text-gray-700">
+							Lun - Vie: 8:00 AM - 6:00 PM<br />Sáb: 8:00 AM - 12:00 PM
+						</span>
 					</div>
 				</div>
 			</div>
@@ -1381,10 +1740,10 @@
 
 <!-- Footer -->
 <footer
-	class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 px-6 py-16 text-white"
+	class="bg-linear-to-br relative overflow-hidden from-gray-900 via-gray-800 to-gray-900 px-6 py-16 text-white"
 >
 	<!-- Elementos decorativos de fondo -->
-	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
+	<div class="absolute right-0 top-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
 	<div class="absolute bottom-0 left-0 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
 
 	<!-- Patrón de fondo sutil -->
@@ -1395,7 +1754,7 @@
 		></div>
 	</div>
 
-	<div class="relative z-10 container mx-auto max-w-6xl">
+	<div class="container relative z-10 mx-auto max-w-6xl">
 		{#if mounted}
 			<div in:fade={{ duration: 600, delay: 200 }}>
 				<!-- Sección principal del footer -->
@@ -1528,12 +1887,12 @@
 											d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 										/>
 									</svg>
-									gerencia@segispro.com
+									administracion@segispro.com
 								</a>
 							</li>
 							<li>
 								<a
-									href="tel:+57"
+									href="tel:+573104853340"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
@@ -1549,7 +1908,7 @@
 											d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
 										/>
 									</svg>
-									+57 310 5031316
+									+57 310 485 3340
 								</a>
 							</li>
 							<li>
@@ -1558,7 +1917,7 @@
 									class="group flex items-start text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
-										class="mt-0.5 mr-2 h-4 w-4 flex-shrink-0"
+										class="mr-2 mt-0.5 h-4 w-4 flex-shrink-0"
 										fill="none"
 										stroke="currentColor"
 										viewBox="0 0 24 24"
@@ -1576,7 +1935,7 @@
 											d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
 										/>
 									</svg>
-									Yopal, Casanare<br />Colombia
+									Calle 27 # 27-75<br />Yopal, Casanare, Colombia
 								</a>
 							</li>
 						</ul>
@@ -1592,11 +1951,11 @@
 							<input
 								type="email"
 								placeholder="Tu email"
-								class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
+								class="w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2.5 text-white placeholder-gray-400 transition-all duration-300 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
 							/>
 							<button
 								type="submit"
-								class="w-full transform rounded-lg bg-linear-to-r from-blue-600 to-blue-500 px-4 py-2.5 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 active:scale-95"
+								class="bg-linear-to-r w-full transform rounded-lg from-blue-600 to-blue-500 px-4 py-2.5 font-semibold text-white transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 active:scale-95"
 							>
 								Suscribirse
 							</button>
