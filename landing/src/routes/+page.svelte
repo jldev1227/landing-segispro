@@ -17,10 +17,6 @@
 	let cvUploading = false;
 	let cvUploadSuccess = false;
 	let cvUploadError = '';
-	let nombreCompleto = '';
-	let emailContacto = '';
-	let telefonoContacto = '';
-	let cargoInteres = '';
 
 	$: isScrolled = scrollY > 50;
 
@@ -475,10 +471,6 @@
 		cvUploading = false;
 		cvUploadSuccess = false;
 		cvUploadError = '';
-		nombreCompleto = '';
-		emailContacto = '';
-		telefonoContacto = '';
-		cargoInteres = '';
 		document.body.style.overflow = '';
 	}
 
@@ -510,8 +502,8 @@
 	}
 
 	async function submitCV() {
-		if (!cvFile || !nombreCompleto || !emailContacto || !telefonoContacto) {
-			cvUploadError = 'Por favor completa todos los campos obligatorios';
+		if (!cvFile) {
+			cvUploadError = 'Por favor selecciona un archivo PDF';
 			return;
 		}
 
@@ -1016,7 +1008,7 @@
 						>
 							<!-- Efecto de brillo animado -->
 							<div
-								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
 							></div>
 
 							<!-- Partículas decorativas -->
@@ -1031,7 +1023,7 @@
 								<!-- Número -->
 								<div class="mb-3 flex items-center justify-center">
 									<span
-										class="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+										class="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 									>
 										{profesionales}{statsConfig.profesionales.suffix}
 									</span>
@@ -1055,7 +1047,7 @@
 							class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
 						>
 							<div
-								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
 							></div>
 
 							{#if hasAnimated}
@@ -1068,7 +1060,7 @@
 							<div class="relative z-10 text-center">
 								<div class="mb-3 flex items-center justify-center">
 									<span
-										class="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+										class="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 									>
 										{cubrimiento}{statsConfig.cubrimiento.suffix}
 									</span>
@@ -1090,7 +1082,7 @@
 							class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
 						>
 							<div
-								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
 							></div>
 
 							{#if hasAnimated}
@@ -1103,7 +1095,7 @@
 							<div class="relative z-10 text-center">
 								<div class="mb-3 flex items-center justify-center">
 									<span
-										class="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+										class="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 									>
 										{clientesNumber}{statsConfig.clientes.suffix}
 									</span>
@@ -1125,7 +1117,7 @@
 							class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
 						>
 							<div
-								class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
 							></div>
 
 							{#if hasAnimated}
@@ -1138,7 +1130,7 @@
 							<div class="relative z-10 text-center">
 								<div class="mb-3 flex items-center justify-center">
 									<span
-										class="bg-gradient-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+										class="bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 									>
 										{experiencia}{statsConfig.experiencia.suffix}
 									</span>
@@ -1531,7 +1523,7 @@
 				<!-- CTA Button -->
 				<button
 					on:click={openCvModal}
-					class="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl bg-white px-8 py-4 text-lg font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl"
+					class="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl bg-white px-8 py-4 text-lg font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
 				>
 					<span class="relative z-10">Enviar mi Hoja de Vida</span>
 					<svg
@@ -2256,273 +2248,121 @@
 	</div>
 </footer>
 
-<!-- Modal de Hoja de Vida -->
+<!-- Modal de Hoja de Vida - Glassmorphism Style -->
 {#if cvModalOpen}
 	<div
-		class="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+		class="fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-4 backdrop-blur-2xl"
 		on:click={closeCvModal}
 		on:keydown={(e) => e.key === 'Escape' && closeCvModal()}
 		role="button"
 		tabindex="0"
-		transition:fade={{ duration: 200 }}
+		transition:fade={{ duration: 300 }}
 	>
 		<div
-			class="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl"
+			class="modal-glass-container relative w-full max-w-md rounded-3xl border border-black/70 bg-white p-8 shadow-2xl backdrop-blur-xl"
 			on:click|stopPropagation
 			on:keydown|stopPropagation
 			role="dialog"
 			aria-modal="true"
 			aria-labelledby="modal-title"
 			tabindex="-1"
-			transition:scale={{ duration: 300, start: 0.9 }}
 		>
-			<!-- Header -->
-			<div class="sticky top-0 z-10 bg-linear-to-r from-blue-600 to-blue-700 px-6 py-5">
-				<div class="flex items-center justify-between">
-					<div class="flex items-center gap-3">
-						<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20">
-							<span class="text-2xl">📄</span>
-						</div>
-						<h3 id="modal-title" class="text-xl font-bold text-white">Enviar Hoja de Vida</h3>
+			<!-- Header Minimalista -->
+			<div class="mb-8 flex items-center justify-between">
+				<h3 id="modal-title" class="text-2xl font-bold text-black">
+					Adjunta tu Hoja de Vida
+				</h3>
+				<button
+					on:click={closeCvModal}
+					class="rounded-full bg-white/10 p-2 text-black transition-all hover:rotate-90 hover:bg-white/20"
+					aria-label="Cerrar modal"
+				>
+					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					</svg>
+				</button>
+			</div>
+
+			{#if !cvUploadSuccess}
+				<!-- Zona de Upload -->
+				<div class="mb-6">
+					<label
+						for="cv-upload"
+						class={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 transition-all ${
+							cvFile
+								? 'border-blue-400 bg-blue-500/10'
+								: 'border-black/30 bg-white/5 hover:border-black/50 hover:bg-white/10'
+						}`}
+					>
+						<input
+							id="cv-upload"
+							type="file"
+							accept=".pdf"
+							on:change={handleFileSelect}
+							class="hidden"
+						/>
+						
+						{#if cvFile}
+							<!-- Archivo Seleccionado -->
+							<svg class="mb-4 h-16 w-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+							</svg>
+							<p class="text-lg font-semibold text-black" title={cvFileName}>
+								{cvFileName.length > 30 ? `${cvFileName.substring(0, 30)}...` : cvFileName}
+							</p>
+							<p class="mt-2 text-sm text-black/70">Archivo listo para enviar</p>
+						{:else}
+							<!-- Estado Vacío -->
+							<svg class="mb-4 h-16 w-16 text-black/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+							</svg>
+							<p class="text-lg font-semibold text-black">Arrastra tu archivo aquí</p>
+							<p class="mt-2 text-sm text-black/70">o haz clic para seleccionar</p>
+							<p class="mt-4 text-xs text-black/50">Solo archivos PDF - Máx. 5MB</p>
+						{/if}
+					</label>
+
+					{#if cvUploadError}
+						<p class="mt-3 text-center text-sm text-red-400">{cvUploadError}</p>
+					{/if}
+				</div>
+
+				<!-- Botón de Envío -->
+				<button
+					on:click={submitCV}
+					disabled={!cvFile || cvUploading}
+					class="w-full rounded-xl bg-linear-to-r from-blue-500 to-blue-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
+				>
+					{#if cvUploading}
+						<span class="flex items-center justify-center gap-2">
+							<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
+								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+							</svg>
+							Enviando...
+						</span>
+					{:else}
+						Enviar
+					{/if}
+				</button>
+			{:else}
+				<!-- Estado de Éxito -->
+				<div class="flex flex-col items-center justify-center py-8 text-center">
+					<div class="mb-6 rounded-full bg-green-500/20 p-4">
+						<svg class="h-16 w-16 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+						</svg>
 					</div>
+					<h4 class="mb-2 text-2xl font-bold text-white">¡CV Recibido!</h4>
+					<p class="mb-6 text-white/70">Nos pondremos en contacto contigo pronto.</p>
 					<button
 						on:click={closeCvModal}
-						class="flex h-8 w-8 items-center justify-center rounded-lg text-white transition-colors hover:bg-white/20"
-						aria-label="Cerrar modal"
+						class="rounded-xl bg-white/10 px-8 py-3 font-semibold text-white transition-all hover:bg-white/20"
 					>
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M6 18L18 6M6 6l12 12"
-							/>
-						</svg>
+						Cerrar
 					</button>
 				</div>
-			</div>
-
-			<!-- Body -->
-			<div class="p-6">
-				{#if cvUploadSuccess}
-					<!-- Success Message -->
-					<div class="py-12 text-center">
-						<div
-							class="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100"
-						>
-							<svg
-								class="h-10 w-10 text-green-600"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M5 13l4 4L19 7"
-								/>
-							</svg>
-						</div>
-						<h4 class="mb-2 text-2xl font-bold text-gray-900">¡Hoja de vida recibida!</h4>
-						<p class="text-gray-600">
-							Gracias por tu interés. Revisaremos tu perfil y nos pondremos en contacto contigo
-							pronto.
-						</p>
-					</div>
-				{:else}
-					<!-- Form -->
-					<form on:submit|preventDefault={submitCV} class="space-y-6">
-						<!-- Nombre Completo -->
-						<div>
-							<label for="nombreCompleto" class="mb-2 block text-sm font-semibold text-gray-700">
-								Nombre Completo <span class="text-red-500">*</span>
-							</label>
-							<input
-								type="text"
-								id="nombreCompleto"
-								bind:value={nombreCompleto}
-								required
-								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-								placeholder="Ej: Juan Pérez González"
-							/>
-						</div>
-
-						<!-- Email -->
-						<div>
-							<label for="emailContacto" class="mb-2 block text-sm font-semibold text-gray-700">
-								Email <span class="text-red-500">*</span>
-							</label>
-							<input
-								type="email"
-								id="emailContacto"
-								bind:value={emailContacto}
-								required
-								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-								placeholder="tucorreo@ejemplo.com"
-							/>
-						</div>
-
-						<!-- Teléfono -->
-						<div>
-							<label for="telefonoContacto" class="mb-2 block text-sm font-semibold text-gray-700">
-								Teléfono <span class="text-red-500">*</span>
-							</label>
-							<input
-								type="tel"
-								id="telefonoContacto"
-								bind:value={telefonoContacto}
-								required
-								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-								placeholder="Ej: +57 300 123 4567"
-							/>
-						</div>
-
-						<!-- Cargo de Interés -->
-						<div>
-							<label for="cargoInteres" class="mb-2 block text-sm font-semibold text-gray-700">
-								Cargo de Interés
-							</label>
-							<input
-								type="text"
-								id="cargoInteres"
-								bind:value={cargoInteres}
-								class="w-full rounded-lg border border-gray-300 px-4 py-3 transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none"
-								placeholder="Ej: Auditor SST, Consultor HSEQ, etc."
-							/>
-						</div>
-
-						<!-- File Upload -->
-						<div>
-							<label class="mb-2 block text-sm font-semibold text-gray-700">
-								Hoja de Vida (PDF) <span class="text-red-500">*</span>
-							</label>
-							<div class="relative">
-								<input
-									type="file"
-									id="cvFile"
-									accept=".pdf"
-									on:change={handleFileSelect}
-									required
-									class="hidden"
-								/>
-								<label
-									for="cvFile"
-									class="flex cursor-pointer items-center justify-center gap-3 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-8 transition-all hover:border-blue-500 hover:bg-blue-50"
-								>
-									<svg
-										class="h-8 w-8 text-gray-400"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-										/>
-									</svg>
-									<div class="text-center">
-										<p class="text-sm font-medium text-gray-700">
-											{cvFileName || 'Haz clic para seleccionar tu CV'}
-										</p>
-										<p class="mt-1 text-xs text-gray-500">Solo archivos PDF (máx. 5MB)</p>
-									</div>
-								</label>
-							</div>
-							{#if cvFileName}
-								<div
-									class="mt-2 flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-sm text-blue-700"
-								>
-									<svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-										<path
-											fill-rule="evenodd"
-											d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z"
-											clip-rule="evenodd"
-										/>
-									</svg>
-									<span class="flex-1">{cvFileName}</span>
-									<button
-										type="button"
-										on:click={() => {
-											cvFile = null;
-											cvFileName = '';
-										}}
-										class="text-blue-600 hover:text-blue-800"
-									>
-										<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M6 18L18 6M6 6l12 12"
-											/>
-										</svg>
-									</button>
-								</div>
-							{/if}
-						</div>
-
-						<!-- Error Message -->
-						{#if cvUploadError}
-							<div
-								class="flex items-start gap-2 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700"
-								transition:fly={{ y: -10, duration: 200 }}
-							>
-								<svg class="mt-0.5 h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-									<path
-										fill-rule="evenodd"
-										d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-								<span>{cvUploadError}</span>
-							</div>
-						{/if}
-
-						<!-- Submit Button -->
-						<div class="flex gap-3 pt-4">
-							<button
-								type="button"
-								on:click={closeCvModal}
-								class="flex-1 rounded-lg border-2 border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-all hover:bg-gray-50"
-								disabled={cvUploading}
-							>
-								Cancelar
-							</button>
-							<button
-								type="submit"
-								disabled={cvUploading || !cvFile}
-								class="flex-1 rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-all hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-							>
-								{#if cvUploading}
-									<span class="flex items-center justify-center gap-2">
-										<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-											<circle
-												class="opacity-25"
-												cx="12"
-												cy="12"
-												r="10"
-												stroke="currentColor"
-												stroke-width="4"
-											/>
-											<path
-												class="opacity-75"
-												fill="currentColor"
-												d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-											/>
-										</svg>
-										Enviando...
-									</span>
-								{:else}
-									Enviar Hoja de Vida
-								{/if}
-							</button>
-						</div>
-					</form>
-				{/if}
-			</div>
+			{/if}
 		</div>
 	</div>
 {/if}
@@ -2531,6 +2371,31 @@
 	/* ===== GLOBAL STYLES ===== */
 	:global(html) {
 		scroll-behavior: smooth;
+	}
+
+	/* ===== MODAL GLASSMORPHISM ANIMATIONS ===== */
+	.modal-glass-container {
+		animation: modalGlassDance 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	}
+
+	@keyframes modalGlassDance {
+		0% {
+			opacity: 0;
+			transform: perspective(1000px) rotateX(-15deg) rotateY(10deg) scale(0.8) translateZ(-50px);
+		}
+		25% {
+			transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.05) translateZ(20px);
+		}
+		50% {
+			transform: perspective(1000px) rotateX(-3deg) rotateY(3deg) scale(0.98) translateZ(0px);
+		}
+		75% {
+			transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.02) translateZ(10px);
+		}
+		100% {
+			opacity: 1;
+			transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px);
+		}
 	}
 
 	/* GPU acceleration hints */
