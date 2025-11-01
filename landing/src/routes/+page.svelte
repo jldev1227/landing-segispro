@@ -617,10 +617,10 @@
 				<!-- Desktop CTA Buttons -->
 				<div class="hidden items-center gap-3 lg:flex">
 					<a
-						href="/capacitacion"
+						href="/capacitaciones"
 						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
 					>
-						Capacitación
+						Capacitaciones
 					</a>
 					<a
 						href="/validar-certificado"
@@ -736,14 +736,14 @@
 			<!-- Action Buttons -->
 			<div class="space-y-2">
 				<a
-					href="/capacitacion"
+					href="/capacitaciones"
 					class="block rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
 					on:click={() => (mobileMenuOpen = false)}
 				>
-					📚 Capacitación
+					📚 Capacitaciones
 				</a>
 				<a
-					href="#validar-certificado"
+					href="/validar-certificado"
 					class="block rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-700"
 					on:click={() => (mobileMenuOpen = false)}
 				>
