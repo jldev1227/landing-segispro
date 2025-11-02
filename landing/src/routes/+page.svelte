@@ -871,7 +871,10 @@
 
 		<!-- Carrusel de servicios directo -->
 		<div class="mt-2 sm:mt-3">
-			<ServicesCarousel visible={carouselVisible} />
+			<!-- Contenedor con max-width para limitar el ancho -->
+			<div class="mx-auto max-w-6xl">
+				<ServicesCarousel visible={carouselVisible} />
+			</div>
 		</div>
 
 		<!-- Stats Section Compactas -->
