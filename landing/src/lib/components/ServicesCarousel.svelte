@@ -18,11 +18,11 @@
 
 	export let visible = false;
 
-	// Datos de servicios - Todos en escala de azules
+	// Datos de servicios - Tonalidades del mismo azul
 	const serviceGroups: ServiceGroup[] = [
 		{
 			header: 'Consultoría & Asesoría',
-			headerColor: 'from-blue-600 to-blue-700',
+			headerColor: 'from-blue-700 to-blue-800',
 			emoji: '🎯',
 			accentColor: 'blue',
 			sections: [
@@ -45,9 +45,9 @@
 		},
 		{
 			header: 'Formación & Capacitación',
-			headerColor: 'from-sky-500 to-sky-600',
+			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🎓',
-			accentColor: 'sky',
+			accentColor: 'blue',
 			sections: [
 				{
 					title: 'CURSOS',
@@ -68,9 +68,9 @@
 		},
 		{
 			header: 'Estudios & Análisis',
-			headerColor: 'from-cyan-500 to-cyan-600',
+			headerColor: 'from-blue-500 to-blue-600',
 			emoji: '🔬',
-			accentColor: 'cyan',
+			accentColor: 'blue',
 			sections: [
 				{
 					title: 'AMBIENTE',
@@ -86,9 +86,9 @@
 		},
 		{
 			header: 'Innovación & Tecnología',
-			headerColor: 'from-indigo-500 to-indigo-600',
+			headerColor: 'from-blue-400 to-blue-500',
 			emoji: '🚀',
-			accentColor: 'indigo',
+			accentColor: 'blue',
 			sections: [
 				{
 					title: 'DIGITAL',
@@ -130,33 +130,6 @@
 
 	// Crear array extendido para scroll infinito
 	$: extendedGroups = [...serviceGroups, ...serviceGroups, ...serviceGroups];
-
-	// Función para el efecto 3D (igual que CarouselInfinito)
-	function handleMouseMove(event: MouseEvent, element: HTMLElement) {
-		if (isDragging) return;
-
-		const card = element.querySelector('.card-inner') as HTMLElement;
-		if (!card) return;
-
-		const rect = card.getBoundingClientRect();
-		const x = event.clientX - rect.left;
-		const y = event.clientY - rect.top;
-
-		const centerX = rect.width / 2;
-		const centerY = rect.height / 2;
-
-		const rotateX = ((y - centerY) / centerY) * 8;
-		const rotateY = ((centerX - x) / centerX) * 8;
-
-		card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
-	}
-
-	function handleMouseLeave(element: HTMLElement) {
-		const card = element.querySelector('.card-inner') as HTMLElement;
-		if (!card) return;
-
-		card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-	}
 
 	function getPositionX(event: MouseEvent | TouchEvent): number {
 		return 'touches' in event ? event.touches[0].clientX : event.clientX;
@@ -345,13 +318,11 @@
 			>
 				{#each extendedGroups as group, i}
 					<div 
-						class="card-3d-wrapper perspective-container shrink-0 px-4" 
+						class="card-wrapper shrink-0 px-4" 
 						style="width: {cardWidth}px;"
-						on:mousemove={(e) => handleMouseMove(e, e.currentTarget)}
-						on:mouseleave={(e) => handleMouseLeave(e.currentTarget)}
 						role="presentation"
 					>
-						<!-- Card 3D con glassmorphism - Más compacto -->
+						<!-- Card con glassmorphism - Más compacto -->
 						<div
 							class="card-inner group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:border-{group.accentColor}-500"
 						>
@@ -417,15 +388,6 @@
 											{#if section.items.length === 0}
 												<p class="text-xs italic text-gray-400">Próximamente</p>
 											{/if}
-
-											<!-- Indicador de número -->
-											<div
-												class="mt-2 border-t border-gray-200 pt-2 transition-colors duration-300 group-hover/box:border-{group.accentColor}-200"
-											>
-												<span class="text-xs font-semibold text-{group.accentColor}-500">
-													{String(sIndex + 1).padStart(2, '0')}
-												</span>
-											</div>
 										</div>
 									{/each}
 								</div>
@@ -471,8 +433,8 @@
 			</button>
 		</div>
 
-		<!-- Indicadores (igual que CarouselInfinito) -->
-		<div class="mt-8 space-y-2 text-center">
+		<!-- Indicadores -->
+		<div class="mt-6 text-center">
 			<!-- Dots -->
 			<div class="flex items-center justify-center gap-2">
 				{#each serviceGroups as group, i}
@@ -489,33 +451,11 @@
 					</button>
 				{/each}
 			</div>
-
-			<!-- Texto indicador -->
-			<p class="flex items-center justify-center gap-2 text-sm text-gray-500 italic">
-				<span class="text-lg">🎴</span>
-				Mueve el cursor sobre las tarjetas para ver el efecto 3D
-			</p>
-
-			<!-- Estado de auto-scroll -->
-			<div class="flex items-center justify-center gap-3 text-sm text-gray-400">
-				<div
-					class="h-2 w-2 rounded-full transition-colors duration-300"
-					class:bg-green-500={isAutoScrolling}
-					class:bg-gray-400={!isAutoScrolling}
-					class:animate-pulse={isAutoScrolling}
-				></div>
-				<span>
-					{isAutoScrolling
-						? 'Desplazamiento automático'
-						: 'Pausado - Arrastra o usa las flechas ← →'}
-				</span>
-			</div>
 		</div>
 	</div>
 {/if}
 
 <style>
-	/* Igual que CarouselInfinito */
 	.carousel-track {
 		transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		cursor: grab;
@@ -527,49 +467,6 @@
 		cursor: grabbing !important;
 	}
 
-	/* Contenedor con perspectiva */
-	.perspective-container {
-		perspective: 1000px;
-	}
-
-	/* Card 3D */
-	.card-inner {
-		transform-style: preserve-3d;
-		backface-visibility: hidden;
-		will-change: transform;
-		transition:
-			transform 0.1s ease-out,
-			box-shadow 0.3s ease;
-	}
-
-	/* Icono con profundidad */
-	.icon-3d {
-		transform: translateZ(20px);
-		transition: transform 0.3s ease;
-	}
-
-	.card-inner:hover .icon-3d {
-		transform: translateZ(30px);
-	}
-
-	/* Sombra dinámica */
-	.card-shadow {
-		transform: translateZ(-20px);
-	}
-
-	/* Elementos con profundidad */
-	.card-inner h3 {
-		transform: translateZ(15px);
-	}
-
-	.card-inner h4 {
-		transform: translateZ(15px);
-	}
-
-	.card-inner ul {
-		transform: translateZ(10px);
-	}
-
 	/* Line clamp */
 	.line-clamp-2 {
 		display: -webkit-box;
@@ -577,31 +474,6 @@
 		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
-	}
-
-	/* Animación de respiración */
-	@keyframes breathe {
-		0%,
-		100% {
-			box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
-		}
-		50% {
-			box-shadow: 0 20px 60px rgba(59, 130, 246, 0.25);
-		}
-	}
-
-	.card-inner:hover {
-		animation: breathe 2s ease-in-out infinite;
-	}
-
-	/* Brillo suave */
-	.shine-layer {
-		opacity: 0;
-		transition: opacity 0.3s ease;
-	}
-
-	.card-inner:hover .shine-layer {
-		opacity: 1;
 	}
 
 	/* Mejora del scroll en móviles */

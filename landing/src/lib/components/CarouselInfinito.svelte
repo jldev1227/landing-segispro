@@ -368,7 +368,7 @@
 		</div>
 
 		<!-- Indicadores -->
-		<div class="mt-8 space-y-2 text-center">
+		<div class="mt-6 text-center">
 			<!-- Dots -->
 			<div class="flex items-center justify-center gap-2">
 				{#each characteristics as characteristic, i (characteristic.title + i)}
@@ -382,27 +382,6 @@
 						aria-label={`Ir a característica ${i + 1}`}
 					></button>
 				{/each}
-			</div>
-
-			<!-- Texto indicador -->
-			<p class="flex items-center justify-center gap-2 text-sm text-gray-500 italic">
-				<span class="text-lg">🎴</span>
-				Mueve el cursor sobre las tarjetas para ver el efecto 3D
-			</p>
-
-			<!-- Estado de auto-scroll -->
-			<div class="flex items-center justify-center gap-3 text-sm text-gray-400">
-				<div
-					class="h-2 w-2 rounded-full transition-colors duration-300"
-					class:bg-green-500={isAutoScrolling}
-					class:bg-gray-400={!isAutoScrolling}
-					class:animate-pulse={isAutoScrolling}
-				></div>
-				<span>
-					{isAutoScrolling
-						? 'Desplazamiento automático'
-						: 'Pausado - Arrastra o usa las flechas ← →'}
-				</span>
 			</div>
 		</div>
 	</div>
