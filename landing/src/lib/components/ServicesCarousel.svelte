@@ -214,18 +214,7 @@
 						}}
 					>
 						<!-- Card actual -->
-						<div
-							class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12"
-							style="will-change: transform;"
-						>
-							<!-- Patrón de fondo mejorado -->
-							<div class="absolute inset-0 opacity-10">
-								<div
-									class="absolute inset-0"
-									style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 30px 30px;"
-								></div>
-							</div>
-
+						<div class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12">
 							<!-- Elementos decorativos sutiles -->
 							<div
 								class="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
@@ -443,14 +432,6 @@
 						class="overflow-hidden rounded-2xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-3.5 shadow-2xl sm:p-5"
 						in:fly={{ y: 20, duration: 400, delay: groupIndex * 150 }}
 					>
-						<!-- Patrón de fondo -->
-						<div class="absolute inset-0 opacity-10">
-							<div
-								class="absolute inset-0"
-								style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 30px 30px;"
-							></div>
-						</div>
-
 						<!-- Header del servicio compacto -->
 						<div class="relative z-10 mb-4 sm:mb-5">
 							<div class="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">

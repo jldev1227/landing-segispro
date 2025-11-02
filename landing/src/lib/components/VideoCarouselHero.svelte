@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { scale } from 'svelte/transition';
+	import { scale, fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 
 	export let visible = false;
 
@@ -29,51 +30,22 @@
 	];
 
 	let currentIndex = 0;
-	let carouselTrack: HTMLElement;
-	let currentTranslate = 0;
-	let prevTranslate = 0;
-	let animationID: number | undefined;
+	let previousIndex = 0;
+	let isTransitioning = false;
 	let autoScrollInterval: ReturnType<typeof setInterval>;
 
-	const AUTO_SCROLL_INTERVAL = 3000; // 3 segundos
-
-	// Crear array extendido para scroll infinito
-	$: extendedMedia = [...mediaItems, ...mediaItems, ...mediaItems];
-
-	function setSliderPosition() {
-		if (!carouselTrack) return;
-		carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
-	}
+	const AUTO_SCROLL_INTERVAL = 4000; // 4 segundos para mejor visualización
 
 	function goToNext() {
-		currentIndex++;
+		if (isTransitioning) return;
 
-		if (currentIndex >= extendedMedia.length - mediaItems.length) {
-			currentIndex = mediaItems.length;
-			currentTranslate = -currentIndex * 100;
-			prevTranslate = currentTranslate;
-			setSliderPosition();
+		isTransitioning = true;
+		previousIndex = currentIndex;
+		currentIndex = (currentIndex + 1) % mediaItems.length;
 
-			setTimeout(() => {
-				currentIndex++;
-				updatePosition();
-			}, 50);
-		} else {
-			updatePosition();
-		}
-
-		resetAutoScroll();
-	}
-
-	function updatePosition() {
-		currentTranslate = -currentIndex * 100;
-		prevTranslate = currentTranslate;
-		setSliderPosition();
-	}
-
-	function resetAutoScroll() {
-		// No se pausa - siempre activo
-		return;
+		setTimeout(() => {
+			isTransitioning = false;
+		}, 800); // Duración de la transición
 	}
 
 	function startAutoScroll() {
@@ -83,66 +55,110 @@
 	}
 
 	onMount(() => {
-		currentIndex = mediaItems.length;
-		updatePosition();
 		startAutoScroll();
 
 		return () => {
 			clearInterval(autoScrollInterval);
-			if (animationID !== undefined) {
-				cancelAnimationFrame(animationID);
-			}
 		};
 	});
 </script>
 
 {#if visible}
 	<div class="relative w-full" in:scale={{ duration: 1000, delay: 400, start: 0.8 }}>
-		<!-- Contenedor del carousel -->
-		<div class="video-carousel-container relative overflow-hidden rounded-2xl h-52 xl:h-64">
-			<!-- Gradiente de fondo similar al banner -->
+		<!-- Contenedor del carousel con perspectiva 3D -->
+		<div
+			class="carousel-container relative h-52 overflow-hidden rounded-2xl xl:h-64"
+			style="perspective: 1500px;"
+		>
+			<!-- Gradiente de fondo -->
 			<div
 				class="absolute inset-0 bg-linear-to-br from-blue-600/10 via-blue-500/5 to-orange-500/10"
 			></div>
 
-			<!-- Track del carousel -->
-			<div
-				bind:this={carouselTrack}
-				class="carousel-track flex h-full"
-				role="region"
-				aria-label="Carousel de medios"
-			>
-				{#each extendedMedia as media, i}
-					<div class="media-slide shrink-0 h-full" style="width: 100%;">
-						<div class="relative h-full w-full">
-							{#if media.type === 'video'}
-								<!-- Video -->
-								<video
-									autoplay
-									muted
-									loop
-									playsinline
-									preload="auto"
-									class="h-full w-full object-cover"
-								>
-									<source src={media.src} type="video/mp4" />
-								</video>
-							{:else}
-								<!-- Imagen -->
-								<img
-									src={media.src}
-									alt="Slide de SEGISPRO"
-									class="h-full w-full object-cover"
-									loading="lazy"
-								/>
-							{/if}
+			<!-- Stack de cartas/banners -->
+			<div class="relative h-full w-full">
+				{#each mediaItems as media, i (i)}
+					{#if i === currentIndex}
+						<!-- Carta actual entrando -->
+						<div
+							class="card-slide absolute inset-0"
+							in:fly={{
+								x: 300,
+								y: -50,
+								duration: 700,
+								easing: quintOut,
+								opacity: 0
+							}}
+							style="transform-origin: center center;"
+						>
+							<div class="relative h-full w-full">
+								{#if media.type === 'video'}
+									<video
+										autoplay
+										muted
+										loop
+										playsinline
+										preload="auto"
+										class="h-full w-full rounded-2xl object-cover"
+									>
+										<source src={media.src} type="video/mp4" />
+									</video>
+								{:else}
+									<img
+										src={media.src}
+										alt="Slide de SEGISPRO"
+										class="h-full w-full rounded-2xl object-cover"
+										loading="eager"
+									/>
+								{/if}
 
-							<!-- Overlay gradient sutil -->
-							<div
-								class="pointer-events-none absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent"
-							></div>
+								<!-- Overlay gradient sutil -->
+								<div
+									class="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-black/20 via-transparent to-transparent"
+								></div>
+							</div>
 						</div>
-					</div>
+					{:else if i === previousIndex && isTransitioning}
+						<!-- Carta anterior saliendo -->
+						<div
+							class="card-slide absolute inset-0"
+							out:fly={{
+								x: -300,
+								y: 50,
+								duration: 700,
+								easing: quintOut,
+								opacity: 0
+							}}
+							style="transform-origin: center center;"
+						>
+							<div class="relative h-full w-full">
+								{#if media.type === 'video'}
+									<video
+										autoplay
+										muted
+										loop
+										playsinline
+										preload="auto"
+										class="h-full w-full rounded-2xl object-cover"
+									>
+										<source src={media.src} type="video/mp4" />
+									</video>
+								{:else}
+									<img
+										src={media.src}
+										alt="Slide de SEGISPRO"
+										class="h-full w-full rounded-2xl object-cover"
+										loading="eager"
+									/>
+								{/if}
+
+								<!-- Overlay gradient sutil -->
+								<div
+									class="pointer-events-none absolute inset-0 rounded-2xl bg-linear-to-t from-black/20 via-transparent to-transparent"
+								></div>
+							</div>
+						</div>
+					{/if}
 				{/each}
 			</div>
 
@@ -150,9 +166,31 @@
 			<div class="border-glow pointer-events-none absolute inset-0 rounded-2xl"></div>
 		</div>
 
+		<!-- Indicadores de slide -->
+		<div class="mt-4 flex items-center justify-center gap-2">
+			{#each mediaItems as _, i}
+				<button
+					on:click={() => {
+						if (!isTransitioning && i !== currentIndex) {
+							isTransitioning = true;
+							previousIndex = currentIndex;
+							currentIndex = i;
+							setTimeout(() => {
+								isTransitioning = false;
+							}, 800);
+						}
+					}}
+					class="h-2 rounded-full transition-all duration-300 {i === currentIndex
+						? 'w-8 bg-blue-500'
+						: 'w-2 bg-gray-300 hover:bg-gray-400'}"
+					aria-label={`Ir al slide ${i + 1}`}
+				></button>
+			{/each}
+		</div>
+
 		<!-- Elementos decorativos flotantes -->
 		<div
-			class="absolute -right-4 -top-4 h-12 w-12 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
+			class="absolute -top-4 -right-4 h-12 w-12 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
 		></div>
 		<div
 			class="absolute -bottom-4 -left-4 h-16 w-16 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
@@ -162,14 +200,15 @@
 {/if}
 
 <style>
-	.carousel-track {
-		transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-		user-select: none;
-		-webkit-user-select: none;
+	.carousel-container {
+		transform-style: preserve-3d;
 	}
 
-	.media-slide {
-		flex-shrink: 0;
+	.card-slide {
+		backface-visibility: hidden;
+		-webkit-backface-visibility: hidden;
+		transform-style: preserve-3d;
+		will-change: transform, opacity;
 	}
 
 	/* Borde brillante animado */
@@ -185,6 +224,7 @@
 		animation: glow-slide 3s ease-in-out infinite;
 		opacity: 0.6;
 		border-radius: 1rem;
+		pointer-events: none;
 	}
 
 	@keyframes glow-slide {
@@ -197,10 +237,43 @@
 		}
 	}
 
-	/* Mejora del scroll en móviles */
+	/* Asegurar que las imágenes/videos ocupen el full size */
+	.card-slide img,
+	.card-slide video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	/* Mejora del rendimiento en dispositivos móviles */
 	@media (hover: none) {
-		.carousel-track {
-			cursor: default;
+		.card-slide {
+			-webkit-transform: translateZ(0);
+			transform: translateZ(0);
+		}
+	}
+
+	/* Animación personalizada para efecto blackjack */
+	@keyframes card-deal {
+		0% {
+			transform: translateX(100%) translateY(-30%) rotateY(25deg) rotateZ(5deg);
+			opacity: 0;
+		}
+		100% {
+			transform: translateX(0) translateY(0) rotateY(0) rotateZ(0);
+			opacity: 1;
+		}
+	}
+
+	@keyframes card-discard {
+		0% {
+			transform: translateX(0) translateY(0) rotateY(0) rotateZ(0);
+			opacity: 1;
+		}
+		100% {
+			transform: translateX(-100%) translateY(30%) rotateY(-25deg) rotateZ(-5deg);
+			opacity: 0;
 		}
 	}
 </style>
