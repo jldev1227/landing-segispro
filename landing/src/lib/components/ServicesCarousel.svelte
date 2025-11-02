@@ -18,11 +18,11 @@
 
 	export let visible = false;
 
-	// Datos de servicios
+	// Datos de servicios - Todos en escala de azules
 	const serviceGroups: ServiceGroup[] = [
 		{
 			header: 'Consultoría & Asesoría',
-			headerColor: 'from-blue-500 to-blue-700',
+			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🎯',
 			accentColor: 'blue',
 			sections: [
@@ -45,9 +45,9 @@
 		},
 		{
 			header: 'Formación & Capacitación',
-			headerColor: 'from-purple-500 to-purple-700',
+			headerColor: 'from-sky-500 to-sky-600',
 			emoji: '🎓',
-			accentColor: 'purple',
+			accentColor: 'sky',
 			sections: [
 				{
 					title: 'CURSOS',
@@ -68,9 +68,9 @@
 		},
 		{
 			header: 'Estudios & Análisis',
-			headerColor: 'from-emerald-500 to-emerald-700',
+			headerColor: 'from-cyan-500 to-cyan-600',
 			emoji: '🔬',
-			accentColor: 'emerald',
+			accentColor: 'cyan',
 			sections: [
 				{
 					title: 'AMBIENTE',
@@ -86,9 +86,9 @@
 		},
 		{
 			header: 'Innovación & Tecnología',
-			headerColor: 'from-orange-500 to-orange-700',
+			headerColor: 'from-indigo-500 to-indigo-600',
 			emoji: '🚀',
-			accentColor: 'orange',
+			accentColor: 'indigo',
 			sections: [
 				{
 					title: 'DIGITAL',
@@ -319,10 +319,10 @@
 </script>
 
 {#if visible}
-	<div class="relative py-8" in:fly={{ y: 30, duration: 600 }}>
+	<div class="relative py-4" in:fly={{ y: 30, duration: 600 }}>
 		<!-- Contenedor con mask CSS (igual que CarouselInfinito) -->
 		<div
-			class="carousel-container relative overflow-hidden py-8"
+			class="carousel-container relative overflow-hidden py-4"
 			style="
 				-webkit-mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
 				mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
@@ -351,41 +351,41 @@
 						on:mouseleave={(e) => handleMouseLeave(e.currentTarget)}
 						role="presentation"
 					>
-						<!-- Card 3D con glassmorphism -->
+						<!-- Card 3D con glassmorphism - Más compacto -->
 						<div
-							class="card-inner group relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:border-{group.accentColor}-500"
+							class="card-inner group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:border-{group.accentColor}-500"
 						>
 							<!-- Gradiente de profundidad (igual que CarouselInfinito) -->
 							<div
-								class="absolute inset-0 rounded-2xl bg-linear-to-br from-{group.accentColor}-500/5 via-transparent to-{group.accentColor}-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+								class="absolute inset-0 rounded-xl bg-linear-to-br from-{group.accentColor}-500/5 via-transparent to-{group.accentColor}-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 							></div>
 
-							<!-- Header con emoji e icono -->
-							<div class="relative z-10 bg-linear-to-r px-6 py-6 {group.headerColor}">
+							<!-- Header con emoji e icono - Más compacto -->
+							<div class="relative z-10 bg-linear-to-r px-4 py-4 {group.headerColor}">
 								<!-- Emoji grande de fondo -->
-								<div class="absolute right-6 top-1/2 -translate-y-1/2 text-7xl opacity-20 transition-all duration-700 group-hover:scale-110 group-hover:opacity-30">
+								<div class="absolute right-4 top-1/2 -translate-y-1/2 text-5xl opacity-20 transition-all duration-700 group-hover:scale-110 group-hover:opacity-30">
 									{group.emoji}
 								</div>
 								
-								<h3 class="relative text-2xl font-bold text-white flex items-center gap-3">
-									<span class="text-3xl">{group.emoji}</span>
+								<h3 class="relative text-lg font-bold text-white flex items-center gap-2">
+									<span class="text-2xl">{group.emoji}</span>
 									{group.header}
 								</h3>
 							</div>
 
-							<!-- Contenido -->
-							<div class="relative z-10 p-6">
-								<div class="grid gap-6 {group.sections.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}">
+							<!-- Contenido - Más compacto -->
+							<div class="relative z-10 p-4">
+								<div class="grid gap-4 {group.sections.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}">
 									{#each group.sections as section, sIndex}
 										<div
-											class="group/box space-y-3"
+											class="group/box space-y-2"
 											in:fly={{ y: 20, duration: 400, delay: sIndex * 80 }}
 										>
 											<!-- Icono y título -->
-											<div class="mb-3 flex items-start space-x-3">
-												<!-- Icono con efecto 3D -->
+											<div class="mb-2 flex items-start space-x-2">
+												<!-- Icono con efecto 3D - Más pequeño -->
 												<div
-													class="icon-3d flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-{group.accentColor}-500 to-{group.accentColor}-700 text-2xl shadow-lg"
+													class="icon-3d flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-{group.accentColor}-500 to-{group.accentColor}-700 text-xl shadow-md"
 												>
 													<span
 														class="icon-inner block transform transition-all duration-300 group-hover/box:scale-110 group-hover/box:rotate-12"
@@ -397,17 +397,17 @@
 												<!-- Título -->
 												<div class="min-w-0 flex-1">
 													<h4
-														class="line-clamp-2 text-sm font-bold uppercase tracking-wide text-gray-700 transition-colors duration-300 group-hover/box:text-{group.accentColor}-600"
+														class="line-clamp-2 text-xs font-bold uppercase tracking-wide text-gray-700 transition-colors duration-300 group-hover/box:text-{group.accentColor}-600"
 													>
 														{section.title}
 													</h4>
 												</div>
 											</div>
 
-											<!-- Lista de items -->
-											<ul class="space-y-2">
+											<!-- Lista de items - Más compacto -->
+											<ul class="space-y-1">
 												{#each section.items as item}
-													<li class="flex items-start gap-2 text-sm text-gray-600 transition-colors duration-200 group-hover/box:text-gray-900">
+													<li class="flex items-start gap-1.5 text-xs text-gray-600 transition-colors duration-200 group-hover/box:text-gray-900">
 														<span class="mt-0.5 text-{group.accentColor}-500">•</span>
 														<span class="flex-1">{item}</span>
 													</li>
@@ -420,7 +420,7 @@
 
 											<!-- Indicador de número -->
 											<div
-												class="mt-4 border-t border-gray-200 pt-3 transition-colors duration-300 group-hover/box:border-{group.accentColor}-200"
+												class="mt-2 border-t border-gray-200 pt-2 transition-colors duration-300 group-hover/box:border-{group.accentColor}-200"
 											>
 												<span class="text-xs font-semibold text-{group.accentColor}-500">
 													{String(sIndex + 1).padStart(2, '0')}

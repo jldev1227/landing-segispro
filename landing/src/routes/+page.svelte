@@ -789,37 +789,37 @@
 	</div>
 {/if}
 
-<!-- Hero Section Optimizado -->
+<!-- Hero Section Ultra-Compacto -->
 <section
 	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-6 py-12 pt-20 xl:py-16 2xl:py-20"
+	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-4 py-6 pt-20 sm:px-6 sm:pt-24 lg:py-8 lg:pt-20 xl:py-20"
 >
 	<div class="container mx-auto max-w-7xl">
-		<div class="grid items-center gap-8 lg:grid-cols-2">
+		<div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
 			<!-- Contenido Izquierdo -->
 			<div class="relative z-10">
 				{#if heroVisible}
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<p class="mb-2 text-xs font-semibold uppercase tracking-wide text-blue-600 xl:mb-3">
+						<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-blue-600 sm:mb-2">
 							Capacitaciones y auditorías para un trabajo más seguro
 						</p>
-						<h1 class="mb-3 text-3xl font-bold leading-tight md:text-4xl lg:text-5xl xl:mb-4 xl:text-6xl">
+						<h1 class="mb-2 text-2xl font-bold leading-tight sm:text-3xl lg:text-4xl xl:text-5xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
 							<span class="text-gray-900">tu aliado estratégico.</span>
 						</h1>
 					</div>
 
 					<div in:fly={{ y: 30, duration: 800, delay: 200, easing: quintOut }}>
-						<p class="mb-4 max-w-xl text-sm leading-relaxed text-gray-700 xl:mb-6 xl:text-base">
+						<p class="mb-3 max-w-xl text-sm leading-relaxed text-gray-700 sm:mb-4">
 							Capacitaciones personalizadas que fortalecen habilidades y cumplimiento. Muy pronto,
 							cursos digitales para aprender con flexibilidad y apoyo experto.
 						</p>
 
 						<!-- CTA Buttons -->
-						<div class="flex flex-wrap gap-3">
+						<div class="flex flex-wrap gap-2 sm:gap-3">
 							<a
 								href="#services"
-								class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 hover:shadow-xl"
+								class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 hover:shadow-xl sm:px-6 sm:py-3"
 							>
 								Ver Servicios
 								<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -833,7 +833,7 @@
 							</a>
 							<a
 								href="#contacto"
-								class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-white px-6 py-3 font-semibold text-blue-600 transition-all duration-300 hover:bg-blue-50"
+								class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 transition-all duration-300 hover:bg-blue-50 sm:px-6 sm:py-3"
 							>
 								Contactar
 							</a>
@@ -842,7 +842,7 @@
 				{/if}
 			</div>
 
-			<!-- Video Derecho - Más Compacto -->
+			<!-- Video Derecho - Compacto -->
 			<div class="relative hidden lg:block">
 				{#if heroVisible}
 					<div
@@ -857,7 +857,7 @@
 								loop
 								playsinline
 								preload="auto"
-								class="h-96 w-full object-cover"
+								class="h-72 w-full object-cover xl:h-80"
 							>
 								<source src="/videos/hero-video.mp4" type="video/mp4" />
 							</video>
@@ -868,10 +868,10 @@
 
 						<!-- Elementos decorativos flotantes reducidos -->
 						<div
-							class="absolute -right-4 -top-4 h-16 w-16 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
+							class="absolute -right-4 -top-4 h-12 w-12 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
 						></div>
 						<div
-							class="absolute -bottom-4 -left-4 h-20 w-20 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
+							class="absolute -bottom-4 -left-4 h-16 w-16 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
 							style="animation-delay: 1s;"
 						></div>
 					</div>
@@ -885,81 +885,40 @@
 	</div>
 </section>
 
-<!-- Services Section con Más Protagonismo -->
-<section id="services" class="min-h-screen bg-linear-to-b from-white via-gray-50 to-white py-20">
+<!-- Services Section Ultra-Compacto -->
+<section id="services" class="bg-linear-to-b from-white via-gray-50 to-white py-4 sm:py-6 lg:py-8">
 	<div class="container mx-auto px-4">
-		<!-- Header de Servicios Mejorado -->
-		<div class="mb-16 text-center">
-			<div class="mb-6">
-				<p class="mb-3 text-sm font-semibold uppercase tracking-wide text-blue-600">
+		<!-- Header Minimalista -->
+		<div class="mb-4 text-center sm:mb-5">
+			<div class="mb-2">
+				<p class="mb-1 text-xs font-semibold uppercase tracking-wide text-blue-600 sm:text-sm">
 					Nuestro portafolio
 				</p>
-				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+				<h2 class="mb-1 text-xl font-bold text-gray-900 sm:text-2xl lg:text-3xl">
 					Servicios <span class="text-blue-600">Profesionales</span>
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-blue-400 sm:w-16"
 				></div>
 			</div>
 
-			<p class="mx-auto max-w-3xl text-lg leading-relaxed text-gray-600">
-				Ofrecemos soluciones integrales en consultoría, formación, estudios y proyectos
-				especiales. Cada servicio está diseñado para cumplir con los más altos estándares de
-				calidad y normatividad.
+			<p class="mx-auto max-w-2xl text-xs leading-relaxed text-gray-600 sm:text-sm">
+				Soluciones integrales en consultoría, formación y estudios especializados
 			</p>
 
-			<!-- Badges informativos -->
-			<div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-				<div class="flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-sm text-blue-700">
-					<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-						<path
-							fill-rule="evenodd"
-							d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					<span class="font-semibold">Certificados ISO</span>
-				</div>
-
-				<div
-					class="flex items-center gap-2 rounded-full bg-purple-50 px-4 py-2 text-sm text-purple-700"
-				>
-					<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-						<path
-							d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"
-						/>
-					</svg>
-					<span class="font-semibold">Equipo Experto</span>
-				</div>
-
-				<div
-					class="flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm text-emerald-700"
-				>
-					<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-						<path
-							fill-rule="evenodd"
-							d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-							clip-rule="evenodd"
-						/>
-					</svg>
-					<span class="font-semibold">100% Cumplimiento</span>
-				</div>
-			</div>
 		</div>
 
-		<!-- Carrusel de servicios con más espacio -->
-		<div class="mb-20">
+		<!-- Carrusel de servicios directo -->
+		<div class="mt-2 sm:mt-3">
 			<ServicesCarousel visible={carouselVisible} />
 		</div>
 
-		<!-- Stats Section -->
-		<div bind:this={statsSection} class="mt-20">
-			<div class="mb-12 text-center">
-				<h3 class="mb-3 text-3xl font-bold text-gray-900 md:text-4xl">
-					Deja que los números hablen
-				</h3>
-				<p class="mx-auto max-w-2xl text-gray-600">
-					Nuestra trayectoria y experiencia nos respaldan
+		<!-- Stats Section Compactas -->
+		<div bind:this={statsSection} class="mt-6 sm:mt-8 lg:mt-10">
+			<div class="mb-4 text-center sm:mb-5">
+				<h3 class="text-lg font-bold text-gray-900 sm:text-xl">Nuestra Trayectoria</h3>
+				<p class="mx-auto mt-1 max-w-2xl text-xs text-gray-600">
+					Datos que respaldan nuestro compromiso
 				</p>
 			</div>
 
