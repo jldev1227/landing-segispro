@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 
 	interface ServiceItem {
 		title: string;
@@ -18,11 +18,11 @@
 
 	export let visible = false;
 
-	// Datos de servicios - Tonalidades del mismo azul
+	// Datos de servicios con mejor estructura
 	const serviceGroups: ServiceGroup[] = [
 		{
 			header: 'Consultoría & Asesoría',
-			headerColor: 'from-blue-700 to-blue-800',
+			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🎯',
 			accentColor: 'blue',
 			sections: [
@@ -68,7 +68,7 @@
 		},
 		{
 			header: 'Estudios & Análisis',
-			headerColor: 'from-blue-500 to-blue-600',
+			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🔬',
 			accentColor: 'blue',
 			sections: [
@@ -86,7 +86,7 @@
 		},
 		{
 			header: 'Innovación & Tecnología',
-			headerColor: 'from-blue-400 to-blue-500',
+			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🚀',
 			accentColor: 'blue',
 			sections: [
@@ -118,15 +118,6 @@
 	const INTERACTION_TIMEOUT = 5000;
 	const AUTO_SCROLL_INTERVAL = 4000;
 
-	// Obtener ancho dinámico de la card - Ocupa todo el carousel
-	function getCardWidth(): number {
-		if (typeof window === 'undefined') return 800;
-		return window.innerWidth;
-	}
-
-	let cardWidth = 800;
-
-	// Crear array extendido para scroll infinito
 	$: extendedGroups = [...serviceGroups, ...serviceGroups, ...serviceGroups];
 
 	function getPositionX(event: MouseEvent | TouchEvent): number {
@@ -147,28 +138,21 @@
 		isDragging = true;
 		isAutoScrolling = false;
 		lastInteractionTime = Date.now();
-
 		startX = getPositionX(event);
 		animationID = requestAnimationFrame(animation);
-
-		if (carouselTrack) {
-			carouselTrack.style.cursor = 'grabbing';
-		}
+		if (carouselTrack) carouselTrack.style.cursor = 'grabbing';
 	}
 
 	function handleDragMove(event: MouseEvent | TouchEvent) {
 		if (!isDragging) return;
-
 		const currentPosition = getPositionX(event);
 		currentTranslate = prevTranslate + currentPosition - startX;
 	}
 
 	function handleDragEnd() {
 		if (!isDragging) return;
-
 		isDragging = false;
 		cancelAnimationFrame(animationID);
-
 		const movedBy = currentTranslate - prevTranslate;
 
 		if (movedBy < -100) {
@@ -180,9 +164,7 @@
 			setSliderPosition();
 		}
 
-		if (carouselTrack) {
-			carouselTrack.style.cursor = 'grab';
-		}
+		if (carouselTrack) carouselTrack.style.cursor = 'grab';
 
 		setTimeout(() => {
 			if (Date.now() - lastInteractionTime >= INTERACTION_TIMEOUT) {
@@ -193,13 +175,13 @@
 
 	function goToNext() {
 		currentIndex++;
+		const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 800;
 
 		if (currentIndex >= extendedGroups.length - serviceGroups.length) {
 			currentIndex = serviceGroups.length;
-			currentTranslate = -currentIndex * cardWidth;
+			currentTranslate = -currentIndex * viewportWidth;
 			prevTranslate = currentTranslate;
 			setSliderPosition();
-
 			setTimeout(() => {
 				currentIndex++;
 				updatePosition();
@@ -207,19 +189,18 @@
 		} else {
 			updatePosition();
 		}
-
 		resetAutoScroll();
 	}
 
 	function goToPrev() {
 		currentIndex--;
+		const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 800;
 
 		if (currentIndex < 0) {
 			currentIndex = extendedGroups.length - serviceGroups.length - 1;
-			currentTranslate = -currentIndex * cardWidth;
+			currentTranslate = -currentIndex * viewportWidth;
 			prevTranslate = currentTranslate;
 			setSliderPosition();
-
 			setTimeout(() => {
 				currentIndex--;
 				updatePosition();
@@ -227,7 +208,6 @@
 		} else {
 			updatePosition();
 		}
-
 		resetAutoScroll();
 	}
 
@@ -238,7 +218,7 @@
 	}
 
 	function updatePosition() {
-		currentTranslate = -currentIndex * cardWidth;
+		currentTranslate = -currentIndex * (typeof window !== 'undefined' ? window.innerWidth : 800);
 		prevTranslate = currentTranslate;
 		setSliderPosition();
 	}
@@ -258,7 +238,6 @@
 			if (isAutoScrolling && Date.now() - lastInteractionTime >= INTERACTION_TIMEOUT) {
 				goToNext();
 			}
-
 			if (!isAutoScrolling && Date.now() - lastInteractionTime >= INTERACTION_TIMEOUT) {
 				isAutoScrolling = true;
 			}
@@ -266,15 +245,12 @@
 	}
 
 	function handleResize() {
-		cardWidth = getCardWidth();
 		updatePosition();
 	}
 
 	onMount(() => {
-		cardWidth = getCardWidth();
 		currentIndex = serviceGroups.length;
 		updatePosition();
-
 		startAutoScroll();
 
 		window.addEventListener('keydown', handleKeydown);
@@ -290,10 +266,8 @@
 </script>
 
 {#if visible}
-	<div class="relative py-4" in:fly={{ y: 30, duration: 600 }}>
-		<!-- Contenedor sin mask -->
-		<div class="carousel-container relative overflow-hidden py-4">
-			<!-- Track del carrusel -->
+	<div class="relative" in:fly={{ y: 30, duration: 600 }}>
+		<div class="carousel-container relative overflow-hidden">
 			<div
 				bind:this={carouselTrack}
 				class="carousel-track flex cursor-grab"
@@ -309,83 +283,136 @@
 				aria-label="Carrusel de servicios"
 			>
 				{#each extendedGroups as group, i}
-					<div 
-						class="card-wrapper shrink-0" 
-						style="width: {cardWidth}px;"
-						role="presentation"
-					>
-						<!-- Card Full Width con gradiente azul sutil -->
+					<div class="card-wrapper w-full shrink-0" style="min-width: 100vw; max-width: 100vw;">
+						<!-- Card con mejor contraste -->
 						<div
-							class="relative h-full min-h-[500px] overflow-hidden rounded-2xl bg-linear-to-br from-blue-900 to-blue-950 p-8 shadow-2xl sm:p-12"
+							class="relative min-h-[450px] overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-6 shadow-2xl sm:min-h-[500px] sm:p-8 md:p-10 lg:p-12"
 						>
-							<!-- Patrón de fondo sutil -->
-							<div class="absolute inset-0 opacity-5">
+							<!-- Patrón de fondo mejorado -->
+							<div class="absolute inset-0 opacity-10">
 								<div
 									class="absolute inset-0"
-									style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"
+									style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 30px 30px;"
 								></div>
 							</div>
 
-							<!-- Elementos decorativos flotantes -->
-							<div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl"></div>
-							<div class="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl"></div>
+							<!-- Elementos decorativos sutiles -->
+							<div
+								class="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
+							></div>
+							<div
+								class="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"
+							></div>
 
-							<!-- Contenido -->
-							<div class="relative z-10">
-								<!-- Header del servicio -->
-								<div class="mb-8 text-center">
-									<div class="mb-4 flex items-center justify-center gap-3">
-										<span class="text-6xl">{group.emoji}</span>
+							<!-- Contenido principal -->
+							<div class="relative z-10 h-full">
+								<!-- Header con mejor jerarquía -->
+								<div class="mb-8 sm:mb-10">
+									<div class="flex items-center gap-4 sm:gap-5">
+										<div
+											class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-4xl backdrop-blur-sm sm:h-20 sm:w-20 sm:text-5xl"
+										>
+											{group.emoji}
+										</div>
+										<div class="min-w-0 flex-1">
+											<h3
+												class="mb-2 text-2xl font-bold text-white sm:text-3xl md:text-4xl lg:text-5xl"
+											>
+												{group.header}
+											</h3>
+											<div
+												class="h-1 w-20 rounded-full bg-linear-to-r from-blue-300 to-blue-400 sm:w-28"
+											></div>
+										</div>
 									</div>
-									<h3 class="mb-2 text-3xl font-bold text-white sm:text-4xl">
-										{group.header}
-									</h3>
-									<div class="mx-auto h-1 w-24 rounded-full bg-linear-to-r from-blue-400 to-blue-600"></div>
 								</div>
 
-								<!-- Grid de servicios con glassmorphism -->
-								<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+								<!-- Grid de servicios con cards destacadas -->
+								<div
+									class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6"
+								>
 									{#each group.sections as section, sIndex}
 										<div
-											class="group/glass relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-xl hover:shadow-blue-500/20"
+											class="service-card group/card relative overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 hover:shadow-2xl hover:shadow-blue-500/30 sm:p-6"
 											in:fly={{ y: 20, duration: 400, delay: sIndex * 100 }}
 										>
-											<!-- Gradiente interno sutil -->
+											<!-- Efecto de brillo superior -->
 											<div
-												class="absolute inset-0 bg-linear-to-br from-white/5 via-transparent to-blue-500/5 opacity-0 transition-opacity duration-300 group-hover/glass:opacity-100"
+												class="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"
 											></div>
 
-											<!-- Icono flotante -->
+											<!-- Gradiente hover -->
+											<div
+												class="absolute inset-0 bg-linear-to-br from-white/10 via-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+											></div>
+
+											<!-- Header de la subcategoría -->
 											<div class="relative z-10 mb-4 flex items-center gap-3">
 												<div
-													class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-600 text-2xl shadow-lg transition-transform duration-300 group-hover/glass:scale-110 group-hover/glass:rotate-6"
+													class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-400 to-blue-500 text-2xl shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6 group-hover/card:shadow-xl"
 												>
 													{section.icon}
 												</div>
-												<h4 class="text-sm font-bold uppercase tracking-wide text-blue-300">
+												<h4
+													class="flex-1 text-sm font-bold uppercase tracking-wider text-white sm:text-base"
+												>
 													{section.title}
 												</h4>
 											</div>
 
-											<!-- Lista de items -->
-											<ul class="relative z-10 space-y-2">
+											<!-- Separador -->
+											<div class="mb-4 h-px bg-white/20"></div>
+
+											<!-- Lista de items mejorada -->
+											<ul class="relative z-10 space-y-3">
 												{#each section.items as item}
-													<li class="flex items-start gap-2 text-sm text-gray-300 transition-colors duration-200 group-hover/glass:text-white">
-														<svg class="mt-1 h-4 w-4 shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
-															<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-														</svg>
-														<span class="flex-1">{item}</span>
+													<li
+														class="group/item flex items-start gap-3 transition-all duration-200"
+													>
+														<!-- Check icon mejorado -->
+														<div
+															class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-400/20 transition-all duration-200 group-hover/item:bg-blue-400/30 group-hover/item:scale-110"
+														>
+															<svg
+																class="h-3 w-3 text-blue-300"
+																fill="currentColor"
+																viewBox="0 0 20 20"
+															>
+																<path
+																	fill-rule="evenodd"
+																	d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+																	clip-rule="evenodd"
+																/>
+															</svg>
+														</div>
+														<!-- Texto con mejor contraste -->
+														<span
+															class="min-w-0 flex-1 text-sm font-medium text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-base"
+														>
+															{item}
+														</span>
 													</li>
 												{/each}
 											</ul>
 
 											{#if section.items.length === 0}
-												<p class="text-sm italic text-gray-400">Próximamente</p>
+												<div class="flex items-center justify-center py-4">
+													<p class="text-sm italic text-blue-200">Próximamente</p>
+												</div>
 											{/if}
 
-											<!-- Brillo en hover -->
+											<!-- Badge de contador -->
 											<div
-												class="pointer-events-none absolute inset-0 rounded-xl bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover/glass:opacity-100"
+												class="absolute bottom-4 right-4 flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/30 backdrop-blur-sm"
+											>
+												<span class="text-xs font-bold text-white"
+													>{section.items.length}</span
+												>
+											</div>
+
+											<!-- Efecto de esquina -->
+											<div
+												class="absolute -bottom-6 -right-6 h-24 w-24 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
 											></div>
 										</div>
 									{/each}
@@ -396,45 +423,87 @@
 				{/each}
 			</div>
 
-			<!-- Botones de navegación (igual estilo que CarouselInfinito) -->
+			<!-- Botones de navegación mejorados -->
 			<button
 				on:click={goToPrev}
-				class="absolute left-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95"
+				class="absolute left-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14"
 				aria-label="Anterior"
 			>
-				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+				<svg
+					class="h-5 w-5 text-blue-700 sm:h-6 sm:w-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					stroke-width="3"
+				>
 					<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
 				</svg>
 			</button>
 
 			<button
 				on:click={goToNext}
-				class="absolute right-4 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl active:scale-95"
+				class="absolute right-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14"
 				aria-label="Siguiente"
 			>
-				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+				<svg
+					class="h-5 w-5 text-blue-700 sm:h-6 sm:w-6"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+					stroke-width="3"
+				>
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
 				</svg>
 			</button>
 		</div>
 
-		<!-- Indicadores -->
-		<div class="mt-6 text-center">
-			<!-- Dots -->
-			<div class="flex items-center justify-center gap-2">
+		<!-- Indicadores mejorados -->
+		<div class="mt-8 space-y-4 text-center">
+			<!-- Dots con mejor visualización -->
+			<div class="flex items-center justify-center gap-3">
 				{#each serviceGroups as group, i}
 					<button
 						on:click={() => goToIndex(i + serviceGroups.length)}
 						class="group relative transition-all duration-300"
 						aria-label={`Ir a ${group.header}`}
 					>
+						<!-- Dot principal -->
 						<div
-							class="h-2 rounded-full transition-all duration-300 {currentIndex % serviceGroups.length === i
-								? 'w-8 bg-blue-600'
-								: 'w-2 bg-gray-300 hover:bg-gray-400'}"
+							class="relative h-3 rounded-full transition-all duration-300 {currentIndex %
+								serviceGroups.length ===
+							i
+								? 'w-12 bg-blue-600 shadow-lg shadow-blue-600/50'
+								: 'w-3 bg-gray-300 hover:bg-gray-400'}"
 						></div>
+
+						<!-- Tooltip -->
+						<div
+							class="pointer-events-none absolute -top-12 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-blue-900 px-3 py-2 text-xs font-medium text-white opacity-0 shadow-xl transition-all duration-300 group-hover:opacity-100"
+						>
+							{group.header}
+							<div
+								class="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-blue-900"
+							></div>
+						</div>
 					</button>
 				{/each}
+			</div>
+
+			<!-- Contador y estado -->
+			<div class="flex items-center justify-center gap-4 text-sm text-gray-600">
+				<span class="font-medium">
+					{(currentIndex % serviceGroups.length) + 1} / {serviceGroups.length}
+				</span>
+				<span class="text-gray-400">•</span>
+				<div class="flex items-center gap-2">
+					<div
+						class="h-2 w-2 rounded-full transition-all duration-300"
+						class:bg-green-500={isAutoScrolling}
+						class:bg-gray-400={!isAutoScrolling}
+						class:animate-pulse={isAutoScrolling}
+					></div>
+					<span class="text-xs">{isAutoScrolling ? 'Auto' : 'Pausado'}</span>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -452,19 +521,49 @@
 		cursor: grabbing !important;
 	}
 
-	/* Line clamp */
-	.line-clamp-2 {
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
+	.card-wrapper {
+		box-sizing: border-box;
 	}
 
-	/* Mejora del scroll en móviles */
+	.carousel-container {
+		max-width: 100vw;
+		overflow-x: hidden;
+	}
+
+	/* Animación de entrada de las cards */
+	.service-card {
+		transform-style: preserve-3d;
+		backface-visibility: hidden;
+	}
+
+	/* Mejora del efecto hover en las cards */
+	.service-card::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		padding: 2px;
+		background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
+		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask-composite: xor;
+		mask-composite: exclude;
+		opacity: 0;
+		transition: opacity 0.3s;
+	}
+
+	.service-card:hover::before {
+		opacity: 1;
+	}
+
 	@media (hover: none) {
 		.carousel-track {
 			cursor: default;
+		}
+	}
+
+	@media (max-width: 640px) {
+		.card-wrapper {
+			padding: 0;
 		}
 	}
 </style>
