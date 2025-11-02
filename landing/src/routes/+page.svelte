@@ -786,7 +786,7 @@
 <!-- Hero Section Ultra-Compacto -->
 <section
 	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-4 py-6 pt-20 sm:px-6 sm:pt-24 lg:py-8 lg:pt-20 xl:py-20"
+	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-4 py-5 pt-18 sm:px-6 sm:pt-22 lg:py-7 lg:pt-18 xl:py-24 xl:pb-12"
 >
 	<div class="container mx-auto max-w-7xl">
 		<div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">

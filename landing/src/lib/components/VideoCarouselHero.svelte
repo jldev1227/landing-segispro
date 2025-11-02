@@ -131,7 +131,7 @@
 {#if visible}
 	<div class="relative w-full" in:scale={{ duration: 1000, delay: 400, start: 0.8 }}>
 		<!-- Contenedor del carousel -->
-		<div class="video-carousel-container relative overflow-hidden rounded-2xl h-72 xl:h-80">
+		<div class="video-carousel-container relative overflow-hidden rounded-2xl h-52 xl:h-64">
 			<!-- Gradiente de fondo similar al banner -->
 			<div
 				class="absolute inset-0 bg-linear-to-br from-blue-600/10 via-blue-500/5 to-orange-500/10"

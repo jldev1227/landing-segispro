@@ -191,7 +191,7 @@
 		<!-- Vista Desktop: Cards apiladas con animación -->
 		<div class="hidden lg:block">
 			<!-- Contenedor de cards apiladas -->
-			<div class="relative min-h-[500px] w-full overflow-hidden sm:min-h-[550px] md:min-h-[600px]">
+			<div class="relative min-h-[328px] w-full overflow-hidden sm:min-h-[361px] md:min-h-[393px]">
 				<!-- Cards Stack -->
 				{#key currentIndex}
 					<div
@@ -229,32 +229,32 @@
 
 							<!-- Contenido principal -->
 							<div class="relative z-10 h-full">
-								<!-- Header con mejor jerarquía -->
-								<div class="mb-8 md:mb-10">
-									<div class="flex items-center gap-4 md:gap-5">
+								<!-- Header compacto -->
+								<div class="mb-5 md:mb-6">
+									<div class="flex items-center gap-3">
 										<div
-											class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-4xl backdrop-blur-sm md:h-20 md:w-20 md:text-5xl"
+											class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-2xl backdrop-blur-sm md:h-14 md:w-14 md:text-3xl"
 										>
 											{serviceGroups[currentIndex].emoji}
 										</div>
 										<div class="min-w-0 flex-1">
 											<h3
-												class="mb-2 text-2xl font-bold text-white md:text-3xl lg:text-4xl xl:text-5xl"
+												class="mb-1.5 text-lg font-bold text-white md:text-xl lg:text-2xl"
 											>
 												{serviceGroups[currentIndex].header}
 											</h3>
 											<div
-												class="h-1 w-20 rounded-full bg-linear-to-r from-blue-300 to-blue-400 md:w-28"
+												class="h-0.5 w-16 rounded-full bg-linear-to-r from-blue-300 to-blue-400 md:w-20"
 											></div>
 										</div>
 									</div>
 								</div>
 
-								<!-- Grid de servicios -->
-								<div class="grid auto-rows-fr grid-cols-1 gap-5 lg:grid-cols-3 lg:gap-6">
+								<!-- Grid de servicios compacto -->
+								<div class="grid auto-rows-fr grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
 									{#each serviceGroups[currentIndex].sections as section, sIndex}
 										<div
-											class="service-card group/card relative flex h-full min-h-[280px] flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-5 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 hover:shadow-2xl hover:shadow-blue-500/30 md:p-6"
+											class="service-card group/card relative flex h-full min-h-[180px] flex-col overflow-hidden rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 hover:shadow-2xl hover:shadow-blue-500/30 md:p-3.5"
 											in:fly={{ y: 20, duration: 400, delay: sIndex * 100 }}
 										>
 											<!-- Efecto de brillo superior -->
@@ -267,33 +267,33 @@
 												class="absolute inset-0 bg-linear-to-br from-white/10 via-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
 											></div>
 
-											<!-- Header de la subcategoría -->
-											<div class="relative z-10 mb-4 flex items-center gap-3">
+											<!-- Header compacto -->
+											<div class="relative z-10 mb-3 flex items-center gap-2">
 												<div
-													class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-400 to-blue-500 text-xl shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6 group-hover/card:shadow-xl sm:h-12 sm:w-12 sm:text-2xl"
+													class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-base shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6 sm:h-9 sm:w-9 sm:text-lg"
 												>
 													{section.icon}
 												</div>
 												<h4
-													class="flex-1 text-xs font-bold uppercase tracking-wider text-white sm:text-sm md:text-base"
+													class="flex-1 text-[10px] font-bold uppercase tracking-wider text-white sm:text-xs"
 												>
 													{section.title}
 												</h4>
 											</div>
 
-											<!-- Separador -->
-											<div class="mb-4 h-px bg-white/20"></div>
+											<!-- Separador delgado -->
+											<div class="mb-2.5 h-px bg-white/20"></div>
 
-											<!-- Lista de items mejorada -->
-											<ul class="relative z-10 flex-1 space-y-3">
+											<!-- Lista compacta -->
+											<ul class="relative z-10 flex-1 space-y-1.5">
 												{#each section.items as item}
-													<li class="group/item flex items-start gap-3 transition-all duration-200">
-														<!-- Check icon mejorado -->
+													<li class="group/item flex items-start gap-2 transition-all duration-200">
+														<!-- Check icon pequeño -->
 														<div
-															class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-400/20 transition-all duration-200 group-hover/item:scale-110 group-hover/item:bg-blue-400/30"
+															class="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-400/20 transition-all duration-200 group-hover/item:scale-110 group-hover/item:bg-blue-400/30"
 														>
 															<svg
-																class="h-3 w-3 text-blue-300"
+																class="h-2 w-2 text-blue-300"
 																fill="currentColor"
 																viewBox="0 0 20 20"
 															>
@@ -304,9 +304,9 @@
 																/>
 															</svg>
 														</div>
-														<!-- Texto con mejor contraste -->
+														<!-- Texto compacto -->
 														<span
-															class="min-w-0 flex-1 text-xs font-medium text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-sm md:text-base"
+															class="min-w-0 flex-1 text-xs font-medium leading-tight text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-sm"
 														>
 															{item}
 														</span>
@@ -315,21 +315,14 @@
 											</ul>
 
 											{#if section.items.length === 0}
-												<div class="flex flex-1 items-center justify-center py-4">
-													<p class="text-xs italic text-blue-200 sm:text-sm">Próximamente</p>
+												<div class="flex flex-1 items-center justify-center py-3">
+													<p class="text-[10px] italic text-blue-200 sm:text-xs">Próximamente</p>
 												</div>
 											{/if}
 
-											<!-- Badge de contador -->
-											<div
-												class="mt-4 flex h-7 w-7 items-center justify-center self-end rounded-full bg-blue-500/30 backdrop-blur-sm sm:h-8 sm:w-8"
-											>
-												<span class="text-xs font-bold text-white">{section.items.length}</span>
-											</div>
-
 											<!-- Efecto de esquina -->
 											<div
-												class="absolute -bottom-6 -right-6 h-24 w-24 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+												class="absolute -bottom-6 -right-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
 											></div>
 										</div>
 									{/each}
@@ -424,10 +417,10 @@
 
 		<!-- Vista Mobile/Tablet: Scroll estático vertical -->
 		<div class="block lg:hidden">
-			<div class="space-y-6">
+			<div class="space-y-4 sm:space-y-5">
 				{#each serviceGroups as group, groupIndex}
 					<div
-						class="overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-4 shadow-2xl sm:p-6"
+						class="overflow-hidden rounded-2xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-3.5 shadow-2xl sm:p-5"
 						in:fly={{ y: 20, duration: 400, delay: groupIndex * 150 }}
 					>
 						<!-- Patrón de fondo -->
@@ -438,60 +431,60 @@
 							></div>
 						</div>
 
-						<!-- Header del servicio -->
-						<div class="relative z-10 mb-6">
-							<div class="mb-4 flex items-center gap-3 sm:gap-4">
+						<!-- Header del servicio compacto -->
+						<div class="relative z-10 mb-4 sm:mb-5">
+							<div class="mb-3 flex items-center gap-2.5 sm:mb-4 sm:gap-3">
 								<div
-									class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 text-3xl backdrop-blur-sm sm:h-16 sm:w-16 sm:text-4xl"
+									class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-2xl backdrop-blur-sm sm:h-12 sm:w-12 sm:text-3xl"
 								>
 									{group.emoji}
 								</div>
 								<div class="min-w-0 flex-1">
-									<h3 class="mb-2 text-xl font-bold text-white sm:text-2xl">
+									<h3 class="mb-1.5 text-lg font-bold text-white sm:text-xl">
 										{group.header}
 									</h3>
 									<div
-										class="h-1 w-16 rounded-full bg-linear-to-r from-blue-300 to-blue-400 sm:w-20"
+										class="h-0.5 w-14 rounded-full bg-linear-to-r from-blue-300 to-blue-400 sm:w-16"
 									></div>
 								</div>
 							</div>
 						</div>
 
-						<!-- Grid de servicios responsive -->
-						<div class="relative z-10 grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+						<!-- Grid de servicios responsive compacto -->
+						<div class="relative z-10 grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
 							{#each group.sections as section}
 								<div
-									class="service-card group/card relative flex flex-col overflow-hidden rounded-2xl border border-white/20 bg-white/10 p-4 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 sm:p-5"
+									class="service-card group/card relative flex flex-col overflow-hidden rounded-xl border border-white/20 bg-white/10 p-2.5 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 sm:p-3"
 								>
 									<!-- Efecto de brillo superior -->
 									<div
 										class="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"
 									></div>
 
-									<!-- Header de la subcategoría -->
-									<div class="relative z-10 mb-4 flex items-center gap-3">
+									<!-- Header de la subcategoría compacto -->
+									<div class="relative z-10 mb-2.5 flex items-center gap-2 sm:mb-3">
 										<div
-											class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-blue-400 to-blue-500 text-xl shadow-lg sm:h-12 sm:w-12 sm:text-2xl"
+											class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-base shadow-lg sm:h-9 sm:w-9 sm:text-lg"
 										>
 											{section.icon}
 										</div>
-										<h4 class="flex-1 text-xs font-bold uppercase tracking-wider text-white sm:text-sm">
+										<h4 class="flex-1 text-[10px] font-bold uppercase tracking-wider text-white sm:text-xs">
 											{section.title}
 										</h4>
 									</div>
 
-									<!-- Separador -->
-									<div class="mb-4 h-px bg-white/20"></div>
+									<!-- Separador delgado -->
+									<div class="mb-2 h-px bg-white/20 sm:mb-2.5"></div>
 
-									<!-- Lista de items -->
-									<ul class="relative z-10 flex-1 space-y-2.5">
+									<!-- Lista de items compacta -->
+									<ul class="relative z-10 flex-1 space-y-1.5">
 										{#each section.items as item}
-											<li class="flex items-start gap-2.5">
-												<!-- Check icon -->
+											<li class="flex items-start gap-2">
+												<!-- Check icon pequeño -->
 												<div
-													class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-blue-400/20"
+													class="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-400/20"
 												>
-													<svg class="h-3 w-3 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+													<svg class="h-2 w-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
 														<path
 															fill-rule="evenodd"
 															d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -499,8 +492,8 @@
 														/>
 													</svg>
 												</div>
-												<!-- Texto -->
-												<span class="min-w-0 flex-1 text-xs font-medium text-gray-100 sm:text-sm">
+												<!-- Texto compacto -->
+												<span class="min-w-0 flex-1 text-xs font-medium leading-tight text-gray-100 sm:text-sm">
 													{item}
 												</span>
 											</li>
@@ -508,17 +501,10 @@
 									</ul>
 
 									{#if section.items.length === 0}
-										<div class="flex items-center justify-center py-4">
-											<p class="text-xs italic text-blue-200">Próximamente</p>
+										<div class="flex items-center justify-center py-2.5">
+											<p class="text-[10px] italic text-blue-200 sm:text-xs">Próximamente</p>
 										</div>
 									{/if}
-
-									<!-- Badge de contador -->
-									<div
-										class="mt-4 flex h-6 w-6 items-center justify-center self-end rounded-full bg-blue-500/30 backdrop-blur-sm sm:h-7 sm:w-7"
-									>
-										<span class="text-xs font-bold text-white">{section.items.length}</span>
-									</div>
 								</div>
 							{/each}
 						</div>
