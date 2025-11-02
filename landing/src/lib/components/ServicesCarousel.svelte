@@ -118,12 +118,10 @@
 	const INTERACTION_TIMEOUT = 5000;
 	const AUTO_SCROLL_INTERVAL = 4000;
 
-	// Obtener ancho dinámico de la card
+	// Obtener ancho dinámico de la card - Ocupa todo el carousel
 	function getCardWidth(): number {
 		if (typeof window === 'undefined') return 800;
-		if (window.innerWidth < 768) return window.innerWidth - 32;
-		if (window.innerWidth < 1024) return window.innerWidth * 0.9;
-		return Math.min(1000, window.innerWidth * 0.85);
+		return window.innerWidth;
 	}
 
 	let cardWidth = 800;
@@ -293,18 +291,12 @@
 
 {#if visible}
 	<div class="relative py-4" in:fly={{ y: 30, duration: 600 }}>
-		<!-- Contenedor con mask CSS (igual que CarouselInfinito) -->
-		<div
-			class="carousel-container relative overflow-hidden py-4"
-			style="
-				-webkit-mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
-				mask-image: linear-gradient(to right, transparent, black 128px, black calc(100% - 128px), transparent);
-			"
-		>
+		<!-- Contenedor sin mask -->
+		<div class="carousel-container relative overflow-hidden py-4">
 			<!-- Track del carrusel -->
 			<div
 				bind:this={carouselTrack}
-				class="carousel-track flex gap-8 cursor-grab"
+				class="carousel-track flex cursor-grab"
 				on:mousedown={handleDragStart}
 				on:mousemove={handleDragMove}
 				on:mouseup={handleDragEnd}
@@ -318,93 +310,86 @@
 			>
 				{#each extendedGroups as group, i}
 					<div 
-						class="card-wrapper shrink-0 px-4" 
+						class="card-wrapper shrink-0" 
 						style="width: {cardWidth}px;"
 						role="presentation"
 					>
-						<!-- Card con glassmorphism - Más compacto -->
+						<!-- Card Full Width con gradiente azul sutil -->
 						<div
-							class="card-inner group relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-lg transition-all duration-300 hover:border-{group.accentColor}-500"
+							class="relative h-full min-h-[500px] overflow-hidden rounded-2xl bg-linear-to-br from-blue-900 to-blue-950 p-8 shadow-2xl sm:p-12"
 						>
-							<!-- Gradiente de profundidad (igual que CarouselInfinito) -->
-							<div
-								class="absolute inset-0 rounded-xl bg-linear-to-br from-{group.accentColor}-500/5 via-transparent to-{group.accentColor}-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-							></div>
-
-							<!-- Header con emoji e icono - Más compacto -->
-							<div class="relative z-10 bg-linear-to-r px-4 py-4 {group.headerColor}">
-								<!-- Emoji grande de fondo -->
-								<div class="absolute right-4 top-1/2 -translate-y-1/2 text-5xl opacity-20 transition-all duration-700 group-hover:scale-110 group-hover:opacity-30">
-									{group.emoji}
-								</div>
-								
-								<h3 class="relative text-lg font-bold text-white flex items-center gap-2">
-									<span class="text-2xl">{group.emoji}</span>
-									{group.header}
-								</h3>
+							<!-- Patrón de fondo sutil -->
+							<div class="absolute inset-0 opacity-5">
+								<div
+									class="absolute inset-0"
+									style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"
+								></div>
 							</div>
 
-							<!-- Contenido - Más compacto -->
-							<div class="relative z-10 p-4">
-								<div class="grid gap-4 {group.sections.length === 2 ? 'md:grid-cols-2' : 'md:grid-cols-3'}">
+							<!-- Elementos decorativos flotantes -->
+							<div class="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-500/10 blur-3xl"></div>
+							<div class="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl"></div>
+
+							<!-- Contenido -->
+							<div class="relative z-10">
+								<!-- Header del servicio -->
+								<div class="mb-8 text-center">
+									<div class="mb-4 flex items-center justify-center gap-3">
+										<span class="text-6xl">{group.emoji}</span>
+									</div>
+									<h3 class="mb-2 text-3xl font-bold text-white sm:text-4xl">
+										{group.header}
+									</h3>
+									<div class="mx-auto h-1 w-24 rounded-full bg-linear-to-r from-blue-400 to-blue-600"></div>
+								</div>
+
+								<!-- Grid de servicios con glassmorphism -->
+								<div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 									{#each group.sections as section, sIndex}
 										<div
-											class="group/box space-y-2"
-											in:fly={{ y: 20, duration: 400, delay: sIndex * 80 }}
+											class="group/glass relative overflow-hidden rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-md transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover:shadow-xl hover:shadow-blue-500/20"
+											in:fly={{ y: 20, duration: 400, delay: sIndex * 100 }}
 										>
-											<!-- Icono y título -->
-											<div class="mb-2 flex items-start space-x-2">
-												<!-- Icono con efecto 3D - Más pequeño -->
-												<div
-													class="icon-3d flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-{group.accentColor}-500 to-{group.accentColor}-700 text-xl shadow-md"
-												>
-													<span
-														class="icon-inner block transform transition-all duration-300 group-hover/box:scale-110 group-hover/box:rotate-12"
-													>
-														{section.icon}
-													</span>
-												</div>
+											<!-- Gradiente interno sutil -->
+											<div
+												class="absolute inset-0 bg-linear-to-br from-white/5 via-transparent to-blue-500/5 opacity-0 transition-opacity duration-300 group-hover/glass:opacity-100"
+											></div>
 
-												<!-- Título -->
-												<div class="min-w-0 flex-1">
-													<h4
-														class="line-clamp-2 text-xs font-bold uppercase tracking-wide text-gray-700 transition-colors duration-300 group-hover/box:text-{group.accentColor}-600"
-													>
-														{section.title}
-													</h4>
+											<!-- Icono flotante -->
+											<div class="relative z-10 mb-4 flex items-center gap-3">
+												<div
+													class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-600 text-2xl shadow-lg transition-transform duration-300 group-hover/glass:scale-110 group-hover/glass:rotate-6"
+												>
+													{section.icon}
 												</div>
+												<h4 class="text-sm font-bold uppercase tracking-wide text-blue-300">
+													{section.title}
+												</h4>
 											</div>
 
-											<!-- Lista de items - Más compacto -->
-											<ul class="space-y-1">
+											<!-- Lista de items -->
+											<ul class="relative z-10 space-y-2">
 												{#each section.items as item}
-													<li class="flex items-start gap-1.5 text-xs text-gray-600 transition-colors duration-200 group-hover/box:text-gray-900">
-														<span class="mt-0.5 text-{group.accentColor}-500">•</span>
+													<li class="flex items-start gap-2 text-sm text-gray-300 transition-colors duration-200 group-hover/glass:text-white">
+														<svg class="mt-1 h-4 w-4 shrink-0 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+															<path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+														</svg>
 														<span class="flex-1">{item}</span>
 													</li>
 												{/each}
 											</ul>
 
 											{#if section.items.length === 0}
-												<p class="text-xs italic text-gray-400">Próximamente</p>
+												<p class="text-sm italic text-gray-400">Próximamente</p>
 											{/if}
+
+											<!-- Brillo en hover -->
+											<div
+												class="pointer-events-none absolute inset-0 rounded-xl bg-linear-to-br from-white/10 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover/glass:opacity-100"
+											></div>
 										</div>
 									{/each}
 								</div>
-							</div>
-
-							<!-- Sombra 3D mejorada (igual que CarouselInfinito) -->
-							<div
-								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-linear-to-br from-{group.accentColor}-500/20 to-{group.accentColor}-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
-							></div>
-
-							<!-- Brillo que sigue al mouse -->
-							<div
-								class="card-shine pointer-events-none absolute inset-0 overflow-hidden rounded-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-							>
-								<div
-									class="shine-layer absolute inset-0 bg-linear-to-br from-white/30 via-transparent to-transparent"
-								></div>
 							</div>
 						</div>
 					</div>
