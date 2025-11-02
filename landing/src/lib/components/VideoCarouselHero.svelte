@@ -34,7 +34,7 @@
 	let isTransitioning = false;
 	let autoScrollInterval: ReturnType<typeof setInterval>;
 
-	const AUTO_SCROLL_INTERVAL = 4000; // 4 segundos para mejor visualización
+	const AUTO_SCROLL_INTERVAL = 10000; // 8 segundos para mejor visualización
 
 	function goToNext() {
 		if (isTransitioning) return;
@@ -67,7 +67,7 @@
 	<div class="relative w-full" in:scale={{ duration: 1000, delay: 400, start: 0.8 }}>
 		<!-- Contenedor del carousel con perspectiva 3D -->
 		<div
-			class="carousel-container relative h-52 overflow-hidden rounded-2xl xl:h-64"
+			class="carousel-container relative h-64 overflow-hidden rounded-2xl xl:h-80"
 			style="perspective: 1500px;"
 		>
 			<!-- Gradiente de fondo -->
@@ -164,28 +164,6 @@
 
 			<!-- Borde brillante animado -->
 			<div class="border-glow pointer-events-none absolute inset-0 rounded-2xl"></div>
-		</div>
-
-		<!-- Indicadores de slide -->
-		<div class="mt-4 flex items-center justify-center gap-2">
-			{#each mediaItems as _, i}
-				<button
-					on:click={() => {
-						if (!isTransitioning && i !== currentIndex) {
-							isTransitioning = true;
-							previousIndex = currentIndex;
-							currentIndex = i;
-							setTimeout(() => {
-								isTransitioning = false;
-							}, 800);
-						}
-					}}
-					class="h-2 rounded-full transition-all duration-300 {i === currentIndex
-						? 'w-8 bg-blue-500'
-						: 'w-2 bg-gray-300 hover:bg-gray-400'}"
-					aria-label={`Ir al slide ${i + 1}`}
-				></button>
-			{/each}
 		</div>
 
 		<!-- Elementos decorativos flotantes -->

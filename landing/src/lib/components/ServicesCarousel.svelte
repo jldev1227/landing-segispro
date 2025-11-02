@@ -83,7 +83,7 @@
 				},
 				{
 					title: 'SALUD',
-					icon: '💚',
+					icon: '❤️',
 					items: ['Riesgo Psicosocial', 'Tamizajes', 'Ergonomía']
 				}
 			],
