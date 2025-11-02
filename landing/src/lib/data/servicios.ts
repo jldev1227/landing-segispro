@@ -22,9 +22,9 @@ export interface ServiceDetail {
 }
 
 export const serviciosData: Record<string, ServiceDetail> = {
-	consultoria: {
-		slug: 'consultoria',
-		title: 'Consultoría',
+	'consultoria-asesoria': {
+		slug: 'consultoria-asesoria',
+		title: 'Consultoría y Asesoría',
 		icon: '🎯',
 		tagline: 'Transformamos sistemas en resultados medibles.',
 		description: `En Segispro Ingeniería SAS, la consultoría es una alianza estratégica para dinamizar la gestión organizacional. Acompañamos a empresas públicas y privadas en el diseño, documentación, implementación y evaluación de sistemas de gestión, alineados con estándares nacionales e internacionales. Integramos herramientas digitales que facilitan el seguimiento, la trazabilidad y la toma de decisiones en tiempo real. Cada intervención se adapta al contexto, con enfoque técnico, humano y sostenible.`,

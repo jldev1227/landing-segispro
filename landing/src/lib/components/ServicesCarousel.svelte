@@ -15,6 +15,7 @@
 		sections: ServiceItem[];
 		emoji: string;
 		accentColor: string;
+		link: string;
 	}
 
 	export let visible = false;
@@ -42,10 +43,11 @@
 					icon: '⚖️',
 					items: ['SG-SST 1072', 'PESV 40595', 'SARLAFT 2328']
 				}
-			]
+			],
+			link: '/servicios/consultoria-asesoria'
 		},
 		{
-			header: 'Formación & Capacitación',
+			header: 'Formación, Capacitación & Auditoría',
 			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🎓',
 			accentColor: 'blue',
@@ -65,10 +67,11 @@
 					icon: '🚨',
 					items: ['Simulacros', 'Primeros Auxilios', 'Capacitaciones SST']
 				}
-			]
+			],
+			link: '#'
 		},
 		{
-			header: 'Estudios & Análisis',
+			header: 'Estudios',
 			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🔬',
 			accentColor: 'blue',
@@ -83,10 +86,11 @@
 					icon: '💚',
 					items: ['Riesgo Psicosocial', 'Tamizajes', 'Ergonomía']
 				}
-			]
+			],
+			link: '#'
 		},
 		{
-			header: 'Innovación & Tecnología',
+			header: 'Otros',
 			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🚀',
 			accentColor: 'blue',
@@ -101,7 +105,8 @@
 					icon: '⭐',
 					items: ['Consultoría Personalizada', 'Proyectos Especiales']
 				}
-			]
+			],
+			link: '#'
 		}
 	];
 
@@ -191,11 +196,12 @@
 		<!-- Vista Desktop: Cards apiladas con animación -->
 		<div class="hidden lg:block">
 			<!-- Contenedor de cards apiladas -->
-			<div class="relative min-h-[328px] w-full overflow-hidden sm:min-h-[361px] md:min-h-[393px]">
+			<div class="relative min-h-[344px] w-full overflow-hidden sm:min-h-[379px] md:min-h-[413px]">
 				<!-- Cards Stack -->
 				{#key currentIndex}
 					<div
 						class="absolute inset-0 w-full"
+						style="border-radius: 1.5rem; will-change: transform;"
 						in:fly={{ 
 							y: direction === 'down' ? -100 : 100, 
 							duration: 500, 
@@ -210,6 +216,7 @@
 						<!-- Card actual -->
 						<div
 							class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12"
+							style="will-change: transform;"
 						>
 							<!-- Patrón de fondo mejorado -->
 							<div class="absolute inset-0 opacity-10">
@@ -319,13 +326,36 @@
 													<p class="text-[10px] italic text-blue-200 sm:text-xs">Próximamente</p>
 												</div>
 											{/if}
-
+											
 											<!-- Efecto de esquina -->
 											<div
 												class="absolute -bottom-6 -right-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
 											></div>
 										</div>
 									{/each}
+								</div>
+
+								<!-- Botón Ver más de la categoría -->
+								<div class="relative z-10 mt-6 flex justify-center md:mt-8">
+									<a
+										href="/servicios"
+										class="group/btn inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 md:px-8 md:py-3.5 md:text-base"
+									>
+										<span>Ver más</span>
+										<svg
+											class="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1 md:h-5 md:w-5"
+											fill="none"
+											stroke="currentColor"
+											viewBox="0 0 24 24"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M9 5l7 7-7 7"
+											/>
+										</svg>
+									</a>
 								</div>
 							</div>
 						</div>
@@ -336,7 +366,7 @@
 			<!-- Botones de navegación - Solo desktop -->
 			<button
 				on:click={goToPrev}
-				class="absolute left-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14"
+				class="absolute left-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14 cursor-pointer"
 				aria-label="Anterior"
 			>
 				<svg
@@ -352,7 +382,7 @@
 
 			<button
 				on:click={goToNext}
-				class="absolute right-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14"
+				class="absolute right-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14 cursor-pointer"
 				aria-label="Siguiente"
 			>
 				<svg
@@ -401,16 +431,6 @@
 					<span class="font-medium">
 						{currentIndex + 1} / {serviceGroups.length}
 					</span>
-					<span class="text-gray-400">•</span>
-					<div class="flex items-center gap-2">
-						<div
-							class="h-2 w-2 rounded-full transition-all duration-300"
-							class:bg-green-500={isAutoScrolling}
-							class:bg-gray-400={!isAutoScrolling}
-							class:animate-pulse={isAutoScrolling}
-						></div>
-						<span class="text-xs">{isAutoScrolling ? 'Auto' : 'Pausado'}</span>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -507,6 +527,29 @@
 									{/if}
 								</div>
 							{/each}
+						</div>
+
+						<!-- Botón Ver más de la categoría -->
+						<div class="relative z-10 mt-5 flex justify-center sm:mt-6">
+							<a
+								href={group.link}
+								class="group/btn inline-flex items-center gap-2 rounded-xl bg-white/10 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 sm:px-6 sm:py-3 sm:text-base"
+							>
+								<span>Ver más</span>
+								<svg
+									class="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1 sm:h-5 sm:w-5"
+									fill="none"
+									stroke="currentColor"
+									viewBox="0 0 24 24"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 5l7 7-7 7"
+									/>
+								</svg>
+							</a>
 						</div>
 					</div>
 				{/each}

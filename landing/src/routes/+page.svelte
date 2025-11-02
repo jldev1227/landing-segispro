@@ -12,6 +12,7 @@
 	let mobileMenuOpen = false;
 	let activeSection = 'inicio';
 	let carouselVisible = false;
+	let formacionDropdownOpen = false;
 
 	// Modal de trabajo
 	let cvModalOpen = false;
@@ -636,18 +637,65 @@
 
 				<!-- Desktop CTA Buttons -->
 				<div class="hidden items-center gap-3 lg:flex">
-					<a
-						href={resolveRoute('/capacitaciones')}
-						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
+					<!-- Dropdown de Formación -->
+					<div 
+						role="group"
+						class="relative"
 					>
-						Capacitaciones
-					</a>
-					<a
-						href={resolveRoute('/validar-certificado')}
-						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-					>
-						Validar
-					</a>
+						<button
+							on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
+							on:mouseenter={() => (formacionDropdownOpen = true)}
+							on:mouseleave={() => (formacionDropdownOpen = false)}
+							class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
+						>
+							Formación
+							<svg
+								class="h-4 w-4 transition-transform duration-200"
+								class:rotate-180={formacionDropdownOpen}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7"
+								/>
+							</svg>
+						</button>
+
+						<!-- Dropdown Menu con glassmorphism -->
+						{#if formacionDropdownOpen}
+							<div
+								role="menu"
+								tabindex="-1"
+								on:mouseenter={() => (formacionDropdownOpen = true)}
+								on:mouseleave={() => (formacionDropdownOpen = false)}
+								class="absolute left-0 top-full z-50 w-48 pt-2"
+							>
+								<div class="overflow-hidden rounded-xl border border-white/20 bg-white/80 shadow-xl backdrop-blur-md" transition:fly={{ y: -10, duration: 200 }}>
+									<div class="p-1.5">
+										<a
+											href="/capacitaciones"
+											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
+										>
+											<span>🎓</span>
+											<span>Cursos</span>
+										</a>
+										<a
+											href={resolveRoute('/validar-certificado')}
+											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
+										>
+											<span>✓</span>
+											<span>Validar cursos</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						{/if}
+					</div>
+
 					<a
 						href="#contacto"
 						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700"
@@ -757,20 +805,52 @@
 
 			<!-- Action Buttons -->
 			<div class="space-y-2">
-				<a
-					href={resolveRoute('/capacitaciones')}
-					class="block rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
-					on:click={() => (mobileMenuOpen = false)}
-				>
-					📚 Capacitaciones
-				</a>
-				<a
-					href={resolveRoute('/validar-certificado')}
-					class="block rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-700"
-					on:click={() => (mobileMenuOpen = false)}
-				>
-					✓ Validar Certificado
-				</a>
+				<!-- Formación con sub-items -->
+				<div class="space-y-1">
+					<button
+						on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
+						class="flex w-full items-center justify-between rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
+					>
+						<span>📚 Formación</span>
+						<svg
+							class="h-4 w-4 transition-transform duration-200"
+							class:rotate-180={formacionDropdownOpen}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M19 9l-7 7-7-7"
+							/>
+						</svg>
+					</button>
+
+					{#if formacionDropdownOpen}
+						<div
+							class="ml-2 space-y-1 overflow-hidden rounded-lg border border-purple-500/30 bg-purple-900/30 p-1"
+							transition:fly={{ y: -10, duration: 200 }}
+						>
+							<a
+								href="/capacitaciones"
+								class="block rounded-md px-3 py-2 text-sm text-purple-100 transition-colors duration-200 hover:bg-purple-700"
+								on:click={() => (mobileMenuOpen = false)}
+							>
+								🎓 Cursos
+							</a>
+							<a
+								href={resolveRoute('/validar-certificado')}
+								class="block rounded-md px-3 py-2 text-sm text-purple-100 transition-colors duration-200 hover:bg-purple-700"
+								on:click={() => (mobileMenuOpen = false)}
+							>
+								✓ Validar cursos
+							</a>
+						</div>
+					{/if}
+				</div>
+
 				<a
 					href="#contacto"
 					class="block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700"
@@ -1044,7 +1124,7 @@
 			Contáctanos hoy y descubre cómo podemos ayudarte a alcanzar tus objetivos
 		</p>
 		<button
-			class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-600 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+			class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-600 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl cursor-pointer"
 		>
 			Solicitar Consulta
 			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

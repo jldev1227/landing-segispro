@@ -30,45 +30,19 @@
 
 	let currentIndex = 0;
 	let carouselTrack: HTMLElement;
-	let isDragging = false;
-	let startX = 0;
 	let currentTranslate = 0;
 	let prevTranslate = 0;
-	let animationID: number;
-	let isAutoScrolling = true;
-	let lastInteractionTime = Date.now();
+	let animationID: number | undefined;
 	let autoScrollInterval: ReturnType<typeof setInterval>;
 
-	const INTERACTION_TIMEOUT = 5000;
 	const AUTO_SCROLL_INTERVAL = 3000; // 3 segundos
 
 	// Crear array extendido para scroll infinito
 	$: extendedMedia = [...mediaItems, ...mediaItems, ...mediaItems];
 
-	function getPositionX(event: MouseEvent | TouchEvent): number {
-		return 'touches' in event ? event.touches[0].clientX : event.clientX;
-	}
-
-	function animation() {
-		setSliderPosition();
-		if (isDragging) requestAnimationFrame(animation);
-	}
-
 	function setSliderPosition() {
 		if (!carouselTrack) return;
 		carouselTrack.style.transform = `translateX(${currentTranslate}px)`;
-	}
-
-	function handleDragStart(event: MouseEvent | TouchEvent) {
-		return; // Deshabilitado
-	}
-
-	function handleDragMove(event: MouseEvent | TouchEvent) {
-		return; // Deshabilitado
-	}
-
-	function handleDragEnd() {
-		return; // Deshabilitado
 	}
 
 	function goToNext() {
@@ -89,14 +63,6 @@
 		}
 
 		resetAutoScroll();
-	}
-
-	function goToPrev() {
-		return; // Deshabilitado - solo avance automático
-	}
-
-	function goToIndex(index: number) {
-		return; // Deshabilitado
 	}
 
 	function updatePosition() {
@@ -123,7 +89,9 @@
 
 		return () => {
 			clearInterval(autoScrollInterval);
-			cancelAnimationFrame(animationID);
+			if (animationID !== undefined) {
+				cancelAnimationFrame(animationID);
+			}
 		};
 	});
 </script>
