@@ -10,7 +10,7 @@ export async function uploadHojaDeVida(file: File): Promise<UploadHVResponse> {
 		return { ok: false, error: 'VITE_API_URL no está definida en el entorno' };
 	}
 
-	const endpoint = `${API_URL}/professionals/upload-hv`;
+	const endpoint = `${API_URL}/professionals/hv/upload`;
 
 	const formData = new FormData();
 	formData.append('file', file);
