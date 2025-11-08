@@ -5,10 +5,15 @@
 	import { resolveRoute } from '$app/paths';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
+	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
+	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
+	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
 
 	let scrollY = 0;
 	let mobileMenuOpen = false;
 	let activeSection = 'inicio';
+	let carouselVisible = false;
+	let formacionDropdownOpen = false;
 
 	// Modal de trabajo
 	let cvModalOpen = false;
@@ -17,6 +22,11 @@
 	let cvUploading = false;
 	let cvUploadSuccess = false;
 	let cvUploadError = '';
+
+	// Estado avanzado del modal de CV
+	let isDragActive = false;
+	let uploadingProgress = 0;
+	let uploadInterval: ReturnType<typeof setInterval> | null = null;
 
 	$: isScrolled = scrollY > 50;
 
@@ -33,7 +43,7 @@
 
 	// Estados para los contadores
 	let hasAnimated = false;
-	let statsSection: HTMLElement;
+	let statsSection: HTMLElement | undefined;
 	let profesionales = 0;
 	let cubrimiento = 0;
 	let clientesNumber = 0;
@@ -163,6 +173,10 @@
 			heroVisible = true;
 		}, 100);
 
+		setTimeout(() => {
+			carouselVisible = true;
+		}, 200);
+
 		// Observar sección de estadísticas con el observer específico
 		// IMPORTANTE: Usar setTimeout para asegurar que el elemento esté completamente montado
 		setTimeout(() => {
@@ -193,65 +207,6 @@
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
-
-	interface Service {
-		title: string;
-		description: string;
-		icon: string;
-		slug: string;
-	}
-
-	const services: Service[] = [
-		{
-			title: 'CONSULTORÍA',
-			description:
-				'Brindamos acompañamiento estratégico y técnico para diseñar, implementar y fortalecer sistemas de gestión adaptados a cada organización.',
-			icon: '🎯',
-			slug: 'consultoria'
-		},
-		{
-			title: 'AUDITORÍA',
-			description:
-				'Realizamos auditorías internas, combinadas y a proveedores con enfoque práctico, formativo y orientado al mejoramiento continuo.',
-			icon: '📊',
-			slug: 'auditoria'
-		},
-		{
-			title: 'FORMACIÓN',
-			description:
-				'Ofrecemos cursos, diplomados y capacitaciones personalizadas para fortalecer competencias técnicas, normativas y humanas.',
-			icon: '📚',
-			slug: 'formacion'
-		},
-		{
-			title: 'CAMPAÑAS Y ESTUDIOS',
-			description:
-				'Diseñamos intervenciones que promueven la cultura preventiva, evalúan condiciones laborales y aseguran el cumplimiento legal.',
-			icon: '🔬',
-			slug: 'campanas-estudios'
-		},
-		{
-			title: 'DIGITALIZACIÓN',
-			description:
-				'Integración de herramientas tecnológicas, apps y automatización para una gestión más ágil, trazable y eficiente.',
-			icon: '⚙️',
-			slug: 'digitalizacion'
-		},
-		{
-			title: 'PROYECTOS ESPECIALES',
-			description:
-				'Desarrollamos soluciones innovadoras y flexibles adaptadas a necesidades específicas.',
-			icon: '🛠️',
-			slug: 'proyectos-especiales'
-		},
-		{
-			title: 'INTERVENTORÍA',
-			description:
-				'Realizamos interventorías técnicas que verifican el cumplimiento de requisitos, normativas y estándares en proyectos clave.',
-			icon: '🔍',
-			slug: 'interventoria'
-		}
-	];
 
 	interface Characteristic {
 		icon: string;
@@ -297,7 +252,6 @@
 		{ name: 'Colmena Seguros', logo: '/clientes/colmena.png' },
 		{ name: 'Positiva Compañía de Seguros', logo: '/clientes/positiva.png' },
 		{ name: 'AXA Colpatria', logo: '/clientes/axa.png' },
-		{ name: 'Liberty Seguros', logo: '/clientes/liberty.webp' },
 		{ name: 'Equidad Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Mapfre Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Bolívar', logo: '/clientes/bolivar.png' },
@@ -474,31 +428,49 @@
 		document.body.style.overflow = '';
 	}
 
+	function processFile(file: File) {
+		// Validar que sea PDF
+		if (file.type !== 'application/pdf') {
+			cvUploadError = 'Por favor, selecciona solo archivos PDF';
+			cvFile = null;
+			cvFileName = '';
+			return;
+		}
+
+		// Validar tamaño (máximo 50MB)
+		if (file.size > 50 * 1024 * 1024) {
+			cvUploadError = 'El archivo no debe superar los 50MB';
+			cvFile = null;
+			cvFileName = '';
+			return;
+		}
+
+		cvFile = file;
+		cvFileName = file.name;
+		cvUploadError = '';
+	}
+
 	function handleFileSelect(event: Event) {
 		const input = event.target as HTMLInputElement;
 		const file = input.files?.[0];
+		if (file) processFile(file);
+	}
 
-		if (file) {
-			// Validar que sea PDF
-			if (file.type !== 'application/pdf') {
-				cvUploadError = 'Por favor, selecciona solo archivos PDF';
-				cvFile = null;
-				cvFileName = '';
-				return;
-			}
+	function onDragOver(e: DragEvent) {
+		e.preventDefault();
+		isDragActive = true;
+	}
 
-			// Validar tamaño (máximo 5MB)
-			if (file.size > 5 * 1024 * 1024) {
-				cvUploadError = 'El archivo no debe superar los 5MB';
-				cvFile = null;
-				cvFileName = '';
-				return;
-			}
+	function onDragLeave(e: DragEvent) {
+		e.preventDefault();
+		isDragActive = false;
+	}
 
-			cvFile = file;
-			cvFileName = file.name;
-			cvUploadError = '';
-		}
+	function onDrop(e: DragEvent) {
+		e.preventDefault();
+		isDragActive = false;
+		const file = e.dataTransfer?.files?.[0];
+		if (file) processFile(file);
 	}
 
 	async function submitCV() {
@@ -509,23 +481,39 @@
 
 		cvUploading = true;
 		cvUploadError = '';
+		uploadingProgress = 0;
+
+		// Simular progreso mientras se realiza la subida (fetch no expone upload progress)
+		if (uploadInterval) clearInterval(uploadInterval);
+		uploadInterval = setInterval(() => {
+			uploadingProgress = Math.min(95, uploadingProgress + 4);
+		}, 150);
 
 		try {
-			// Aquí se implementaría la lógica real de subida
-			// Por ahora simulamos un delay
-			await new Promise((resolve) => setTimeout(resolve, 2000));
+			const resp = await uploadHojaDeVida(cvFile);
+			if (!resp.ok) {
+				throw new Error(resp.error || 'Error subiendo CV');
+			}
 
-			// Simular envío exitoso
+			uploadingProgress = 100;
+			if (uploadInterval) {
+				clearInterval(uploadInterval);
+				uploadInterval = null;
+			}
 			cvUploadSuccess = true;
 			cvUploading = false;
-
-			// Cerrar modal después de 2 segundos
-			setTimeout(() => {
-				closeCvModal();
-			}, 2000);
-		} catch (error) {
+			setTimeout(() => closeCvModal(), 1600);
+		} catch (err) {
+			if (uploadInterval) {
+				clearInterval(uploadInterval);
+				uploadInterval = null;
+			}
+			console.error(err);
 			cvUploading = false;
-			cvUploadError = 'Ocurrió un error al enviar tu hoja de vida. Por favor intenta nuevamente.';
+			cvUploadError =
+				err instanceof Error
+					? err.message
+					: 'Ocurrió un error al enviar tu hoja de vida. Intenta nuevamente.';
 		}
 	}
 
@@ -649,12 +637,10 @@
 <svelte:window bind:scrollY />
 
 <!-- Header/Navbar -->
-<!-- Header/Navbar -->
 <header
-	class="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
+	class="fixed top-0 right-0 left-0 z-50 shadow-md transition-all duration-300"
 	class:bg-white={isScrolled}
 	class:backdrop-blur-md={isScrolled}
-	class:shadow-md={isScrolled}
 >
 	{#if mounted}
 		<nav
@@ -689,18 +675,65 @@
 
 				<!-- Desktop CTA Buttons -->
 				<div class="hidden items-center gap-3 lg:flex">
-					<a
-						href={resolveRoute('/capacitaciones')}
-						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-					>
-						Capacitaciones
-					</a>
-					<a
-						href={resolveRoute('/validar-certificado')}
-						class="rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
-					>
-						Validar
-					</a>
+					<!-- Dropdown de Formación -->
+					<div role="group" class="relative">
+						<button
+							on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
+							on:mouseenter={() => (formacionDropdownOpen = true)}
+							on:mouseleave={() => (formacionDropdownOpen = false)}
+							class="flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-gray-100"
+						>
+							Formación
+							<svg
+								class="h-4 w-4 transition-transform duration-200"
+								class:rotate-180={formacionDropdownOpen}
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M19 9l-7 7-7-7"
+								/>
+							</svg>
+						</button>
+
+						<!-- Dropdown Menu con glassmorphism -->
+						{#if formacionDropdownOpen}
+							<div
+								role="menu"
+								tabindex="-1"
+								on:mouseenter={() => (formacionDropdownOpen = true)}
+								on:mouseleave={() => (formacionDropdownOpen = false)}
+								class="absolute top-full left-0 z-50 w-48 pt-2"
+							>
+								<div
+									class="overflow-hidden rounded-xl border border-white/20 bg-white/80 shadow-xl backdrop-blur-md"
+									transition:fly={{ y: -10, duration: 200 }}
+								>
+									<div class="p-1.5">
+										<a
+											href="/capacitaciones"
+											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
+										>
+											<span>🎓</span>
+											<span>Cursos</span>
+										</a>
+										<a
+											href={resolveRoute('/validar-certificado')}
+											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
+										>
+											<span>✓</span>
+											<span>Validar cursos</span>
+										</a>
+									</div>
+								</div>
+							</div>
+						{/if}
+					</div>
+
 					<a
 						href="#contacto"
 						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700"
@@ -746,9 +779,9 @@
 
 <!-- Mobile Menu Drawer (fuera del header para z-index correcto) -->
 {#if mounted && mobileMenuOpen}
-	<!-- Overlay -->
+	<!-- Overlay con blur -->
 	<div
-		class="fixed inset-0 z-60 bg-black/50 lg:hidden"
+		class="fixed inset-0 z-60 bg-gray-900/40 backdrop-blur-sm lg:hidden"
 		on:click={() => (mobileMenuOpen = false)}
 		on:keydown={(e) => e.key === 'Escape' && (mobileMenuOpen = false)}
 		in:fade={{ duration: 200 }}
@@ -758,21 +791,21 @@
 		aria-label="Cerrar menú"
 	></div>
 
-	<!-- Drawer -->
+	<!-- Drawer Glass -->
 	<div
-		class="fixed top-0 right-0 z-70 h-full w-80 overflow-hidden bg-linear-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
+		class="fixed top-0 right-0 z-70 h-full w-80 border-l border-white/20 bg-white/10 shadow-2xl backdrop-blur-xl lg:hidden"
 		in:fly={{ x: 320, duration: 300, easing: quintOut }}
 		out:fly={{ x: 320, duration: 250 }}
 	>
-		<!-- Header -->
-		<div class="flex items-center justify-between border-b border-gray-700 px-6 py-4">
+		<!-- Header Glass -->
+		<div class="flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
 			<span class="text-lg font-semibold text-white">Menú</span>
 			<button
 				on:click={() => (mobileMenuOpen = false)}
-				class="flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-700"
+				class="flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200 hover:bg-white/10 active:scale-95"
 				aria-label="Cerrar menú"
 			>
-				<svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
 						stroke-linecap="round"
 						stroke-linejoin="round"
@@ -786,15 +819,19 @@
 		<!-- Content -->
 		<div class="overflow-y-auto p-6" style="height: calc(100% - 65px);">
 			<!-- Navigation -->
-			<nav class="space-y-1">
+			<nav class="space-y-2">
 				{#each navItems as item, i (item.id)}
 					<a
 						href="#{item.id}"
-						class="block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-200"
-						class:bg-blue-600={activeSection === item.id}
+						class="block rounded-xl px-4 py-3 text-sm font-medium backdrop-blur-sm transition-all duration-200"
+						class:bg-blue-500={activeSection === item.id}
 						class:text-white={activeSection === item.id}
-						class:text-gray-300={activeSection !== item.id}
-						class:hover:bg-gray-700={activeSection !== item.id}
+						class:border={activeSection === item.id}
+						class:border-blue-400={activeSection === item.id}
+						class:shadow-lg={activeSection === item.id}
+						class:shadow-blue-500={activeSection === item.id}
+						class:text-gray-200={activeSection !== item.id}
+						class:hover:bg-white={activeSection !== item.id}
 						on:click={() => {
 							activeSection = item.id;
 							mobileMenuOpen = false;
@@ -805,28 +842,61 @@
 					</a>
 				{/each}
 			</nav>
-			<!-- Divider -->
-			<div class="my-6 border-t border-gray-700"></div>
+
+			<!-- Divider Glass -->
+			<div class="my-6 h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
 
 			<!-- Action Buttons -->
-			<div class="space-y-2">
-				<a
-					href={resolveRoute('/capacitaciones')}
-					class="block rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
-					on:click={() => (mobileMenuOpen = false)}
-				>
-					📚 Capacitaciones
-				</a>
-				<a
-					href={resolveRoute('/validar-certificado')}
-					class="block rounded-lg bg-emerald-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-emerald-700"
-					on:click={() => (mobileMenuOpen = false)}
-				>
-					✓ Validar Certificado
-				</a>
+			<div class="space-y-3">
+				<!-- Formación con sub-items -->
+				<div class="space-y-2">
+					<button
+						on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
+						class="flex w-full items-center justify-between rounded-xl border border-blue-400/30 bg-blue-500/20 px-4 py-3 text-sm font-medium text-white backdrop-blur-md transition-all duration-200 hover:bg-blue-500/30 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98]"
+					>
+						<span>📚 Formación</span>
+						<svg
+							class="h-4 w-4 transition-transform duration-300"
+							class:rotate-180={formacionDropdownOpen}
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M19 9l-7 7-7-7"
+							/>
+						</svg>
+					</button>
+
+					{#if formacionDropdownOpen}
+						<div
+							class="ml-2 space-y-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-md"
+							transition:fly={{ y: -10, duration: 200 }}
+						>
+							<a
+								href="/capacitaciones"
+								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
+								on:click={() => (mobileMenuOpen = false)}
+							>
+								🎓 Cursos
+							</a>
+							<a
+								href={resolveRoute('/validar-certificado')}
+								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
+								on:click={() => (mobileMenuOpen = false)}
+							>
+								✓ Validar cursos
+							</a>
+						</div>
+					{/if}
+				</div>
+
 				<a
 					href="#contacto"
-					class="block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700"
+					class="block rounded-xl border border-blue-400/30 bg-blue-500/20 px-4 py-3 text-center text-sm font-medium text-white backdrop-blur-md transition-all duration-200 hover:bg-blue-500/30 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98]"
 					on:click={() => (mobileMenuOpen = false)}
 				>
 					Contáctanos
@@ -836,325 +906,287 @@
 	</div>
 {/if}
 
-<!-- Hero Section -->
+<!-- Hero Section Ultra-Compacto -->
 <section
 	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-100 px-6 pt-32 pb-20"
+	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-8 pt-18 pb-10 sm:pt-22 lg:pt-24"
 >
-	<div class="container mx-auto max-w-6xl">
-		<div class="grid items-center gap-12 lg:grid-cols-2">
+	<div class="container mx-auto max-w-7xl">
+		<div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
 			<!-- Contenido Izquierdo -->
 			<div class="relative z-10">
 				{#if heroVisible}
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<p class="mb-4 text-sm font-semibold tracking-wide text-blue-600 uppercase">
-							Capacitaciones y auditorías para un trabajo más seguro
+						<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:mb-2">
+							Mejora y evoluciona con SEGISPRO Ingeniería. Transformamos tus retos empresariales en
+							oportunidades con consultorías, auditorías y formación a la medida.
 						</p>
-						<h1 class="mb-6 text-5xl leading-tight font-bold md:text-6xl lg:text-7xl">
+						<h1 class="mb-2 text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl xl:text-5xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
-							<span class="text-gray-900">tu aliado</span><br />
-							<span class="text-gray-900">estratégico.</span>
+							<span class="text-gray-900">tu aliado estratégico.</span>
 						</h1>
 					</div>
 
 					<div in:fly={{ y: 30, duration: 800, delay: 200, easing: quintOut }}>
-						<p class="mb-8 max-w-2xl text-lg leading-relaxed text-gray-700">
+						<p class="mb-3 max-w-xl text-sm leading-relaxed text-gray-700 sm:mb-4">
 							Capacitaciones personalizadas que fortalecen habilidades y cumplimiento. Muy pronto,
-							cursos digitales para aprender con flexibilidad y apoyo experto en todo momento.
+							cursos digitales para aprender con flexibilidad y apoyo experto.
 						</p>
+
+						<!-- CTA Buttons -->
+						<div class="flex flex-wrap gap-2 sm:gap-3">
+							<a
+								href="#services"
+								class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 hover:shadow-xl sm:px-6 sm:py-3"
+							>
+								Ver Servicios
+								<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M19 9l-7 7-7-7"
+									/>
+								</svg>
+							</a>
+							<a
+								href="#contacto"
+								class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 transition-all duration-300 hover:bg-blue-50 sm:px-6 sm:py-3"
+							>
+								Contactar
+							</a>
+						</div>
 					</div>
 				{/if}
 			</div>
 
-			<!-- Video Derecho con Mask Orgánico -->
+			<!-- Video Carousel Derecho - Estilo Netflix -->
 			<div class="relative hidden lg:block">
 				{#if heroVisible}
-					<div
-						in:scale={{ duration: 1000, delay: 400, start: 0.8, easing: quintOut }}
-						class="relative"
-					>
-						<!-- Contenedor del video con mask deformado -->
-						<div class="video-mask relative">
-							<video autoplay muted loop playsinline preload="auto" class="h-132 w-full">
-								<source src="/videos/hero-video.mp4" type="video/mp4" />
-							</video>
-
-							<!-- Borde brillante animado -->
-							<div class="border-glow pointer-events-none absolute inset-0"></div>
-						</div>
-
-						<!-- Elementos decorativos flotantes -->
-						<div
-							class="absolute -top-6 -right-6 h-24 w-24 animate-pulse rounded-full bg-blue-500/20 blur-2xl"
-						></div>
-						<div
-							class="absolute -bottom-8 -left-8 h-32 w-32 animate-pulse rounded-full bg-orange-500/20 blur-3xl"
-							style="animation-delay: 1s;"
-						></div>
-					</div>
+					<VideoCarouselHero visible={heroVisible} />
 				{/if}
 			</div>
 		</div>
 	</div>
 </section>
 
-<!-- Services Section con Stats -->
-<section
-	id="services"
-	class="relative overflow-hidden bg-linear-to-b from-white via-gray-50 to-white px-6 py-20"
->
-	<!-- Elementos decorativos de fondo -->
-	<div class="absolute top-20 right-10 h-72 w-72 rounded-full bg-blue-500/5 blur-3xl"></div>
-	<div class="absolute bottom-20 left-10 h-96 w-96 rounded-full bg-orange-500/5 blur-3xl"></div>
-
-	<div class="relative z-10 container mx-auto max-w-6xl space-y-12">
-		{#if mounted}
-			<div in:fly={{ y: 30, duration: 600 }} class="text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
-					Experiencia y compromiso
+<!-- Services Section Ultra-Compacto -->
+<section id="services" class="bg-linear-to-b from-white via-gray-50 to-white p-8">
+	<div class="container mx-auto max-w-7xl">
+		<!-- Header Minimalista -->
+		<div class="mb-6 text-center sm:mb-8">
+			<div class="mb-2">
+				<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
+					Nuestro portafolio
 				</p>
-				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-					Nuestros <span class="text-blue-600">servicios</span>
+				<h2 class="mb-1 text-xl font-bold text-gray-900 sm:text-2xl lg:text-3xl">
+					Servicios <span class="text-blue-600">Profesionales</span>
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-blue-400 sm:w-16"
 				></div>
 			</div>
 
-			<!-- Grid de servicios -->
-			<div class="grid gap-8 md:grid-cols-2">
-				{#each services as service, i (service.slug)}
-					{#if servicesVisible || mounted}
-						<div
-							in:scale={{ duration: 600, delay: i * 150, start: 0.8, easing: quintOut }}
-							class="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-8 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
-						>
-							<!-- Gradiente de fondo animado -->
-							<div
-								class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-							></div>
+			<p class="mx-auto max-w-2xl text-xs leading-relaxed text-gray-600 sm:text-sm">
+				Soluciones integrales en consultoría, formación y estudios especializados
+			</p>
+		</div>
 
-							<!-- Borde brillante en hover -->
-							<div
-								class="absolute inset-0 rounded-3xl bg-linear-to-r from-blue-500/20 via-orange-500/20 to-blue-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
-							></div>
+		<!-- Carrusel de servicios directo -->
+		<div class="mt-4 sm:mt-6">
+			<!-- Contenedor con max-width para limitar el ancho -->
+			<div class="mx-auto max-w-6xl">
+				<ServicesCarousel visible={carouselVisible} />
+			</div>
+		</div>
 
-							<div class="relative z-10">
-								<!-- Icono con fondo -->
-								<div
-									class="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
-								>
-									<div class="text-3xl text-white">
-										{service.icon}
-									</div>
-								</div>
-
-								<h3
-									class="mb-4 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600"
-								>
-									{service.title}
-								</h3>
-
-								<p class="mb-6 leading-relaxed text-gray-600">
-									{service.description}
-								</p>
-
-								<!-- Botón mejorado -->
-								<a
-									href={resolveRoute(`/servicios/${service.slug}`)}
-									class="group/btn relative inline-flex transform items-center gap-2 overflow-hidden rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
-								>
-									<span class="relative z-10">Ver más</span>
-									<svg
-										class="relative z-10 h-4 w-4 transform transition-transform duration-300 group-hover/btn:translate-x-1"
-										fill="none"
-										stroke="currentColor"
-										viewBox="0 0 24 24"
-									>
-										<path
-											stroke-linecap="round"
-											stroke-linejoin="round"
-											stroke-width="2"
-											d="M9 5l7 7-7 7"
-										/>
-									</svg>
-									<!-- Efecto de brillo al hover -->
-									<div
-										class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 group-hover/btn:translate-x-full"
-									></div>
-								</a>
-							</div>
-
-							<!-- Efecto de esquina decorativa -->
-							<div
-								class="absolute top-0 right-0 h-32 w-32 rounded-bl-full bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-							></div>
-						</div>
-					{/if}
-				{/each}
+		<!-- Stats Section Compactas -->
+		<div bind:this={statsSection} class="mt-10 sm:mt-12 lg:mt-16">
+			<div class="mb-6 text-center sm:mb-8">
+				<h3 class="text-lg font-bold text-gray-900 sm:text-xl">Nuestra Trayectoria</h3>
+				<p class="mx-auto mt-1 max-w-2xl text-xs text-gray-600">
+					Datos que respaldan nuestro compromiso
+				</p>
 			</div>
 
-			<!-- Stats Section integrada -->
-			<div bind:this={statsSection}>
-				<div class="mb-12 text-center">
-					<h3 class="text-2xl font-bold text-gray-900 md:text-3xl">Deja que los números hablen</h3>
+			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+				<!-- Profesionales -->
+				<div class="group relative">
+					<div
+						class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-linear-to-br from-blue-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
+					>
+						<!-- Efecto de brillo animado -->
+						<div
+							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+						></div>
+
+						<!-- Partículas decorativas -->
+						{#if hasAnimated}
+							<div
+								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
+								in:scale={{ duration: 600, delay: 0 }}
+							></div>
+						{/if}
+
+						<div class="relative z-10 text-center">
+							<!-- Número -->
+							<div class="mb-3 flex items-center justify-center">
+								<span
+									class="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+								>
+									{profesionales}{statsConfig.profesionales.suffix}
+								</span>
+							</div>
+
+							<!-- Línea decorativa -->
+							<div
+								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
+							></div>
+
+							<!-- Descripción -->
+							<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
+							<p class="text-sm text-gray-600">especializados</p>
+						</div>
+					</div>
 				</div>
 
-				<div class="mb-16 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-					<!-- Profesionales -->
-					<div class="group relative">
+				<!-- Cubrimiento -->
+				<div class="group relative">
+					<div
+						class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
+					>
 						<div
-							class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-linear-to-br from-blue-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
-						>
-							<!-- Efecto de brillo animado -->
+							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+						></div>
+
+						{#if hasAnimated}
 							<div
-								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
+								in:scale={{ duration: 600, delay: 200 }}
+							></div>
+						{/if}
+
+						<div class="relative z-10 text-center">
+							<div class="mb-3 flex items-center justify-center">
+								<span
+									class="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+								>
+									{cubrimiento}{statsConfig.cubrimiento.suffix}
+								</span>
+							</div>
+
+							<div
+								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
 							></div>
 
-							<!-- Partículas decorativas -->
-							{#if hasAnimated}
-								<div
-									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
-									in:scale={{ duration: 600, delay: 0 }}
-								></div>
-							{/if}
-
-							<div class="relative z-10 text-center">
-								<!-- Número -->
-								<div class="mb-3 flex items-center justify-center">
-									<span
-										class="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-									>
-										{profesionales}{statsConfig.profesionales.suffix}
-									</span>
-								</div>
-
-								<!-- Línea decorativa -->
-								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
-								></div>
-
-								<!-- Descripción -->
-								<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
-								<p class="text-sm text-gray-600">especializados</p>
-							</div>
+							<h4 class="text-base font-semibold text-gray-900">Cubrimiento</h4>
+							<p class="text-sm text-gray-600">normativo</p>
 						</div>
 					</div>
+				</div>
 
-					<!-- Cubrimiento -->
-					<div class="group relative">
+				<!-- Clientes -->
+				<div class="group relative">
+					<div
+						class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
+					>
 						<div
-							class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
-						>
+							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+						></div>
+
+						{#if hasAnimated}
 							<div
-								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
+								in:scale={{ duration: 600, delay: 400 }}
+							></div>
+						{/if}
+
+						<div class="relative z-10 text-center">
+							<div class="mb-3 flex items-center justify-center">
+								<span
+									class="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+								>
+									{clientesNumber}{statsConfig.clientes.suffix}
+								</span>
+							</div>
+
+							<div
+								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-emerald-500 to-teal-500"
 							></div>
 
-							{#if hasAnimated}
-								<div
-									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
-									in:scale={{ duration: 600, delay: 200 }}
-								></div>
-							{/if}
-
-							<div class="relative z-10 text-center">
-								<div class="mb-3 flex items-center justify-center">
-									<span
-										class="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-									>
-										{cubrimiento}{statsConfig.cubrimiento.suffix}
-									</span>
-								</div>
-
-								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
-								></div>
-
-								<h4 class="text-base font-semibold text-gray-900">Cubrimiento</h4>
-								<p class="text-sm text-gray-600">normativo</p>
-							</div>
+							<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
+							<p class="text-sm text-gray-600">satisfechos</p>
 						</div>
 					</div>
+				</div>
 
-					<!-- Clientes -->
-					<div class="group relative">
+				<!-- Años de experiencia -->
+				<div class="group relative">
+					<div
+						class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
+					>
 						<div
-							class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
-						>
+							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+						></div>
+
+						{#if hasAnimated}
 							<div
-								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
+								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
+								in:scale={{ duration: 600, delay: 600 }}
+							></div>
+						{/if}
+
+						<div class="relative z-10 text-center">
+							<div class="mb-3 flex items-center justify-center">
+								<span
+									class="bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
+								>
+									{experiencia}{statsConfig.experiencia.suffix}
+								</span>
+							</div>
+
+							<div
+								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-orange-500 to-amber-500"
 							></div>
 
-							{#if hasAnimated}
-								<div
-									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
-									in:scale={{ duration: 600, delay: 400 }}
-								></div>
-							{/if}
-
-							<div class="relative z-10 text-center">
-								<div class="mb-3 flex items-center justify-center">
-									<span
-										class="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-									>
-										{clientesNumber}{statsConfig.clientes.suffix}
-									</span>
-								</div>
-
-								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-emerald-500 to-teal-500"
-								></div>
-
-								<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
-								<p class="text-sm text-gray-600">satisfechos</p>
-							</div>
-						</div>
-					</div>
-
-					<!-- Años de experiencia -->
-					<div class="group relative">
-						<div
-							class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/5 to-transparent p-6 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
-						>
-							<div
-								class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-							></div>
-
-							{#if hasAnimated}
-								<div
-									class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
-									in:scale={{ duration: 600, delay: 600 }}
-								></div>
-							{/if}
-
-							<div class="relative z-10 text-center">
-								<div class="mb-3 flex items-center justify-center">
-									<span
-										class="bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-									>
-										{experiencia}{statsConfig.experiencia.suffix}
-									</span>
-								</div>
-
-								<div
-									class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-orange-500 to-amber-500"
-								></div>
-
-								<h4 class="text-base font-semibold text-gray-900">Años de</h4>
-								<p class="text-sm text-gray-600">experiencia</p>
-							</div>
+							<h4 class="text-base font-semibold text-gray-900">Años de</h4>
+							<p class="text-sm text-gray-600">experiencia</p>
 						</div>
 					</div>
 				</div>
 			</div>
-		{/if}
+		</div>
+	</div>
+</section>
+
+<!-- Sección CTA -->
+<section class="bg-linear-to-r from-blue-600 to-blue-700 p-8 px-6 py-12 text-white">
+	<div class="container mx-auto max-w-6xl text-center">
+		<h2 class="mb-4 text-3xl font-bold md:text-4xl">¿Listo para comenzar?</h2>
+		<p class="mx-auto mb-8 max-w-2xl text-lg text-blue-100">
+			Contáctanos hoy y descubre cómo podemos ayudarte a alcanzar tus objetivos
+		</p>
+		<a
+			href="#contacto"
+			class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-600 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
+		>
+			Solicitar Consulta
+			<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M13 7l5 5m0 0l-5 5m5-5H6"
+				/>
+			</svg>
+		</a>
 	</div>
 </section>
 
 <!-- Characteristics Section -->
 <section
 	id="nosotros"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 p-8"
 >
 	<!-- Elementos decorativos de fondo -->
 	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
@@ -1171,22 +1203,22 @@
 	<div class="relative z-10 container mx-auto max-w-6xl">
 		{#if characteristicsVisible || mounted}
 			<!-- Encabezado mejorado -->
-			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">
+			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
+				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
 					Nuestro compromiso
 				</p>
-				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+				<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
 					<span class="text-blue-600">Características</span> que nos definen
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
 				></div>
 			</div>
 
 			<!-- Card destacada principal -->
 			<div in:fly={{ y: 30, duration: 800, delay: 200 }}>
 				<div
-					class="group relative mb-12 overflow-hidden rounded-3xl border border-gray-100 bg-white p-10 shadow-xl transition-all duration-500 hover:border-blue-200 hover:shadow-2xl"
+					class="group relative mb-8 overflow-hidden rounded-2xl border border-gray-100 bg-white p-6 shadow-xl transition-all duration-500 hover:border-blue-200 hover:shadow-2xl sm:mb-10 sm:p-8"
 				>
 					<!-- Gradiente de fondo animado -->
 					<div
@@ -1195,7 +1227,7 @@
 
 					<!-- Número decorativo grande -->
 					<div
-						class="absolute -top-6 -left-6 text-[200px] leading-none font-bold text-blue-500/5 select-none"
+						class="absolute -top-6 -left-6 text-[150px] leading-none font-bold text-blue-500/5 select-none"
 					>
 						01
 					</div>
@@ -1203,40 +1235,40 @@
 					<div class="relative z-10">
 						<!-- Badge con número -->
 						<div
-							class="mb-6 inline-flex items-center gap-3 rounded-full bg-linear-to-r from-blue-500 to-blue-600 px-5 py-2 text-white shadow-lg"
+							class="mb-4 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-blue-500 to-blue-600 px-4 py-1.5 text-white shadow-lg"
 						>
-							<span class="text-sm font-bold">01</span>
-							<div class="h-4 w-px bg-white/30"></div>
-							<span class="text-sm font-semibold">Principal</span>
+							<span class="text-xs font-bold">01</span>
+							<div class="h-3 w-px bg-white/30"></div>
+							<span class="text-xs font-semibold">Principal</span>
 						</div>
 
 						<h3
-							class="mb-6 text-3xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600 md:text-4xl"
+							class="mb-4 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600 sm:text-2xl lg:text-3xl"
 						>
 							Ayudamos a las entidades al mejoramiento continuo
 						</h3>
 
-						<p class="max-w-3xl text-lg leading-relaxed text-gray-600">
+						<p class="max-w-3xl text-sm leading-relaxed text-gray-600 sm:text-base">
 							Acompañamos a las organizaciones en su búsqueda de mejora continua, optimizando sus
 							procesos con agilidad, con la confianza se garantiza la protección de su información y
 							avanzan con innovación y sostenibilidad para lograr objetivos.
 						</p>
 
 						<!-- Iconos decorativos -->
-						<div class="mt-8 flex items-center gap-4">
-							<div class="flex items-center gap-2 text-sm text-gray-500">
+						<div class="mt-6 flex flex-wrap items-center gap-3">
+							<div class="flex items-center gap-2 text-xs text-gray-500 sm:text-sm">
 								<div class="h-2 w-2 rounded-full bg-blue-500"></div>
 								<span>Innovación</span>
 							</div>
-							<div class="flex items-center gap-2 text-sm text-gray-500">
+							<div class="flex items-center gap-2 text-xs text-gray-500 sm:text-sm">
 								<div class="h-2 w-2 rounded-full bg-orange-500"></div>
 								<span>Sostenibilidad</span>
 							</div>
-							<div class="flex items-center gap-2 text-sm text-gray-500">
+							<div class="flex items-center gap-2 text-xs text-gray-500 sm:text-sm">
 								<div class="h-2 w-2 rounded-full bg-green-500"></div>
 								<span>Agilidad</span>
 							</div>
-							<div class="flex items-center gap-2 text-sm text-gray-500">
+							<div class="flex items-center gap-2 text-xs text-gray-500 sm:text-sm">
 								<div class="h-2 w-2 rounded-full bg-purple-500"></div>
 								<span>Confidencialidad</span>
 							</div>
@@ -1245,17 +1277,19 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-40 w-40 rounded-bl-[100px] bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[80px] bg-linear-to-br from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 				</div>
 			</div>
 
 			<!-- Título del carrusel -->
-			<div in:fly={{ y: 30, duration: 800, delay: 300 }} class="mb-8">
-				<h3 class="text-center text-2xl font-bold text-gray-900 md:text-3xl">
+			<div in:fly={{ y: 30, duration: 800, delay: 300 }} class="mb-6">
+				<h3 class="text-center text-lg font-bold text-gray-900 sm:text-xl lg:text-2xl">
 					Más características destacadas
 				</h3>
-				<p class="mt-2 text-center text-gray-600">Descubre todo lo que nos hace diferentes</p>
+				<p class="mt-1 text-center text-xs text-gray-600 sm:text-sm">
+					Descubre todo lo que nos hace diferentes
+				</p>
 			</div>
 
 			<!-- Carrusel Infinito de Características con contenedor limitado -->
@@ -1270,7 +1304,7 @@
 	<!-- Gallery Section (sin stats) -->
 	<section
 		id="experience"
-		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-24"
+		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black p-8"
 	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
@@ -1288,15 +1322,15 @@
 
 		<div class="relative z-10 container mx-auto max-w-7xl">
 			<!-- Header -->
-			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-400 uppercase">
+			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
+				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-400 uppercase sm:text-sm">
 					Nuestra experiencia
 				</p>
-				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
+				<h2 class="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
 					Proyectos que <span class="text-blue-400">transforman</span>
 				</h2>
 				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
 				></div>
 			</div>
 
@@ -1412,7 +1446,7 @@
 			</div>
 
 			<!-- Indicators -->
-			<div class="mt-12 flex items-center justify-center gap-3">
+			<div class="mt-8 flex items-center justify-center gap-3">
 				{#each images as image, i (image.title + i)}
 					<button
 						on:click={() => goToIndex(i)}
@@ -1423,26 +1457,12 @@
 					></button>
 				{/each}
 			</div>
-
-			<!-- Auto-play indicator -->
-			<div class="mt-8 text-center">
-				<div class="inline-flex items-center gap-3 text-sm text-gray-400">
-					<div
-						class="h-2 w-2 rounded-full transition-colors duration-300 {isAutoPlaying
-							? 'animate-pulse bg-green-500'
-							: 'bg-gray-500'}"
-					></div>
-					<span>
-						{isAutoPlaying ? 'Reproducción automática' : 'Pausado - Usa las flechas ← →'}
-					</span>
-				</div>
-			</div>
 		</div>
 	</section>
 {/if}
 
 <!-- Clients Section -->
-<section class="bg-gray-50 px-6 py-16">
+<section class="bg-gray-50 p-8">
 	<div class="container mx-auto max-w-6xl">
 		<CarouselClientes visible={mounted} {clientes} speed={35} />
 	</div>
@@ -1451,7 +1471,7 @@
 <!-- Trabaja con Nosotros Section -->
 {#if mounted}
 	<section
-		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 px-6 py-24"
+		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 p-8"
 		in:fly={{ y: 50, duration: 800, delay: 200 }}
 	>
 		<!-- Elementos decorativos -->
@@ -1466,55 +1486,63 @@
 			></div>
 		</div>
 
-		<div class="relative z-10 container mx-auto max-w-4xl">
+		<div class="relative z-10 container mx-auto max-w-5xl">
 			<div class="text-center">
 				<!-- Icono -->
-				<div class="mb-6 flex justify-center">
+				<div class="mb-4 flex justify-center">
 					<div
-						class="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm"
+						class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm"
 					>
-						<span class="text-5xl">👥</span>
+						<span class="text-4xl">👥</span>
 					</div>
 				</div>
 
 				<!-- Título -->
-				<h2 class="mb-4 text-4xl font-bold text-white md:text-5xl">Trabaja con Nosotros</h2>
+				<h2 class="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+					Trabaja con Nosotros
+				</h2>
 
 				<!-- Descripción -->
-				<p class="mx-auto mb-8 max-w-2xl text-lg text-blue-100 md:text-xl">
+				<p class="mx-auto mb-6 max-w-2xl text-sm text-blue-100 sm:text-base lg:text-lg">
 					¿Eres un profesional apasionado por la seguridad, la calidad y el mejoramiento continuo?
 					Únete a nuestro equipo de expertos y haz parte de una empresa líder en consultoría,
 					auditoría y formación.
 				</p>
 
 				<!-- Beneficios -->
-				<div class="mb-12 grid gap-6 md:grid-cols-3">
+				<div class="mb-8 grid gap-4 sm:gap-6 md:grid-cols-3">
 					<div
-						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-3 text-3xl">🎯</div>
-						<h3 class="mb-2 text-lg font-semibold text-white">Proyectos Desafiantes</h3>
-						<p class="text-sm text-blue-100">
+						<div class="mb-2 text-2xl sm:text-3xl">🎯</div>
+						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
+							Proyectos Desafiantes
+						</h3>
+						<p class="text-xs text-blue-100 sm:text-sm">
 							Trabaja en proyectos innovadores con clientes de diversos sectores
 						</p>
 					</div>
 
 					<div
-						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-3 text-3xl">📚</div>
-						<h3 class="mb-2 text-lg font-semibold text-white">Desarrollo Profesional</h3>
-						<p class="text-sm text-blue-100">
+						<div class="mb-2 text-2xl sm:text-3xl">📚</div>
+						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
+							Desarrollo Profesional
+						</h3>
+						<p class="text-xs text-blue-100 sm:text-sm">
 							Capacitaciones constantes y oportunidades de crecimiento
 						</p>
 					</div>
 
 					<div
-						class="rounded-xl bg-white/10 p-6 backdrop-blur-sm transition-all duration-300 hover:bg-white/15"
+						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-3 text-3xl">🤝</div>
-						<h3 class="mb-2 text-lg font-semibold text-white">Ambiente Colaborativo</h3>
-						<p class="text-sm text-blue-100">
+						<div class="mb-2 text-2xl sm:text-3xl">🤝</div>
+						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
+							Ambiente Colaborativo
+						</h3>
+						<p class="text-xs text-blue-100 sm:text-sm">
 							Equipo multidisciplinario comprometido con la excelencia
 						</p>
 					</div>
@@ -1523,7 +1551,7 @@
 				<!-- CTA Button -->
 				<button
 					on:click={openCvModal}
-					class="group relative inline-flex items-center gap-3 overflow-hidden rounded-xl bg-white px-8 py-4 text-lg font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+					class="group relative inline-flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-white px-6 py-3 text-base font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:text-lg"
 				>
 					<span class="relative z-10">Enviar mi Hoja de Vida</span>
 					<svg
@@ -1547,7 +1575,9 @@
 				</button>
 
 				<!-- Nota -->
-				<p class="mt-6 text-sm text-blue-200">Solo aceptamos archivos PDF · Tamaño máximo: 5MB</p>
+				<p class="mt-4 text-xs text-blue-200 sm:text-sm">
+					Solo aceptamos archivos PDF · Tamaño máximo: 50MB
+				</p>
 			</div>
 		</div>
 	</section>
@@ -1556,7 +1586,7 @@
 <!-- Contact Section -->
 <section
 	id="contacto"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-24"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 p-8"
 >
 	<!-- Elementos decorativos de fondo -->
 	<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
@@ -1573,26 +1603,28 @@
 	<div class="relative z-10 container mx-auto max-w-6xl">
 		{#if mounted}
 			<!-- Encabezado -->
-			<div in:fly={{ y: 30, duration: 800 }} class="mb-16 text-center">
-				<p class="mb-3 text-sm font-semibold tracking-wide text-blue-600 uppercase">Hablemos</p>
-				<h2 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
+			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
+				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
+					Hablemos
+				</p>
+				<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
 					¿Listo para <span class="text-blue-600">transformar</span> tu empresa?
 				</h2>
-				<p class="mx-auto max-w-2xl text-lg text-gray-600">
+				<p class="mx-auto max-w-2xl text-sm text-gray-600 sm:text-base">
 					Estamos aquí para asesorarte. Elige la forma que prefieras para ponerte en contacto con
 					nosotros.
 				</p>
 				<div
-					class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
+					class="mx-auto mt-4 h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
 				></div>
 			</div>
 
 			<!-- Grid de métodos de contacto -->
-			<div class="mb-16 grid gap-8 md:grid-cols-3">
+			<div class="mb-8 grid gap-6 sm:mb-10 sm:gap-8 md:grid-cols-3">
 				<!-- WhatsApp Card -->
 				<div
 					in:fly={{ y: 30, duration: 800, delay: 200 }}
-					class="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+					class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl sm:p-8"
 				>
 					<!-- Gradiente animado -->
 					<div
@@ -1600,11 +1632,11 @@
 					></div>
 
 					<!-- Icono -->
-					<div class="relative z-10 mb-6">
+					<div class="relative z-10 mb-4 sm:mb-6">
 						<div
-							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-green-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl sm:h-16 sm:w-16"
 						>
-							<svg class="h-8 w-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+							<svg class="h-6 w-6 text-white sm:h-8 sm:w-8" fill="currentColor" viewBox="0 0 24 24">
 								<path
 									d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
 								/>
@@ -1614,11 +1646,11 @@
 
 					<div class="relative z-10 text-center">
 						<h3
-							class="mb-3 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-green-600"
+							class="mb-2 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-green-600 sm:mb-3 sm:text-2xl"
 						>
-							WhatsApp
+							Contáctanos
 						</h3>
-						<p class="mb-6 text-sm leading-relaxed text-gray-600">
+						<p class="mb-4 text-xs leading-relaxed text-gray-600 sm:mb-6 sm:text-sm">
 							Chatea con nosotros en tiempo real y obtén respuestas inmediatas
 						</p>
 
@@ -1672,14 +1704,14 @@
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-24 w-24 rounded-bl-[80px] bg-linear-to-bl from-green-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 sm:h-32 sm:w-32"
 					></div>
 				</div>
 
 				<!-- Email Card -->
 				<div
 					in:fly={{ y: 30, duration: 800, delay: 300 }}
-					class="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+					class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl sm:p-8"
 				>
 					<!-- Gradiente animado -->
 					<div
@@ -1687,11 +1719,16 @@
 					></div>
 
 					<!-- Icono -->
-					<div class="relative z-10 mb-6">
+					<div class="relative z-10 mb-4 sm:mb-6">
 						<div
-							class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl"
+							class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl sm:h-16 sm:w-16"
 						>
-							<svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<svg
+								class="h-6 w-6 text-white sm:h-8 sm:w-8"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
@@ -1704,17 +1741,17 @@
 
 					<div class="relative z-10 text-center">
 						<h3
-							class="mb-3 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600"
+							class="mb-2 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600 sm:mb-3 sm:text-2xl"
 						>
-							Email
+							Cotízanos
 						</h3>
-						<p class="mb-6 text-sm leading-relaxed text-gray-600">
+						<p class="mb-4 text-xs leading-relaxed text-gray-600 sm:mb-6 sm:text-sm">
 							Envíanos un correo detallado y te responderemos a la brevedad
 						</p>
 
 						<a
 							href="mailto:administracion@segispro.com?subject=Consulta%20sobre%20servicios&body=Hola,%20me%20gustaría%20obtener%20más%20información%20sobre..."
-							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-6 py-3 font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95"
+							class="inline-flex transform items-center gap-2 rounded-full bg-linear-to-r from-blue-600 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-blue-700 hover:to-blue-600 hover:shadow-xl active:scale-95 sm:text-base"
 						>
 							<span>Enviar email</span>
 							<svg
@@ -1731,19 +1768,19 @@
 								/>
 							</svg>
 						</a>
-						<p class="mt-4 text-xs text-gray-500">administracion@segispro.com</p>
+						<p class="mt-3 text-xs text-gray-500 sm:mt-4">administracion@segispro.com</p>
 					</div>
 
 					<!-- Esquina decorativa -->
 					<div
-						class="absolute top-0 right-0 h-32 w-32 rounded-bl-[100px] bg-linear-to-bl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+						class="absolute top-0 right-0 h-24 w-24 rounded-bl-[80px] bg-linear-to-bl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 sm:h-32 sm:w-32"
 					></div>
 				</div>
 
 				<!-- Teléfono Card -->
 				<div
 					in:fly={{ y: 30, duration: 800, delay: 400 }}
-					class="group relative overflow-hidden rounded-3xl border border-gray-200 bg-white p-8 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl"
+					class="group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl sm:p-8"
 				>
 					<!-- Gradiente animado -->
 					<div
@@ -1770,10 +1807,10 @@
 						<h3
 							class="mb-3 text-2xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-orange-600"
 						>
-							Teléfono
+							Llámanos
 						</h3>
 						<p class="mb-6 text-sm leading-relaxed text-gray-600">
-							Llámanos directamente y habla con nuestro equipo
+							Agenda una cita directamente y habla con nuestro equipo
 						</p>
 
 						<!-- Botones de llamada -->
@@ -1969,8 +2006,6 @@
 					<div>
 						<div class="mb-6">
 							<img src="/assets/logo-white.png" alt="SEGISPRO Logo" class="mb-4 h-8 w-32" />
-							<!-- Si no tienes logo blanco, usa esto: -->
-							<!-- <h3 class="text-2xl font-bold text-blue-400">SEGISPRO</h3> -->
 						</div>
 						<p class="mb-6 text-sm leading-relaxed text-gray-400">
 							Tu aliado estratégico en capacitaciones y auditorías para un trabajo más seguro.
@@ -2089,7 +2124,7 @@
 						<ul class="space-y-3">
 							<li>
 								<a
-									href="mailto:info@segispro.co"
+									href="mailto:administracion@segispro.com"
 									class="group flex items-center text-sm text-gray-400 transition-colors hover:text-blue-400"
 								>
 									<svg
@@ -2248,116 +2283,227 @@
 	</div>
 </footer>
 
-<!-- Modal de Hoja de Vida - Glassmorphism Style -->
+<!-- Modal de Hoja de Vida - Animado con Dropzone -->
 {#if cvModalOpen}
 	<div
-		class="fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-4 backdrop-blur-2xl"
-		on:click={closeCvModal}
-		on:keydown={(e) => e.key === 'Escape' && closeCvModal()}
+		class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-md"
 		role="button"
 		tabindex="0"
-		transition:fade={{ duration: 300 }}
+		aria-label="Cerrar modal"
+		on:click={closeCvModal}
+		on:keydown={(e) => (e.key === 'Escape' || e.key === 'Enter') && closeCvModal()}
+		in:fade={{ duration: 200 }}
+		out:fade={{ duration: 150 }}
 	>
 		<div
-			class="modal-glass-container relative w-full max-w-md rounded-3xl border border-black/70 bg-white p-8 shadow-2xl backdrop-blur-xl"
+			on:mousedown|stopPropagation
 			on:click|stopPropagation
 			on:keydown|stopPropagation
+			class="animate-in fade-in zoom-in relative w-full max-w-md rounded-lg border border-neutral-200 bg-white p-7 shadow-[0_25px_80px_rgba(0,0,0,0.35)] duration-200"
 			role="dialog"
 			aria-modal="true"
-			aria-labelledby="modal-title"
-			tabindex="-1"
+			aria-labelledby="cv-title"
+			tabindex="0"
+			in:fly={{ y: 12, duration: 220, delay: 80, opacity: 0.6 }}
+			out:fly={{ y: -8, duration: 180, opacity: 0 }}
 		>
-			<!-- Header Minimalista -->
-			<div class="mb-8 flex items-center justify-between">
-				<h3 id="modal-title" class="text-2xl font-bold text-black">
-					Adjunta tu Hoja de Vida
-				</h3>
+			<!-- Glow decorativo -->
+			<div
+				class="animate-glow pointer-events-none absolute -inset-20 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.25),transparent_60%)]"
+			></div>
+
+			<!-- Header -->
+			<div class="mb-6 flex items-center justify-between">
+				<div class="flex items-center gap-3">
+					<div
+						class="flex h-10 w-10 items-center justify-center rounded-md bg-blue-600 text-white shadow-md"
+					>
+						<svg
+							class="animate-float h-5 w-5"
+							fill="none"
+							stroke="currentColor"
+							viewBox="0 0 24 24"
+						>
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M9 12h6m-6 4h6M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"
+							/>
+						</svg>
+					</div>
+					<h3 id="cv-title" class="text-lg font-semibold text-neutral-900">
+						Adjuntar Hoja de Vida (PDF)
+					</h3>
+				</div>
 				<button
 					on:click={closeCvModal}
-					class="rounded-full bg-white/10 p-2 text-black transition-all hover:rotate-90 hover:bg-white/20"
+					class="rounded-md p-2 transition hover:bg-neutral-100"
 					aria-label="Cerrar modal"
 				>
-					<svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+					<svg
+						class="h-5 w-5 text-neutral-700"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M6 18L18 6M6 6l12 12"
+						/>
 					</svg>
 				</button>
 			</div>
 
 			{#if !cvUploadSuccess}
-				<!-- Zona de Upload -->
-				<div class="mb-6">
-					<label
-						for="cv-upload"
-						class={`relative flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed px-6 py-12 transition-all ${
-							cvFile
-								? 'border-blue-400 bg-blue-500/10'
-								: 'border-black/30 bg-white/5 hover:border-black/50 hover:bg-white/10'
-						}`}
-					>
-						<input
-							id="cv-upload"
-							type="file"
-							accept=".pdf"
-							on:change={handleFileSelect}
-							class="hidden"
-						/>
-						
-						{#if cvFile}
-							<!-- Archivo Seleccionado -->
-							<svg class="mb-4 h-16 w-16 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-							</svg>
-							<p class="text-lg font-semibold text-black" title={cvFileName}>
-								{cvFileName.length > 30 ? `${cvFileName.substring(0, 30)}...` : cvFileName}
-							</p>
-							<p class="mt-2 text-sm text-black/70">Archivo listo para enviar</p>
-						{:else}
-							<!-- Estado Vacío -->
-							<svg class="mb-4 h-16 w-16 text-black/50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-							</svg>
-							<p class="text-lg font-semibold text-black">Arrastra tu archivo aquí</p>
-							<p class="mt-2 text-sm text-black/70">o haz clic para seleccionar</p>
-							<p class="mt-4 text-xs text-black/50">Solo archivos PDF - Máx. 5MB</p>
-						{/if}
-					</label>
+				<!-- Upload Zone -->
+				<label
+					for="cv-upload"
+					class="dropzone group relative block cursor-pointer overflow-hidden rounded-md border-2 border-dashed p-8 text-center transition"
+					class:dropzone--active={isDragActive}
+					on:dragover|preventDefault={onDragOver}
+					on:dragleave={onDragLeave}
+					on:drop={onDrop}
+				>
+					<input
+						id="cv-upload"
+						type="file"
+						class="hidden"
+						accept=".pdf"
+						on:change={handleFileSelect}
+					/>
 
-					{#if cvUploadError}
-						<p class="mt-3 text-center text-sm text-red-400">{cvUploadError}</p>
+					<!-- Shimmer -->
+					<span
+						class="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/50 to-transparent opacity-0 transition group-hover:opacity-100"
+						style="mask-image: linear-gradient(90deg, transparent 0%, black 40%, black 60%, transparent 100%);"
+					></span>
+
+					{#if cvFile}
+						<div
+							class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-md bg-blue-100 text-blue-600"
+						>
+							<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 12h6m-6 4h6M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"
+								/>
+							</svg>
+						</div>
+						<p class="font-medium text-neutral-900">{cvFileName}</p>
+						<p class="mt-1 text-sm text-neutral-500">Listo para enviar</p>
+					{:else}
+						<div
+							class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-md bg-neutral-100 text-neutral-500"
+						>
+							<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6h.1a5 5 0 011 9.9M12 12v8m0 0l-3-3m3 3l3-3"
+								/>
+							</svg>
+						</div>
+						<p class="font-medium text-neutral-800">Arrastra tu PDF o haz clic</p>
+						<p class="mt-1 text-xs text-neutral-500">Formato PDF — Máx 50MB</p>
+
+						<!-- Hint -->
+						<div class="mt-4 flex items-center justify-center gap-2 text-xs text-blue-600">
+							<svg
+								class="h-4 w-4 animate-bounce"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 5v14m0 0l-4-4m4 4l4-4"
+								/>
+							</svg>
+							Suelta el archivo aquí
+						</div>
+					{/if}
+
+					<!-- Border shine -->
+					<span
+						class="pointer-events-none absolute inset-0 rounded-md ring-0 transition duration-300 group-hover:ring-2 group-hover:ring-blue-400/40"
+					></span>
+				</label>
+
+				{#if cvUploadError}
+					<p class="mt-3 text-center text-sm text-red-500">{cvUploadError}</p>
+				{/if}
+
+				<!-- Botón y progreso -->
+				<div class="mt-6">
+					<button
+						on:click={submitCV}
+						disabled={!cvFile || cvUploading}
+						class="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+					>
+						{#if cvUploading}
+							<svg
+								class="h-5 w-5 animate-spin"
+								viewBox="0 0 24 24"
+								fill="none"
+								aria-label="Cargando"
+							>
+								<circle
+									class="opacity-25"
+									cx="12"
+									cy="12"
+									r="10"
+									stroke="currentColor"
+									stroke-width="4"
+								></circle>
+								<path
+									class="opacity-75"
+									fill="currentColor"
+									d="M4 12a8 8 0 018-8V0C5.37 0 0 5.37 0 12h4z"
+								></path>
+							</svg>
+							Enviando... {uploadingProgress}%
+						{:else}
+							Enviar
+						{/if}
+					</button>
+
+					{#if cvUploading}
+						<div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-neutral-200">
+							<div
+								class="h-full w-0 rounded-full bg-blue-600 transition-[width] duration-150"
+								style={`width: ${uploadingProgress}%`}
+							></div>
+						</div>
 					{/if}
 				</div>
-
-				<!-- Botón de Envío -->
-				<button
-					on:click={submitCV}
-					disabled={!cvFile || cvUploading}
-					class="w-full rounded-xl bg-linear-to-r from-blue-500 to-blue-600 px-6 py-4 font-semibold text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
-				>
-					{#if cvUploading}
-						<span class="flex items-center justify-center gap-2">
-							<svg class="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-								<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-								<path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-							</svg>
-							Enviando...
-						</span>
-					{:else}
-						Enviar
-					{/if}
-				</button>
 			{:else}
-				<!-- Estado de Éxito -->
-				<div class="flex flex-col items-center justify-center py-8 text-center">
-					<div class="mb-6 rounded-full bg-green-500/20 p-4">
-						<svg class="h-16 w-16 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+				<!-- Success -->
+				<div class="py-8 text-center">
+					<div
+						class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600"
+					>
+						<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M5 13l4 4L19 7"
+							/>
 						</svg>
 					</div>
-					<h4 class="mb-2 text-2xl font-bold text-white">¡CV Recibido!</h4>
-					<p class="mb-6 text-white/70">Nos pondremos en contacto contigo pronto.</p>
+					<h4 class="mb-2 text-lg font-semibold text-neutral-900">¡Hoja de vida recibida!</h4>
+					<p class="mb-6 text-neutral-600">Un miembro de nuestro equipo la revisará.</p>
 					<button
 						on:click={closeCvModal}
-						class="rounded-xl bg-white/10 px-8 py-3 font-semibold text-white transition-all hover:bg-white/20"
+						class="rounded-md bg-neutral-200 px-6 py-2 transition hover:bg-neutral-300"
 					>
 						Cerrar
 					</button>
@@ -2368,38 +2514,59 @@
 {/if}
 
 <style>
+	/* ===== CV MODAL ENHANCEMENTS ===== */
+	.animate-glow {
+		animation: glowPulse 6s ease-in-out infinite;
+	}
+
+	@keyframes glowPulse {
+		0% {
+			opacity: 0.35;
+			transform: scale(0.98);
+		}
+		50% {
+			opacity: 0.6;
+			transform: scale(1.02);
+		}
+		100% {
+			opacity: 0.35;
+			transform: scale(0.98);
+		}
+	}
+
+	.animate-float {
+		animation: floatIcon 3s ease-in-out infinite;
+	}
+
+	@keyframes floatIcon {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(-4px);
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+
+	.dropzone {
+		border-color: #e5e7eb; /* gray-200 */
+		background-color: #fafafa; /* neutral-50 */
+	}
+
+	.dropzone--active {
+		border-color: rgb(37 99 235); /* blue-600 */
+		background-color: rgba(37, 99, 235, 0.06);
+		box-shadow: inset 0 0 0 4px rgba(37, 99, 235, 0.08);
+	}
+
 	/* ===== GLOBAL STYLES ===== */
 	:global(html) {
 		scroll-behavior: smooth;
 	}
 
-	/* ===== MODAL GLASSMORPHISM ANIMATIONS ===== */
-	.modal-glass-container {
-		animation: modalGlassDance 2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-	}
-
-	@keyframes modalGlassDance {
-		0% {
-			opacity: 0;
-			transform: perspective(1000px) rotateX(-15deg) rotateY(10deg) scale(0.8) translateZ(-50px);
-		}
-		25% {
-			transform: perspective(1000px) rotateX(5deg) rotateY(-5deg) scale(1.05) translateZ(20px);
-		}
-		50% {
-			transform: perspective(1000px) rotateX(-3deg) rotateY(3deg) scale(0.98) translateZ(0px);
-		}
-		75% {
-			transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) scale(1.02) translateZ(10px);
-		}
-		100% {
-			opacity: 1;
-			transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1) translateZ(0px);
-		}
-	}
-
 	/* GPU acceleration hints */
-	.video-mask,
 	.gallery-card {
 		box-shadow:
 			0 25px 50px -12px rgba(0, 0, 0, 0.5),
@@ -2421,48 +2588,6 @@
 		-moz-osx-font-smoothing: grayscale;
 	}
 
-	/* ===== VIDEO MASK (Hero Section) ===== */
-	.video-mask {
-		clip-path: polygon(10% 0%, 100% 5%, 95% 100%, 0% 90%);
-		box-shadow:
-			0 20px 60px rgba(59, 130, 246, 0.3),
-			0 0 80px rgba(147, 51, 234, 0.2);
-		transition: all 0.5s ease;
-		will-change: transform, clip-path;
-	}
-
-	.video-mask:hover {
-		clip-path: polygon(5% 2%, 98% 8%, 100% 95%, 2% 98%);
-		transform: scale(1.02);
-	}
-
-	.border-glow {
-		background: linear-gradient(
-			45deg,
-			transparent,
-			rgba(59, 130, 246, 0.4),
-			transparent,
-			rgba(147, 51, 234, 0.4),
-			transparent
-		);
-		background-size: 300% 300%;
-		animation: borderGlow 3s ease infinite;
-		border-radius: inherit;
-		filter: blur(2px);
-	}
-
-	@keyframes borderGlow {
-		0%,
-		100% {
-			background-position: 0% 50%;
-			opacity: 0.6;
-		}
-		50% {
-			background-position: 100% 50%;
-			opacity: 1;
-		}
-	}
-
 	/* ===== CAROUSEL 3D (Gallery Section) ===== */
 	.carousel-track {
 		cursor: grab;
@@ -2481,11 +2606,6 @@
 
 	/* ===== RESPONSIVE ===== */
 	@media (max-width: 1023px) {
-		.video-mask {
-			clip-path: polygon(5% 3%, 97% 0%, 100% 97%, 3% 100%);
-			margin-top: 2rem;
-		}
-
 		.gallery-card {
 			/* Reduce sombras en móvil para mejor performance */
 			box-shadow:
@@ -2500,9 +2620,7 @@
 			scroll-behavior: auto;
 		}
 
-		.video-mask,
 		.gallery-card,
-		.border-glow,
 		.carousel-track {
 			animation: none !important;
 			transition: none !important;

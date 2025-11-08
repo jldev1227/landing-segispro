@@ -22,7 +22,6 @@
 		await new Promise((resolve) => setTimeout(resolve, 2000));
 
 		isLoading = false;
-		console.log('Login:', { email, password });
 	}
 </script>
 

@@ -245,7 +245,7 @@
 			<!-- Track del carrusel -->
 			<button
 				bind:this={carouselTrack}
-				class="carousel-track flex gap-8 px-4 bg-transparent border-none w-full"
+				class="carousel-track flex w-full gap-8 border-none bg-transparent px-4"
 				on:mousedown={handleDragStart}
 				on:mousemove={handleDragMove}
 				on:mouseup={handleDragEnd}
@@ -338,7 +338,7 @@
 			</button>
 			<button
 				on:click={goToPrev}
-				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
+				class="absolute top-1/2 left-4 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
 				aria-label="Anterior"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -353,7 +353,7 @@
 
 			<button
 				on:click={goToNext}
-				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl cursor-pointer"
+				class="absolute top-1/2 right-4 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-200 bg-white/90 shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-110 hover:bg-white hover:shadow-xl"
 				aria-label="Siguiente"
 			>
 				<svg class="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,7 +368,7 @@
 		</div>
 
 		<!-- Indicadores -->
-		<div class="mt-8 space-y-2 text-center">
+		<div class="mt-6 text-center">
 			<!-- Dots -->
 			<div class="flex items-center justify-center gap-2">
 				{#each characteristics as characteristic, i (characteristic.title + i)}
@@ -382,27 +382,6 @@
 						aria-label={`Ir a característica ${i + 1}`}
 					></button>
 				{/each}
-			</div>
-
-			<!-- Texto indicador -->
-			<p class="flex items-center justify-center gap-2 text-sm text-gray-500 italic">
-				<span class="text-lg">🎴</span>
-				Mueve el cursor sobre las tarjetas para ver el efecto 3D
-			</p>
-
-			<!-- Estado de auto-scroll -->
-			<div class="flex items-center justify-center gap-3 text-sm text-gray-400">
-				<div
-					class="h-2 w-2 rounded-full transition-colors duration-300"
-					class:bg-green-500={isAutoScrolling}
-					class:bg-gray-400={!isAutoScrolling}
-					class:animate-pulse={isAutoScrolling}
-				></div>
-				<span>
-					{isAutoScrolling
-						? 'Desplazamiento automático'
-						: 'Pausado - Arrastra o usa las flechas ← →'}
-				</span>
 			</div>
 		</div>
 	</div>
