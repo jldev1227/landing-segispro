@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
+	import { serviciosData } from '$lib/data/servicios';
 
 	interface ServiceItem {
 		title: string;
@@ -20,93 +21,162 @@
 
 	export let visible = false;
 
-	// Datos de servicios con mejor estructura
+	// Transformar serviciosData al formato del carrusel
 	const serviceGroups: ServiceGroup[] = [
 		{
-			header: 'Consultoría & Asesoría',
+			header: 'Consultoría y Auditoría',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '🎯',
+			emoji: '🧩',
 			accentColor: 'blue',
 			sections: [
 				{
-					title: 'NORMAS ISO',
+					title: 'NORMAS ISO PRINCIPALES',
 					icon: '📋',
-					items: ['ISO 9001', 'ISO 14001', 'ISO 45001', 'ISO 39001']
+					items: [
+						'ISO 9001 - Calidad',
+						'ISO 14001 - Ambiental',
+						'ISO 45001 - SST',
+						'ISO 39001 - Seguridad Vial'
+					]
 				},
 				{
 					title: 'CERTIFICACIONES',
 					icon: '✓',
-					items: ['RUC', 'RUC Transporte', 'BASC']
+					items: ['BASC', 'RUC / RUC Transporte', 'NORSOK S-006']
 				},
 				{
-					title: 'MARCO LEGAL',
+					title: 'NORMATIVA COLOMBIANA',
 					icon: '⚖️',
-					items: ['SG-SST 1072', 'PESV 40595', 'SARLAFT 2328']
+					items: ['SG-SST Decreto 1072', 'PESV Res. 40595', 'SARLAFT Res. 2328', 'TRAST']
 				}
 			],
 			link: '/servicios/consultoria-asesoria'
 		},
 		{
-			header: 'Formación, Capacitación & Auditoría',
+			header: 'Formación, Capacitación y Campañas',
 			headerColor: 'from-blue-600 to-blue-700',
 			emoji: '🎓',
 			accentColor: 'blue',
 			sections: [
 				{
-					title: 'CURSOS',
+					title: 'CURSOS ESPECIALIZADOS',
 					icon: '📚',
-					items: ['Manejo Defensivo', 'Mercancías Peligrosas', 'Comando de Incidentes']
+					items: [
+						'Manejo Defensivo',
+						'Mercancías Peligrosas',
+						'Comando de Incidentes',
+						'Auditoría Interna'
+					]
 				},
 				{
-					title: 'CAMPAÑAS',
+					title: 'CAMPAÑAS INSTITUCIONALES',
 					icon: '📢',
-					items: ['Seguridad Vial', 'Vida Saludable', 'Riesgos Ambientales']
+					items: ['Seguridad Vial', 'Vida Saludable', 'Identificación de Peligros', 'Cultura Ética']
 				},
 				{
-					title: 'PRÁCTICA',
-					icon: '🚨',
-					items: ['Simulacros', 'Primeros Auxilios', 'Capacitaciones SST']
+					title: 'SIMULACROS Y PRÁCTICA',
+					icon: '�️',
+					items: [
+						'Simulacros Ambientales',
+						'Primeros Auxilios',
+						'Capacitaciones SST',
+						'Respuesta a Emergencias'
+					]
 				}
 			],
-			link: '#'
+			link: '/servicios/formacion'
 		},
 		{
-			header: 'Estudios',
+			header: 'Estudios Técnicos',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '🔬',
+			emoji: '�',
 			accentColor: 'blue',
 			sections: [
 				{
-					title: 'AMBIENTE',
+					title: 'ESTUDIOS AMBIENTALES',
 					icon: '🌿',
-					items: ['Luxometrías', 'Sonometrías']
+					items: ['Luxometría', 'Sonometría', 'Evaluaciones Ambientales']
 				},
 				{
-					title: 'SALUD',
-					icon: '❤️',
-					items: ['Riesgo Psicosocial', 'Tamizajes', 'Ergonomía']
+					title: 'SALUD LABORAL',
+					icon: '🩺',
+					items: [
+						'Factores Psicosociales',
+						'Tamizajes de Salud',
+						'Análisis de Puestos',
+						'Clima Organizacional'
+					]
+				},
+				{
+					title: 'ESTUDIOS VIALES',
+					icon: '🚦',
+					items: ['Medición con Radar', 'Evaluación de Respuesta', 'Inspecciones Viales']
 				}
 			],
-			link: '#'
+			link: '/servicios/campanas-estudios'
 		},
 		{
-			header: 'Otros',
+			header: 'Digitalización y Proyectos Especiales',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '🚀',
+			emoji: '⚙️',
 			accentColor: 'blue',
 			sections: [
 				{
-					title: 'DIGITAL',
+					title: 'DIGITALIZACIÓN',
 					icon: '💻',
-					items: ['Plataformas E-Learning', 'Soluciones Web']
+					items: [
+						'Formatos Digitales',
+						'Tableros de Control',
+						'Integración con Plataformas',
+						'Apps Personalizadas'
+					]
 				},
 				{
-					title: 'A MEDIDA',
-					icon: '⭐',
-					items: ['Consultoría Personalizada', 'Proyectos Especiales']
+					title: 'PROYECTOS ESPECIALES',
+					icon: '🛠️',
+					items: [
+						'Modelos de Gestión',
+						'Herramientas a Medida',
+						'Metodologías Propias',
+						'Laboratorios de Innovación'
+					]
+				},
+				{
+					title: 'PROYECTO INTEGRAL VIAL',
+					icon: '🚗',
+					items: [
+						'Plan PESV ISO 39001',
+						'Auditoría Vial',
+						'Capacitaciones',
+						'Inspecciones y Control'
+					]
 				}
 			],
-			link: '#'
+			link: '/servicios/digitalizacion'
+		},
+		{
+			header: 'Interventoría',
+			headerColor: 'from-blue-600 to-blue-700',
+			emoji: '📋',
+			accentColor: 'blue',
+			sections: [
+				{
+					title: 'TIPOS DE INTERVENTORÍA',
+					icon: '🔍',
+					items: ['Obras Civiles', 'Seguridad Vial', 'Sistemas de Gestión', 'Proyectos Especiales']
+				},
+				{
+					title: 'METODOLOGÍA',
+					icon: '📊',
+					items: [
+						'Matrices de Seguimiento',
+						'Informes Trazables',
+						'Herramientas Digitales',
+						'Supervisión en Campo'
+					]
+				}
+			],
+			link: '/servicios/interventoria'
 		}
 	];
 
@@ -124,12 +194,12 @@
 		if (isAnimating) return;
 		direction = 'down';
 		isAnimating = true;
-		
+
 		setTimeout(() => {
 			currentIndex = (currentIndex + 1) % serviceGroups.length;
 			isAnimating = false;
 		}, 400);
-		
+
 		resetAutoScroll();
 	}
 
@@ -137,12 +207,12 @@
 		if (isAnimating) return;
 		direction = 'up';
 		isAnimating = true;
-		
+
 		setTimeout(() => {
 			currentIndex = (currentIndex - 1 + serviceGroups.length) % serviceGroups.length;
 			isAnimating = false;
 		}, 400);
-		
+
 		resetAutoScroll();
 	}
 
@@ -150,12 +220,12 @@
 		if (isAnimating || index === currentIndex) return;
 		direction = index > currentIndex ? 'down' : 'up';
 		isAnimating = true;
-		
+
 		setTimeout(() => {
 			currentIndex = index;
 			isAnimating = false;
 		}, 400);
-		
+
 		resetAutoScroll();
 	}
 
@@ -202,22 +272,24 @@
 					<div
 						class="absolute inset-0 w-full"
 						style="border-radius: 1.5rem; will-change: transform;"
-						in:fly={{ 
-							y: direction === 'down' ? -100 : 100, 
-							duration: 500, 
-							easing: quintOut 
+						in:fly={{
+							y: direction === 'down' ? -100 : 100,
+							duration: 500,
+							easing: quintOut
 						}}
-						out:fly={{ 
-							y: direction === 'down' ? 100 : -100, 
-							duration: 500, 
-							easing: quintOut 
+						out:fly={{
+							y: direction === 'down' ? 100 : -100,
+							duration: 500,
+							easing: quintOut
 						}}
 					>
 						<!-- Card actual -->
-						<div class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12">
+						<div
+							class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12"
+						>
 							<!-- Elementos decorativos sutiles -->
 							<div
-								class="absolute -right-32 -top-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
+								class="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
 							></div>
 							<div
 								class="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"
@@ -234,9 +306,7 @@
 											{serviceGroups[currentIndex].emoji}
 										</div>
 										<div class="min-w-0 flex-1">
-											<h3
-												class="mb-1.5 text-lg font-bold text-white md:text-xl lg:text-2xl"
-											>
+											<h3 class="mb-1.5 text-lg font-bold text-white md:text-xl lg:text-2xl">
 												{serviceGroups[currentIndex].header}
 											</h3>
 											<div
@@ -271,7 +341,7 @@
 													{section.icon}
 												</div>
 												<h4
-													class="flex-1 text-[10px] font-bold uppercase tracking-wider text-white sm:text-xs"
+													class="flex-1 text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs"
 												>
 													{section.title}
 												</h4>
@@ -302,7 +372,7 @@
 														</div>
 														<!-- Texto compacto -->
 														<span
-															class="min-w-0 flex-1 text-xs font-medium leading-tight text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-sm"
+															class="min-w-0 flex-1 text-xs leading-tight font-medium text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-sm"
 														>
 															{item}
 														</span>
@@ -312,13 +382,13 @@
 
 											{#if section.items.length === 0}
 												<div class="flex flex-1 items-center justify-center py-3">
-													<p class="text-[10px] italic text-blue-200 sm:text-xs">Próximamente</p>
+													<p class="text-[10px] text-blue-200 italic sm:text-xs">Próximamente</p>
 												</div>
 											{/if}
-											
+
 											<!-- Efecto de esquina -->
 											<div
-												class="absolute -bottom-6 -right-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+												class="absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
 											></div>
 										</div>
 									{/each}
@@ -355,7 +425,7 @@
 			<!-- Botones de navegación - Solo desktop -->
 			<button
 				on:click={goToPrev}
-				class="absolute left-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14 cursor-pointer"
+				class="absolute top-1/2 left-2 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14"
 				aria-label="Anterior"
 			>
 				<svg
@@ -371,7 +441,7 @@
 
 			<button
 				on:click={goToNext}
-				class="absolute right-2 top-1/2 z-50 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14 cursor-pointer"
+				class="absolute top-1/2 right-2 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14"
 				aria-label="Siguiente"
 			>
 				<svg
@@ -404,7 +474,7 @@
 
 							<!-- Tooltip -->
 							<div
-								class="pointer-events-none absolute -top-12 left-1/2 z-50 -translate-x-1/2 whitespace-nowrap rounded-lg bg-blue-900 px-3 py-2 text-xs font-medium text-white opacity-0 shadow-xl transition-all duration-300 group-hover:opacity-100"
+								class="pointer-events-none absolute -top-12 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-blue-900 px-3 py-2 text-xs font-medium whitespace-nowrap text-white opacity-0 shadow-xl transition-all duration-300 group-hover:opacity-100"
 							>
 								{group.header}
 								<div
@@ -469,7 +539,9 @@
 										>
 											{section.icon}
 										</div>
-										<h4 class="flex-1 text-[10px] font-bold uppercase tracking-wider text-white sm:text-xs">
+										<h4
+											class="flex-1 text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs"
+										>
 											{section.title}
 										</h4>
 									</div>
@@ -485,7 +557,11 @@
 												<div
 													class="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-400/20"
 												>
-													<svg class="h-2 w-2 text-blue-300" fill="currentColor" viewBox="0 0 20 20">
+													<svg
+														class="h-2 w-2 text-blue-300"
+														fill="currentColor"
+														viewBox="0 0 20 20"
+													>
 														<path
 															fill-rule="evenodd"
 															d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
@@ -494,7 +570,9 @@
 													</svg>
 												</div>
 												<!-- Texto compacto -->
-												<span class="min-w-0 flex-1 text-xs font-medium leading-tight text-gray-100 sm:text-sm">
+												<span
+													class="min-w-0 flex-1 text-xs leading-tight font-medium text-gray-100 sm:text-sm"
+												>
 													{item}
 												</span>
 											</li>
@@ -503,7 +581,7 @@
 
 									{#if section.items.length === 0}
 										<div class="flex items-center justify-center py-2.5">
-											<p class="text-[10px] italic text-blue-200 sm:text-xs">Próximamente</p>
+											<p class="text-[10px] text-blue-200 italic sm:text-xs">Próximamente</p>
 										</div>
 									{/if}
 								</div>
@@ -539,7 +617,6 @@
 	</div>
 {/if}
 
-
 <style>
 	/* Animación de entrada de las cards */
 	.service-card {
@@ -555,7 +632,9 @@
 		border-radius: inherit;
 		padding: 2px;
 		background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent);
-		-webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+		-webkit-mask:
+			linear-gradient(#fff 0 0) content-box,
+			linear-gradient(#fff 0 0);
 		-webkit-mask-composite: xor;
 		mask-composite: exclude;
 		opacity: 0;

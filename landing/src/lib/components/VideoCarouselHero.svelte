@@ -67,7 +67,7 @@
 	<div class="relative w-full" in:scale={{ duration: 1000, delay: 400, start: 0.8 }}>
 		<!-- Contenedor del carousel con perspectiva 3D -->
 		<div
-			class="carousel-container relative h-64 overflow-hidden rounded-2xl xl:h-80"
+			class="carousel-container relative h-64 overflow-hidden rounded-2xl xl:h-72"
 			style="perspective: 1500px;"
 		>
 			<!-- Gradiente de fondo -->

@@ -31,7 +31,6 @@ export async function uploadHojaDeVida(file: File): Promise<UploadHVResponse> {
 			};
 		}
 
-		console.log('Hoja de vida enviada con éxito:', payload);
 		return { ok: true, data: payload };
 	} catch (err: unknown) {
 		const message = err instanceof Error ? err.message : 'Error de red al enviar la hoja de vida';

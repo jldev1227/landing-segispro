@@ -252,7 +252,6 @@
 		{ name: 'Colmena Seguros', logo: '/clientes/colmena.png' },
 		{ name: 'Positiva Compañía de Seguros', logo: '/clientes/positiva.png' },
 		{ name: 'AXA Colpatria', logo: '/clientes/axa.png' },
-		{ name: 'Liberty Seguros', logo: '/clientes/liberty.webp' },
 		{ name: 'Equidad Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Mapfre Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Bolívar', logo: '/clientes/bolivar.png' },
@@ -639,10 +638,9 @@
 
 <!-- Header/Navbar -->
 <header
-	class="fixed top-0 right-0 left-0 z-50 transition-all duration-300"
+	class="fixed top-0 right-0 left-0 z-50 shadow-md transition-all duration-300"
 	class:bg-white={isScrolled}
 	class:backdrop-blur-md={isScrolled}
-	class:shadow-md={isScrolled}
 >
 	{#if mounted}
 		<nav
@@ -781,9 +779,9 @@
 
 <!-- Mobile Menu Drawer (fuera del header para z-index correcto) -->
 {#if mounted && mobileMenuOpen}
-	<!-- Overlay -->
+	<!-- Overlay con blur -->
 	<div
-		class="fixed inset-0 z-60 bg-black/50 lg:hidden"
+		class="fixed inset-0 z-60 bg-gray-900/40 backdrop-blur-sm lg:hidden"
 		on:click={() => (mobileMenuOpen = false)}
 		on:keydown={(e) => e.key === 'Escape' && (mobileMenuOpen = false)}
 		in:fade={{ duration: 200 }}
@@ -793,21 +791,21 @@
 		aria-label="Cerrar menú"
 	></div>
 
-	<!-- Drawer -->
+	<!-- Drawer Glass -->
 	<div
-		class="fixed top-0 right-0 z-70 h-full w-80 overflow-hidden bg-linear-to-b from-gray-900 to-gray-800 shadow-2xl lg:hidden"
+		class="fixed top-0 right-0 z-70 h-full w-80 border-l border-white/20 bg-white/10 shadow-2xl backdrop-blur-xl lg:hidden"
 		in:fly={{ x: 320, duration: 300, easing: quintOut }}
 		out:fly={{ x: 320, duration: 250 }}
 	>
-		<!-- Header -->
-		<div class="flex items-center justify-between border-b border-gray-700 px-6 py-4">
+		<!-- Header Glass -->
+		<div class="flex items-center justify-between border-b border-white/10 bg-white/5 px-6 py-4">
 			<span class="text-lg font-semibold text-white">Menú</span>
 			<button
 				on:click={() => (mobileMenuOpen = false)}
-				class="flex h-8 w-8 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-700"
+				class="flex h-8 w-8 items-center justify-center rounded-lg transition-all duration-200 hover:bg-white/10 active:scale-95"
 				aria-label="Cerrar menú"
 			>
-				<svg class="h-5 w-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 					<path
 						stroke-linecap="round"
 						stroke-linejoin="round"
@@ -821,15 +819,19 @@
 		<!-- Content -->
 		<div class="overflow-y-auto p-6" style="height: calc(100% - 65px);">
 			<!-- Navigation -->
-			<nav class="space-y-1">
+			<nav class="space-y-2">
 				{#each navItems as item, i (item.id)}
 					<a
 						href="#{item.id}"
-						class="block rounded-lg px-4 py-3 text-sm font-medium transition-colors duration-200"
-						class:bg-blue-600={activeSection === item.id}
+						class="block rounded-xl px-4 py-3 text-sm font-medium backdrop-blur-sm transition-all duration-200"
+						class:bg-blue-500={activeSection === item.id}
 						class:text-white={activeSection === item.id}
-						class:text-gray-300={activeSection !== item.id}
-						class:hover:bg-gray-700={activeSection !== item.id}
+						class:border={activeSection === item.id}
+						class:border-blue-400={activeSection === item.id}
+						class:shadow-lg={activeSection === item.id}
+						class:shadow-blue-500={activeSection === item.id}
+						class:text-gray-200={activeSection !== item.id}
+						class:hover:bg-white={activeSection !== item.id}
 						on:click={() => {
 							activeSection = item.id;
 							mobileMenuOpen = false;
@@ -840,20 +842,21 @@
 					</a>
 				{/each}
 			</nav>
-			<!-- Divider -->
-			<div class="my-6 border-t border-gray-700"></div>
+
+			<!-- Divider Glass -->
+			<div class="my-6 h-px bg-linear-to-r from-transparent via-white/20 to-transparent"></div>
 
 			<!-- Action Buttons -->
-			<div class="space-y-2">
+			<div class="space-y-3">
 				<!-- Formación con sub-items -->
-				<div class="space-y-1">
+				<div class="space-y-2">
 					<button
 						on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
-						class="flex w-full items-center justify-between rounded-lg bg-purple-600 px-4 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-purple-700"
+						class="flex w-full items-center justify-between rounded-xl border border-blue-400/30 bg-blue-500/20 px-4 py-3 text-sm font-medium text-white backdrop-blur-md transition-all duration-200 hover:bg-blue-500/30 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98]"
 					>
 						<span>📚 Formación</span>
 						<svg
-							class="h-4 w-4 transition-transform duration-200"
+							class="h-4 w-4 transition-transform duration-300"
 							class:rotate-180={formacionDropdownOpen}
 							fill="none"
 							stroke="currentColor"
@@ -870,19 +873,19 @@
 
 					{#if formacionDropdownOpen}
 						<div
-							class="ml-2 space-y-1 overflow-hidden rounded-lg border border-purple-500/30 bg-purple-900/30 p-1"
+							class="ml-2 space-y-2 rounded-xl border border-white/10 bg-white/5 p-2 backdrop-blur-md"
 							transition:fly={{ y: -10, duration: 200 }}
 						>
 							<a
 								href="/capacitaciones"
-								class="block rounded-md px-3 py-2 text-sm text-purple-100 transition-colors duration-200 hover:bg-purple-700"
+								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
 								🎓 Cursos
 							</a>
 							<a
 								href={resolveRoute('/validar-certificado')}
-								class="block rounded-md px-3 py-2 text-sm text-purple-100 transition-colors duration-200 hover:bg-purple-700"
+								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
 								✓ Validar cursos
@@ -893,7 +896,7 @@
 
 				<a
 					href="#contacto"
-					class="block rounded-lg bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700"
+					class="block rounded-xl border border-blue-400/30 bg-blue-500/20 px-4 py-3 text-center text-sm font-medium text-white backdrop-blur-md transition-all duration-200 hover:bg-blue-500/30 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98]"
 					on:click={() => (mobileMenuOpen = false)}
 				>
 					Contáctanos
@@ -906,7 +909,7 @@
 <!-- Hero Section Ultra-Compacto -->
 <section
 	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-6 pt-18 pb-10 sm:pt-22 lg:pt-18"
+	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-8 pt-18 pb-10 sm:pt-22 lg:pt-24"
 >
 	<div class="container mx-auto max-w-7xl">
 		<div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
@@ -968,10 +971,7 @@
 </section>
 
 <!-- Services Section Ultra-Compacto -->
-<section
-	id="services"
-	class="bg-linear-to-b from-white via-gray-50 to-white px-6 py-8 sm:py-12 lg:py-16"
->
+<section id="services" class="bg-linear-to-b from-white via-gray-50 to-white p-8">
 	<div class="container mx-auto max-w-7xl">
 		<!-- Header Minimalista -->
 		<div class="mb-6 text-center sm:mb-8">
@@ -1160,13 +1160,14 @@
 </section>
 
 <!-- Sección CTA -->
-<section class="bg-linear-to-r from-blue-600 to-blue-700 px-6 py-12 text-white sm:py-16">
+<section class="bg-linear-to-r from-blue-600 to-blue-700 p-8 px-6 py-12 text-white">
 	<div class="container mx-auto max-w-6xl text-center">
 		<h2 class="mb-4 text-3xl font-bold md:text-4xl">¿Listo para comenzar?</h2>
 		<p class="mx-auto mb-8 max-w-2xl text-lg text-blue-100">
 			Contáctanos hoy y descubre cómo podemos ayudarte a alcanzar tus objetivos
 		</p>
-		<button
+		<a
+			href="#contacto"
 			class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-blue-600 shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl"
 		>
 			Solicitar Consulta
@@ -1178,14 +1179,14 @@
 					d="M13 7l5 5m0 0l-5 5m5-5H6"
 				/>
 			</svg>
-		</button>
+		</a>
 	</div>
 </section>
 
 <!-- Characteristics Section -->
 <section
 	id="nosotros"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-8 sm:py-12 lg:py-16"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 p-8"
 >
 	<!-- Elementos decorativos de fondo -->
 	<div class="absolute top-0 right-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
@@ -1303,7 +1304,7 @@
 	<!-- Gallery Section (sin stats) -->
 	<section
 		id="experience"
-		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 py-12 sm:py-16 lg:py-20"
+		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black p-8"
 	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
@@ -1461,7 +1462,7 @@
 {/if}
 
 <!-- Clients Section -->
-<section class="bg-gray-50 px-6 py-12 sm:py-16">
+<section class="bg-gray-50 p-8">
 	<div class="container mx-auto max-w-6xl">
 		<CarouselClientes visible={mounted} {clientes} speed={35} />
 	</div>
@@ -1470,7 +1471,7 @@
 <!-- Trabaja con Nosotros Section -->
 {#if mounted}
 	<section
-		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 px-6 py-12 sm:py-16 lg:py-20"
+		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 p-8"
 		in:fly={{ y: 50, duration: 800, delay: 200 }}
 	>
 		<!-- Elementos decorativos -->
@@ -1585,7 +1586,7 @@
 <!-- Contact Section -->
 <section
 	id="contacto"
-	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 px-6 py-12 sm:py-16 lg:py-20"
+	class="relative overflow-hidden bg-linear-to-br from-gray-50 via-white to-blue-50 p-8"
 >
 	<!-- Elementos decorativos de fondo -->
 	<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-blue-500/5 blur-3xl"></div>
