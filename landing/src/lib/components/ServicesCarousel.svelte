@@ -397,7 +397,7 @@
 								<!-- Botón Ver más de la categoría -->
 								<div class="relative z-10 mt-6 flex justify-center md:mt-8">
 									<a
-										href="/servicios"
+										href={serviceGroups[currentIndex].link}
 										class="group/btn inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 md:px-8 md:py-3.5 md:text-base"
 									>
 										<span>Ver más</span>
