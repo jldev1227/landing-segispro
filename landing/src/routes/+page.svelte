@@ -3,11 +3,15 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { resolveRoute } from '$app/paths';
+	import { User } from 'lucide-svelte';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
 	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
 	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
+
+	// Variable de entorno para la app Segispro
+	const SEGISPRO_APP_URL = import.meta.env.VITE_APP_SEGISPRO || 'http://localhost:5174';
 
 	let scrollY = 0;
 	let mobileMenuOpen = false;
@@ -736,12 +740,26 @@
 
 					<a
 						href="#contacto"
-						class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-all duration-200 hover:bg-blue-700"
+						class="rounded-lg border-2 border-blue-600 bg-white px-4 py-2 text-sm font-medium text-blue-600 transition-all duration-200 hover:border-blue-700 hover:bg-blue-50"
 					>
 						Contacto
 					</a>
-				</div>
 
+					<!-- Botón de Ingreso con animación destacada -->
+					<a
+						href={SEGISPRO_APP_URL}
+						target="_blank"
+						rel="noopener noreferrer"
+						class="group relative inline-flex animate-pulse items-center gap-2 overflow-hidden rounded-lg border-2 border-blue-600 bg-linear-to-r from-blue-600 to-blue-700 px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-blue-500/50"
+					>
+						<User class="h-4 w-4 transition-transform duration-300 group-hover:scale-110" />
+						<span>Ingreso</span>
+						<!-- Efecto de brillo -->
+						<div
+							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+						></div>
+					</a>
+				</div>
 				<!-- Mobile Menu Button -->
 				<button
 					class="flex h-10 w-10 items-center justify-center rounded-lg transition-colors duration-200 hover:bg-gray-100 lg:hidden"
@@ -900,6 +918,22 @@
 					on:click={() => (mobileMenuOpen = false)}
 				>
 					Contáctanos
+				</a>
+
+				<!-- Botón de Ingreso destacado -->
+				<a
+					href={SEGISPRO_APP_URL}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="group relative flex items-center justify-center gap-2 overflow-hidden rounded-xl border-2 border-blue-400 bg-linear-to-r from-blue-600 to-blue-700 px-4 py-3 text-center text-sm font-semibold text-white shadow-lg backdrop-blur-md transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/50 active:scale-[0.98]"
+					on:click={() => (mobileMenuOpen = false)}
+				>
+					<User class="h-5 w-5 transition-transform duration-300 group-hover:scale-110" />
+					<span>Ingresar a la plataforma</span>
+					<!-- Efecto de brillo -->
+					<div
+						class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full"
+					></div>
 				</a>
 			</div>
 		</div>
