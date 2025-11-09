@@ -89,7 +89,7 @@
 		{
 			header: 'Estudios Técnicos',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '�',
+			emoji: '📟',
 			accentColor: 'blue',
 			sections: [
 				{
@@ -182,80 +182,89 @@
 
 	let currentIndex = 0;
 	let isAnimating = false;
-	let lastInteractionTime = Date.now();
-	let isAutoScrolling = true;
-	let autoScrollInterval: ReturnType<typeof setInterval>;
 	let direction: 'up' | 'down' = 'down';
+	let progressIntervals: Map<number, ReturnType<typeof setInterval>> = new Map();
+	let progressValues: Map<number, number> = new Map();
 
-	const INTERACTION_TIMEOUT = 5000;
-	const AUTO_SCROLL_INTERVAL = 4000;
+	const AUTO_SCROLL_DURATION = 5000; // 5 segundos por slide
 
-	function goToNext() {
-		if (isAnimating) return;
-		direction = 'down';
-		isAnimating = true;
-
-		setTimeout(() => {
-			currentIndex = (currentIndex + 1) % serviceGroups.length;
-			isAnimating = false;
-		}, 400);
-
-		resetAutoScroll();
-	}
-
-	function goToPrev() {
-		if (isAnimating) return;
-		direction = 'up';
-		isAnimating = true;
-
-		setTimeout(() => {
-			currentIndex = (currentIndex - 1 + serviceGroups.length) % serviceGroups.length;
-			isAnimating = false;
-		}, 400);
-
-		resetAutoScroll();
-	}
+	// Inicializar progress values
+	serviceGroups.forEach((_, index) => {
+		progressValues.set(index, 0);
+	});
 
 	function goToIndex(index: number) {
 		if (isAnimating || index === currentIndex) return;
 		direction = index > currentIndex ? 'down' : 'up';
 		isAnimating = true;
 
+		// Resetear todos los progress
+		progressIntervals.forEach((interval) => clearInterval(interval));
+		progressIntervals.clear();
+		serviceGroups.forEach((_, i) => {
+			progressValues.set(i, 0);
+		});
+
 		setTimeout(() => {
 			currentIndex = index;
 			isAnimating = false;
+			startProgress(index);
 		}, 400);
-
-		resetAutoScroll();
 	}
 
-	function resetAutoScroll() {
-		lastInteractionTime = Date.now();
-		isAutoScrolling = false;
+	function startProgress(index: number) {
+		// Limpiar intervalo anterior si existe
+		const existingInterval = progressIntervals.get(index);
+		if (existingInterval) {
+			clearInterval(existingInterval);
+		}
+
+		progressValues.set(index, 0);
+
+		const intervalTime = 50; // Actualizar cada 50ms
+		const increment = 100 / (AUTO_SCROLL_DURATION / intervalTime);
+
+		const interval = setInterval(() => {
+			const currentProgress = progressValues.get(index) || 0;
+			const newProgress = currentProgress + increment;
+
+			if (newProgress >= 100) {
+				progressValues.set(index, 100);
+				clearInterval(interval);
+				progressIntervals.delete(index);
+
+				// Ir al siguiente automáticamente
+				setTimeout(() => {
+					const nextIndex = (index + 1) % serviceGroups.length;
+					goToIndex(nextIndex);
+				}, 200);
+			} else {
+				progressValues.set(index, newProgress);
+				progressValues = progressValues; // Trigger reactivity
+			}
+		}, intervalTime);
+
+		progressIntervals.set(index, interval);
 	}
 
 	function handleKeydown(e: KeyboardEvent) {
-		if (e.key === 'ArrowLeft') goToPrev();
-		if (e.key === 'ArrowRight') goToNext();
-	}
-
-	function startAutoScroll() {
-		autoScrollInterval = setInterval(() => {
-			if (isAutoScrolling && Date.now() - lastInteractionTime >= INTERACTION_TIMEOUT) {
-				goToNext();
-			}
-			if (!isAutoScrolling && Date.now() - lastInteractionTime >= INTERACTION_TIMEOUT) {
-				isAutoScrolling = true;
-			}
-		}, AUTO_SCROLL_INTERVAL);
+		if (e.key === 'ArrowUp') {
+			const prevIndex = (currentIndex - 1 + serviceGroups.length) % serviceGroups.length;
+			goToIndex(prevIndex);
+		}
+		if (e.key === 'ArrowDown') {
+			const nextIndex = (currentIndex + 1) % serviceGroups.length;
+			goToIndex(nextIndex);
+		}
 	}
 
 	onMount(() => {
-		startAutoScroll();
+		startProgress(0);
 		window.addEventListener('keydown', handleKeydown);
 
 		return () => {
-			clearInterval(autoScrollInterval);
+			progressIntervals.forEach((interval) => clearInterval(interval));
+			progressIntervals.clear();
 			window.removeEventListener('keydown', handleKeydown);
 		};
 	});
@@ -263,233 +272,197 @@
 
 {#if visible}
 	<div class="relative w-full" in:fly={{ y: 30, duration: 600 }}>
-		<!-- Vista Desktop: Cards apiladas con animación -->
+		<!-- Vista Desktop: Grid con lista de navegación a la izquierda -->
 		<div class="hidden lg:block">
-			<!-- Contenedor de cards apiladas -->
-			<div class="relative min-h-[344px] w-full overflow-hidden sm:min-h-[379px] md:min-h-[413px]">
-				<!-- Cards Stack -->
-				{#key currentIndex}
-					<div
-						class="absolute inset-0 w-full"
-						style="border-radius: 1.5rem; will-change: transform;"
-						in:fly={{
-							y: direction === 'down' ? -100 : 100,
-							duration: 500,
-							easing: quintOut
-						}}
-						out:fly={{
-							y: direction === 'down' ? 100 : -100,
-							duration: 500,
-							easing: quintOut
-						}}
-					>
-						<!-- Card actual -->
-						<div
-							class="relative h-full w-full overflow-hidden rounded-3xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-8 shadow-2xl lg:p-10 xl:p-12"
-						>
-							<!-- Elementos decorativos sutiles -->
-							<div
-								class="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
-							></div>
-							<div
-								class="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"
-							></div>
-
-							<!-- Contenido principal -->
-							<div class="relative z-10 h-full">
-								<!-- Header compacto -->
-								<div class="mb-5 md:mb-6">
-									<div class="flex items-center gap-3">
-										<div
-											class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10 text-2xl backdrop-blur-sm md:h-14 md:w-14 md:text-3xl"
-										>
-											{serviceGroups[currentIndex].emoji}
-										</div>
-										<div class="min-w-0 flex-1">
-											<h3 class="mb-1.5 text-lg font-bold text-white md:text-xl lg:text-2xl">
-												{serviceGroups[currentIndex].header}
-											</h3>
-											<div
-												class="h-0.5 w-16 rounded-full bg-linear-to-r from-blue-300 to-blue-400 md:w-20"
-											></div>
-										</div>
-									</div>
-								</div>
-
-								<!-- Grid de servicios compacto -->
-								<div class="grid auto-rows-fr grid-cols-1 gap-3 lg:grid-cols-3 lg:gap-4">
-									{#each serviceGroups[currentIndex].sections as section, sIndex}
-										<div
-											class="service-card group/card relative flex h-full min-h-[180px] flex-col overflow-hidden rounded-xl border border-white/20 bg-white/10 p-3 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 hover:shadow-2xl hover:shadow-blue-500/30 md:p-3.5"
-											in:fly={{ y: 20, duration: 400, delay: sIndex * 100 }}
-										>
-											<!-- Efecto de brillo superior -->
-											<div
-												class="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"
-											></div>
-
-											<!-- Gradiente hover -->
-											<div
-												class="absolute inset-0 bg-linear-to-br from-white/10 via-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
-											></div>
-
-											<!-- Header compacto -->
-											<div class="relative z-10 mb-3 flex items-center gap-2">
-												<div
-													class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-base shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6 sm:h-9 sm:w-9 sm:text-lg"
-												>
-													{section.icon}
-												</div>
-												<h4
-													class="flex-1 text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs"
-												>
-													{section.title}
-												</h4>
-											</div>
-
-											<!-- Separador delgado -->
-											<div class="mb-2.5 h-px bg-white/20"></div>
-
-											<!-- Lista compacta -->
-											<ul class="relative z-10 flex-1 space-y-1.5">
-												{#each section.items as item}
-													<li class="group/item flex items-start gap-2 transition-all duration-200">
-														<!-- Check icon pequeño -->
-														<div
-															class="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-400/20 transition-all duration-200 group-hover/item:scale-110 group-hover/item:bg-blue-400/30"
-														>
-															<svg
-																class="h-2 w-2 text-blue-300"
-																fill="currentColor"
-																viewBox="0 0 20 20"
-															>
-																<path
-																	fill-rule="evenodd"
-																	d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-																	clip-rule="evenodd"
-																/>
-															</svg>
-														</div>
-														<!-- Texto compacto -->
-														<span
-															class="min-w-0 flex-1 text-xs leading-tight font-medium text-gray-100 transition-colors duration-200 group-hover/item:text-white sm:text-sm"
-														>
-															{item}
-														</span>
-													</li>
-												{/each}
-											</ul>
-
-											{#if section.items.length === 0}
-												<div class="flex flex-1 items-center justify-center py-3">
-													<p class="text-[10px] text-blue-200 italic sm:text-xs">Próximamente</p>
-												</div>
-											{/if}
-
-											<!-- Efecto de esquina -->
-											<div
-												class="absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
-											></div>
-										</div>
-									{/each}
-								</div>
-
-								<!-- Botón Ver más de la categoría -->
-								<div class="relative z-10 mt-6 flex justify-center md:mt-8">
-									<a
-										href={serviceGroups[currentIndex].link}
-										class="group/btn inline-flex items-center gap-2 rounded-xl bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95 md:px-8 md:py-3.5 md:text-base"
-									>
-										<span>Ver más</span>
-										<svg
-											class="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1 md:h-5 md:w-5"
-											fill="none"
-											stroke="currentColor"
-											viewBox="0 0 24 24"
-										>
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M9 5l7 7-7 7"
-											/>
-										</svg>
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				{/key}
-			</div>
-
-			<!-- Botones de navegación - Solo desktop -->
-			<button
-				on:click={goToPrev}
-				class="absolute top-1/2 left-2 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:left-4 sm:h-14 sm:w-14"
-				aria-label="Anterior"
-			>
-				<svg
-					class="h-5 w-5 text-blue-700 sm:h-6 sm:w-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					stroke-width="3"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-				</svg>
-			</button>
-
-			<button
-				on:click={goToNext}
-				class="absolute top-1/2 right-2 z-50 flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-2 border-white/20 bg-white/95 shadow-xl backdrop-blur-md transition-all duration-300 hover:scale-110 hover:border-white/30 hover:bg-white hover:shadow-2xl active:scale-95 sm:right-4 sm:h-14 sm:w-14"
-				aria-label="Siguiente"
-			>
-				<svg
-					class="h-5 w-5 text-blue-700 sm:h-6 sm:w-6"
-					fill="none"
-					stroke="currentColor"
-					viewBox="0 0 24 24"
-					stroke-width="3"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-				</svg>
-			</button>
-
-			<!-- Indicadores mejorados - Solo desktop -->
-			<div class="mt-8 space-y-4 text-center">
-				<!-- Dots con mejor visualización -->
-				<div class="flex items-center justify-center gap-3">
-					{#each serviceGroups as group, i}
+			<div class="grid grid-cols-[300px_1fr] gap-6">
+				<!-- Lista de navegación a la izquierda -->
+				<div class="space-y-2">
+					{#each serviceGroups as group, index}
 						<button
-							on:click={() => goToIndex(i)}
-							class="group relative transition-all duration-300"
+							on:click={() => goToIndex(index)}
+							class="group relative w-full overflow-hidden rounded-xl border-2 transition-all duration-300 {currentIndex ===
+							index
+								? 'border-blue-600 bg-blue-50'
+								: 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50/50'}"
 							aria-label={`Ir a ${group.header}`}
 						>
-							<!-- Dot principal -->
-							<div
-								class="relative h-3 rounded-full transition-all duration-300 {currentIndex === i
-									? 'w-12 bg-blue-600 shadow-lg shadow-blue-600/50'
-									: 'w-3 bg-gray-300 hover:bg-gray-400'}"
-							></div>
-
-							<!-- Tooltip -->
-							<div
-								class="pointer-events-none absolute -top-12 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-blue-900 px-3 py-2 text-xs font-medium whitespace-nowrap text-white opacity-0 shadow-xl transition-all duration-300 group-hover:opacity-100"
-							>
-								{group.header}
+							<div class="relative z-10 flex items-center gap-3 p-4">
 								<div
-									class="absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-blue-900"
-								></div>
+									class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-2xl transition-transform duration-300 {currentIndex ===
+									index
+										? 'scale-110 bg-blue-600'
+										: 'bg-gray-100 group-hover:scale-105'}"
+								>
+									<span class={currentIndex === index ? 'grayscale-0' : 'opacity-70 grayscale'}>
+										{group.emoji}
+									</span>
+								</div>
+								<div class="min-w-0 flex-1 text-left">
+									<h4
+										class="truncate text-sm font-semibold transition-colors {currentIndex === index
+											? 'text-blue-900'
+											: 'text-gray-700 group-hover:text-blue-700'}"
+									>
+										{group.header}
+									</h4>
+								</div>
 							</div>
+
+							<!-- Barra de progreso animada -->
+							{#if currentIndex === index}
+								<div
+									class="absolute bottom-0 left-0 h-1 bg-blue-600 transition-all duration-100 ease-linear"
+									style="width: {progressValues.get(index) || 0}%"
+								></div>
+							{/if}
 						</button>
 					{/each}
 				</div>
 
-				<!-- Contador y estado -->
-				<div class="flex items-center justify-center gap-4 text-sm text-gray-600">
-					<span class="font-medium">
-						{currentIndex + 1} / {serviceGroups.length}
-					</span>
+				<!-- Contenido del servicio a la derecha -->
+				<div class="relative min-h-[500px] md:min-h-[450px]">
+					{#key currentIndex}
+						<div
+							class="absolute inset-0"
+							in:fly={{
+								y: direction === 'down' ? -50 : 50,
+								duration: 400,
+								easing: quintOut
+							}}
+							out:fly={{
+								y: direction === 'down' ? 50 : -50,
+								duration: 400,
+								easing: quintOut
+							}}
+						>
+							<div
+								class="h-full overflow-hidden rounded-3xl bg-linear-to-r from-blue-600 to-blue-700 p-8 shadow-2xl lg:p-10"
+							>
+								<!-- Elementos decorativos -->
+								<div
+									class="absolute -top-32 -right-32 h-80 w-80 rounded-full bg-blue-400/20 blur-3xl"
+								></div>
+								<div
+									class="absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-blue-500/20 blur-3xl"
+								></div>
+
+								<!-- Contenido -->
+								<div class="relative z-10 h-full">
+									<!-- Header -->
+									<div class="mb-6">
+										<div class="flex items-center gap-3">
+											<div
+												class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/10 text-3xl backdrop-blur-sm"
+											>
+												{serviceGroups[currentIndex].emoji}
+											</div>
+											<div class="min-w-0 flex-1">
+												<h3 class="mb-1.5 text-2xl font-bold text-white">
+													{serviceGroups[currentIndex].header}
+												</h3>
+												<div
+													class="h-0.5 w-20 rounded-full bg-linear-to-r from-blue-300 to-blue-400"
+												></div>
+											</div>
+										</div>
+									</div>
+
+									<!-- Grid de servicios -->
+									<div class="grid auto-rows-fr grid-cols-1 gap-4 lg:grid-cols-3">
+										{#each serviceGroups[currentIndex].sections as section, sIndex}
+											<div
+												class="service-card group/card relative flex h-full min-h-[200px] flex-col overflow-hidden rounded-xl border border-white/20 bg-white/10 p-4 backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/15 hover:shadow-2xl hover:shadow-blue-500/30"
+												in:fly={{ y: 20, duration: 400, delay: sIndex * 100 }}
+											>
+												<div
+													class="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent"
+												></div>
+
+												<div
+													class="absolute inset-0 bg-linear-to-br from-white/10 via-white/5 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+												></div>
+
+												<div class="relative z-10 mb-3 flex items-center gap-2">
+													<div
+														class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-lg shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6"
+													>
+														{section.icon}
+													</div>
+													<h4 class="flex-1 text-xs font-bold tracking-wider text-white uppercase">
+														{section.title}
+													</h4>
+												</div>
+
+												<div class="mb-3 h-px bg-white/20"></div>
+
+												<ul class="relative z-10 flex-1 space-y-2">
+													{#each section.items as item}
+														<li
+															class="group/item flex items-start gap-2 transition-all duration-200"
+														>
+															<div
+																class="mt-0.5 flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full bg-blue-400/20 transition-all duration-200 group-hover/item:scale-110 group-hover/item:bg-blue-400/30"
+															>
+																<svg
+																	class="h-2 w-2 text-blue-300"
+																	fill="currentColor"
+																	viewBox="0 0 20 20"
+																>
+																	<path
+																		fill-rule="evenodd"
+																		d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+																		clip-rule="evenodd"
+																	/>
+																</svg>
+															</div>
+															<span
+																class="min-w-0 flex-1 text-sm leading-tight font-medium text-gray-100 transition-colors duration-200 group-hover/item:text-white"
+															>
+																{item}
+															</span>
+														</li>
+													{/each}
+												</ul>
+
+												{#if section.items.length === 0}
+													<div class="flex flex-1 items-center justify-center py-3">
+														<p class="text-xs text-blue-200 italic">Próximamente</p>
+													</div>
+												{/if}
+
+												<div
+													class="absolute -right-6 -bottom-6 h-20 w-20 rounded-full bg-linear-to-br from-blue-400/20 to-transparent opacity-0 transition-opacity duration-300 group-hover/card:opacity-100"
+												></div>
+											</div>
+										{/each}
+									</div>
+
+									<!-- Botón Ver más -->
+									<div class="relative z-10 mt-8 flex justify-center">
+										<a
+											href={serviceGroups[currentIndex].link}
+											class="group/btn inline-flex items-center gap-2 rounded-xl bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20 hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
+										>
+											<span>Ver más</span>
+											<svg
+												class="h-5 w-5 transition-transform duration-300 group-hover/btn:translate-x-1"
+												fill="none"
+												stroke="currentColor"
+												viewBox="0 0 24 24"
+											>
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M9 5l7 7-7 7"
+												/>
+											</svg>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					{/key}
 				</div>
 			</div>
 		</div>
@@ -499,7 +472,7 @@
 			<div class="space-y-4 sm:space-y-5">
 				{#each serviceGroups as group, groupIndex}
 					<div
-						class="overflow-hidden rounded-2xl bg-linear-to-br from-blue-700 via-blue-800 to-blue-900 p-3.5 shadow-2xl sm:p-5"
+						class="overflow-hidden rounded-2xl bg-linear-to-r from-blue-600 to-blue-700 p-3.5 shadow-2xl sm:p-5"
 						in:fly={{ y: 20, duration: 400, delay: groupIndex * 150 }}
 					>
 						<!-- Header del servicio compacto -->
