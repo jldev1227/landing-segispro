@@ -41,7 +41,7 @@
 				},
 				{
 					title: 'CERTIFICACIONES',
-					icon: '✓',
+					icon: '🧾',
 					items: ['BASC', 'RUC / RUC Transporte', 'NORSOK S-006']
 				},
 				{
@@ -75,7 +75,7 @@
 				},
 				{
 					title: 'SIMULACROS Y PRÁCTICA',
-					icon: '�️',
+					icon: '🚨',
 					items: [
 						'Simulacros Ambientales',
 						'Primeros Auxilios',
