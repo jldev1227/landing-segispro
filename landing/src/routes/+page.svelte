@@ -951,10 +951,6 @@
 			<div class="relative z-10">
 				{#if heroVisible}
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:mb-2">
-							Mejora y evoluciona con SEGISPRO Ingeniería. Transformamos tus retos empresariales en
-							oportunidades con consultorías, auditorías y formación a la medida.
-						</p>
 						<h1 class="mb-2 text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl xl:text-5xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
 							<span class="text-gray-900">tu aliado estratégico.</span>
@@ -963,8 +959,8 @@
 
 					<div in:fly={{ y: 30, duration: 800, delay: 200, easing: quintOut }}>
 						<p class="mb-3 max-w-xl text-sm leading-relaxed text-gray-700 sm:mb-4">
-							Capacitaciones personalizadas que fortalecen habilidades y cumplimiento. Muy pronto,
-							cursos digitales para aprender con flexibilidad y apoyo experto.
+							Mejora y evoluciona con SEGISPRO Ingeniería. Transformamos tus retos empresariales en
+							oportunidades con consultorías, auditorías y formación a la medida.
 						</p>
 
 						<!-- CTA Buttons -->
