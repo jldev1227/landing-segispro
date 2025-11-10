@@ -1981,8 +1981,9 @@
 
 			<!-- CTA Bottom -->
 			<div in:fly={{ y: 30, duration: 800, delay: 600 }} class="text-center">
+				<!-- Desktop version -->
 				<div
-					class="inline-flex items-center gap-8 rounded-full border border-gray-100 bg-white px-8 py-5 shadow-xl"
+					class="hidden sm:inline-flex items-center gap-8 rounded-full border border-gray-100 bg-white px-8 py-5 shadow-xl"
 				>
 					<div class="flex items-center gap-3">
 						<div class="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
@@ -2008,6 +2009,43 @@
 						<span class="text-sm font-medium text-gray-700">
 							Lun - Vie: 8:00 AM - 6:00 PM<br />Sáb: 8:00 AM - 12:00 PM
 						</span>
+					</div>
+				</div>
+
+				<!-- Mobile version -->
+				<div class="sm:hidden">
+					<div class="space-y-4 rounded-2xl border border-gray-100 bg-white px-6 py-6 shadow-xl">
+						<!-- Response time -->
+						<div class="flex items-center justify-center gap-3">
+							<div class="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
+							<span class="text-sm font-medium text-gray-700 text-center">
+								Respondemos en menos de 24 horas
+							</span>
+						</div>
+						
+						<!-- Divider -->
+						<div class="w-full h-px bg-gray-200"></div>
+						
+						<!-- Schedule -->
+						<div class="flex items-center justify-center gap-3">
+							<svg
+								class="h-5 w-5 text-blue-500 flex-shrink-0"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+							<div class="text-sm font-medium text-gray-700 text-center">
+								<div>Lun - Vie: 8:00 AM - 6:00 PM</div>
+								<div>Sáb: 8:00 AM - 12:00 PM</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
