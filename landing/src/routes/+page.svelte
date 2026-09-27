@@ -22,6 +22,7 @@
 	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
 	import { serviciosData } from '$lib/data/servicios';
 	import { REGIONES } from '$lib/seo/site';
+	import metricas from '$lib/data/metricas.json';
 
 	// Variable de entorno para la app Segispro
 	const SEGISPRO_APP_URL = import.meta.env.VITE_APP_SEGISPRO || 'http://localhost:5174';
@@ -63,20 +64,28 @@
 	// Estados para los contadores
 	let hasAnimated = false;
 	let statsSection: HTMLElement | undefined;
-	// Se inicializan en su valor final para que el HTML servido muestre las cifras
-	// reales; `startAnimation` vuelve a 0 y anima solo en el navegador.
-	let profesionales = 20;
-	let cubrimiento = 15;
-	let clientesNumber = 125;
-	let experiencia = 15;
-
-	// Configuración de las estadísticas
+	/**
+	 * Las cuatro cifras salen de `metricas.json`, que un workflow semanal congela
+	 * desde `GET /api/public/stats`. Antes estaban escritas a mano y se quedaban
+	 * cortas: decían 125 clientes cuando la base tiene 315, y 20 profesionales
+	 * cuando hay 76.
+	 */
 	const statsConfig = {
-		profesionales: { target: 20, duration: 2000, suffix: '+' },
-		cubrimiento: { target: 15, duration: 2000, suffix: '+' },
-		clientes: { target: 125, duration: 2500, suffix: '+' },
-		experiencia: { target: 15, duration: 2000, suffix: '+' }
+		servicios: { target: metricas.serviciosPrestados, duration: 2500, suffix: '+' },
+		clientes: { target: metricas.clientesAtendidos, duration: 2000, suffix: '+' },
+		profesionales: { target: metricas.profesionales, duration: 2000, suffix: '+' },
+		experiencia: { target: metricas.aniosOperacion, duration: 2000, suffix: '' }
 	};
+
+	// Arrancan en su valor final para que el HTML servido muestre las cifras
+	// reales; `startAnimation` vuelve a 0 y anima solo en el navegador.
+	let serviciosPrestados = statsConfig.servicios.target;
+	let clientesNumber = statsConfig.clientes.target;
+	let profesionales = statsConfig.profesionales.target;
+	let experiencia = statsConfig.experiencia.target;
+
+	/** Separador de miles colombiano: 1.174, no 1174. */
+	const cifra = (valor: number) => valor.toLocaleString('es-CO');
 
 	// Función para animar contador
 	function animateCounter(
@@ -110,47 +119,22 @@
 	function startAnimation() {
 		// Los contadores llegan con su valor final desde el servidor: se vuelven a 0
 		// justo antes de animar para que el conteo se aprecie.
-		profesionales = 0;
-		cubrimiento = 0;
+		serviciosPrestados = 0;
 		clientesNumber = 0;
+		profesionales = 0;
 		experiencia = 0;
 
 		// Animar contadores con delays escalonados
-		setTimeout(() => {
-			animateCounter(
-				0,
-				statsConfig.profesionales.target,
-				statsConfig.profesionales.duration,
-				(val: number) => (profesionales = val)
-			);
-		}, 0);
+		const contadores = [
+			[statsConfig.servicios, (v: number) => (serviciosPrestados = v)],
+			[statsConfig.clientes, (v: number) => (clientesNumber = v)],
+			[statsConfig.profesionales, (v: number) => (profesionales = v)],
+			[statsConfig.experiencia, (v: number) => (experiencia = v)]
+		] as const;
 
-		setTimeout(() => {
-			animateCounter(
-				0,
-				statsConfig.cubrimiento.target,
-				statsConfig.cubrimiento.duration,
-				(val: number) => (cubrimiento = val)
-			);
-		}, 200);
-
-		setTimeout(() => {
-			animateCounter(
-				0,
-				statsConfig.clientes.target,
-				statsConfig.clientes.duration,
-				(val: number) => (clientesNumber = val)
-			);
-		}, 400);
-
-		setTimeout(() => {
-			animateCounter(
-				0,
-				statsConfig.experiencia.target,
-				statsConfig.experiencia.duration,
-				(val: number) => (experiencia = val)
-			);
-		}, 600);
+		contadores.forEach(([config, asignar], i) => {
+			setTimeout(() => animateCounter(0, config.target, config.duration, asignar), i * 200);
+		});
 	}
 
 	onMount(() => {
@@ -1029,7 +1013,7 @@
 								<span
 									class="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 								>
-									{profesionales}{statsConfig.profesionales.suffix}
+									{cifra(serviciosPrestados)}{statsConfig.servicios.suffix}
 								</span>
 							</div>
 
@@ -1039,8 +1023,8 @@
 							></div>
 
 							<!-- Descripción -->
-							<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
-							<p class="text-sm text-gray-600">especializados</p>
+							<h4 class="text-base font-semibold text-gray-900">Servicios</h4>
+							<p class="text-sm text-gray-600">prestados</p>
 						</div>
 					</div>
 				</div>
@@ -1066,7 +1050,7 @@
 								<span
 									class="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 								>
-									{cubrimiento}{statsConfig.cubrimiento.suffix}
+									{cifra(clientesNumber)}{statsConfig.clientes.suffix}
 								</span>
 							</div>
 
@@ -1074,8 +1058,8 @@
 								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
 							></div>
 
-							<h4 class="text-base font-semibold text-gray-900">Cubrimiento</h4>
-							<p class="text-sm text-gray-600">normativo</p>
+							<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
+							<p class="text-sm text-gray-600">atendidos</p>
 						</div>
 					</div>
 				</div>
@@ -1101,7 +1085,7 @@
 								<span
 									class="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
 								>
-									{clientesNumber}{statsConfig.clientes.suffix}
+									{cifra(profesionales)}{statsConfig.profesionales.suffix}
 								</span>
 							</div>
 
@@ -1109,8 +1093,8 @@
 								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-emerald-500 to-teal-500"
 							></div>
 
-							<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
-							<p class="text-sm text-gray-600">satisfechos</p>
+							<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
+							<p class="text-sm text-gray-600">especializados</p>
 						</div>
 					</div>
 				</div>

@@ -1,0 +1,72 @@
+{
+	"serviciosPrestados": 1174,
+	"clientesAtendidos": 315,
+	"contratantes": 41,
+	"profesionales": 76,
+	"ciudadesAtendidas": 41,
+	"departamentosAtendidos": 5,
+	"aniosOperacion": 17,
+	"porCategoria": [
+		{
+			"etiqueta": "Consultoría",
+			"total": 868,
+			"categorias": ["CONSULTORIA"]
+		},
+		{
+			"etiqueta": "Capacitación",
+			"total": 197,
+			"categorias": ["CAPACITACION"]
+		},
+		{
+			"etiqueta": "Asesoría",
+			"total": 34,
+			"categorias": ["ASESORIA_HORAS"]
+		},
+		{
+			"etiqueta": "Auditoría",
+			"total": 17,
+			"categorias": ["AUDITORIA"]
+		},
+		{
+			"etiqueta": "Inspección de puestos de trabajo",
+			"total": 17,
+			"categorias": ["INSPECCION_PT"]
+		},
+		{
+			"etiqueta": "Estudio de iluminación",
+			"total": 13,
+			"categorias": ["ESTUDIO_LUX"]
+		},
+		{
+			"etiqueta": "Estudio de ruido",
+			"total": 9,
+			"categorias": ["ESTUDIO_SONO"]
+		},
+		{
+			"etiqueta": "Simulacro",
+			"total": 7,
+			"categorias": ["SIMULACRO"]
+		},
+		{
+			"etiqueta": "Campaña",
+			"total": 5,
+			"categorias": ["CAMPANA"]
+		},
+		{
+			"etiqueta": "Rumboterapia",
+			"total": 3,
+			"categorias": ["RUMBOTERAPIA"]
+		},
+		{
+			"etiqueta": "Video",
+			"total": 2,
+			"categorias": ["VIDEO"]
+		},
+		{
+			"etiqueta": "Curso",
+			"total": 2,
+			"categorias": ["CURSO"]
+		}
+	],
+	"calculadoEn": "2026-09-27T21:32:43.414Z"
+}
