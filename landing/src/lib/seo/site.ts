@@ -36,6 +36,13 @@ export const SOCIAL = [
 
 export const FUNDACION = '2009';
 
+/**
+ * Campus institucional. El catálogo de formación vive allí desde que se retiró
+ * de la landing; `hooks.server.ts` redirige `/capacitaciones/*` a `/cursos`.
+ */
+export const CAMPUS_URL = 'https://formarpro.segispro.com';
+export const CAMPUS_CURSOS = `${CAMPUS_URL}/cursos`;
+
 /** Imagen por defecto para Open Graph / Twitter (1200×630). */
 export const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 

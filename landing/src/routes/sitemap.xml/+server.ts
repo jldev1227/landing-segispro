@@ -1,5 +1,4 @@
 import { serviciosData } from '$lib/data/servicios';
-import { capacitaciones } from '$lib/data/capacitaciones';
 import { REGIONES, SITE_URL } from '$lib/seo/site';
 
 export const prerender = true;
@@ -11,13 +10,13 @@ interface Entrada {
 }
 
 /**
- * El sitemap declara solo lo indexable: quedan fuera `/ingreso`, las pasarelas
- * de pago y la API, que van marcadas `noindex` y bloqueadas en robots.txt.
+ * El sitemap declara solo lo indexable: quedan fuera `/ingreso` y la API.
+ * El catálogo de formación se movió al campus, así que sus URLs salen de aquí
+ * y `hooks.server.ts` las redirige con 301.
  */
 const entradas: Entrada[] = [
 	{ path: '/', changefreq: 'weekly', priority: '1.0' },
 	{ path: '/cobertura', changefreq: 'monthly', priority: '0.9' },
-	{ path: '/capacitaciones', changefreq: 'weekly', priority: '0.9' },
 	{ path: '/validar-certificado', changefreq: 'monthly', priority: '0.6' },
 	{ path: '/politicas-de-privacidad', changefreq: 'yearly', priority: '0.3' },
 	...Object.keys(serviciosData).map(
@@ -32,13 +31,6 @@ const entradas: Entrada[] = [
 			path: `/cobertura/${region.slug}`,
 			changefreq: 'monthly',
 			priority: '0.8'
-		})
-	),
-	...capacitaciones.map(
-		(curso): Entrada => ({
-			path: `/capacitaciones/${curso.slug}`,
-			changefreq: 'monthly',
-			priority: '0.7'
 		})
 	)
 ];

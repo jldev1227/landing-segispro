@@ -21,7 +21,7 @@
 	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
 	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
 	import { serviciosData } from '$lib/data/servicios';
-	import { REGIONES } from '$lib/seo/site';
+	import { CAMPUS_CURSOS, REGIONES } from '$lib/seo/site';
 	import metricas from '$lib/data/metricas.json';
 
 	// Variable de entorno para la app Segispro
@@ -559,9 +559,9 @@
 				'Cada certificado tiene un código UUID único que se consulta en la página de validación de certificados del sitio, que confirma titular, curso y fecha de emisión.'
 		},
 		{
-			pregunta: '¿Las capacitaciones son virtuales o presenciales?',
+			pregunta: '¿Dónde se inscriben las capacitaciones?',
 			respuesta:
-				'Hay cursos virtuales, presenciales e híbridos. Los simulacros y las campañas institucionales se ejecutan siempre de forma presencial en la sede del cliente.'
+				'El catálogo de formación vive en Formar Pro, el campus institucional de SEGISPRO, en formarpro.segispro.com. Hay cursos virtuales, presenciales e híbridos; los simulacros y las campañas institucionales se ejecutan siempre de forma presencial en la sede del cliente.'
 		}
 	];
 
@@ -666,7 +666,9 @@
 								>
 									<div class="p-1.5">
 										<a
-											href={resolve('/capacitaciones')}
+											href={CAMPUS_CURSOS}
+											target="_blank"
+											rel="noopener"
 											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
 										>
 											<span>🎓</span>
@@ -842,7 +844,9 @@
 							transition:fly={{ y: -10, duration: 200 }}
 						>
 							<a
-								href={resolve('/capacitaciones')}
+								href={CAMPUS_CURSOS}
+								target="_blank"
+								rel="noopener"
 								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/seo/Seo.svelte';
-	import { CONTACT, absoluteUrl } from '$lib/seo/site';
+	import { CAMPUS_CURSOS, CONTACT, absoluteUrl } from '$lib/seo/site';
 	import {
 		breadcrumbSchema,
 		graph,
@@ -146,10 +146,12 @@
 						{CONTACT.telefonoVisible}
 					</a>
 					<a
-						href={resolve('/capacitaciones')}
+						href={CAMPUS_CURSOS}
+						target="_blank"
+						rel="noopener"
 						class="rounded-full border-2 border-white px-6 py-3 font-semibold text-white transition-colors hover:bg-white hover:text-blue-600"
 					>
-						Ver capacitaciones
+						Ver formación
 					</a>
 				</div>
 			</div>

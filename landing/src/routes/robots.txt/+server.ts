@@ -7,8 +7,8 @@ export const prerender = true;
  * use el mismo origen canónico que el resto del SEO.
  */
 export async function GET() {
-	// `/ingreso` y las pasarelas de pago NO se bloquean aquí: llevan `noindex` en la
-	// página y bloquearlas impediría que el rastreador llegue a leer esa directiva.
+	// `/ingreso` NO se bloquea aquí: lleva `noindex` en la página, y bloquearla
+	// impediría que el rastreador llegue a leer esa directiva.
 	const body = `User-agent: *
 Allow: /
 

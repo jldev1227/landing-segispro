@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { resolve } from '$app/paths';
+	import { CAMPUS_CURSOS } from '$lib/seo/site';
 	import PageHeader from '$lib/components/PageHeader.svelte';
 	import PageFooter from '$lib/components/PageFooter.svelte';
 </script>
@@ -30,10 +31,12 @@
 			Ir al inicio
 		</a>
 		<a
-			href={resolve('/capacitaciones')}
+			href={CAMPUS_CURSOS}
+			target="_blank"
+			rel="noopener"
 			class="rounded-full border-2 border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
 		>
-			Ver capacitaciones
+			Ver formación
 		</a>
 		<a
 			href={resolve('/cobertura')}
