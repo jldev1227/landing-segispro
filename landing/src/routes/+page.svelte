@@ -16,6 +16,7 @@
 	import { resolve } from '$app/paths';
 	import { User } from 'lucide-svelte';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
+	import Icono from '$lib/components/Icono.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
 	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
@@ -70,6 +71,29 @@
 	let clientesNumber = statsConfig.clientes.target;
 	let profesionales = statsConfig.profesionales.target;
 	let experiencia = statsConfig.experiencia.target;
+
+	$: cifrasClave = [
+		{
+			valor: cifra(serviciosPrestados) + statsConfig.servicios.suffix,
+			titulo: 'Servicios',
+			detalle: 'prestados'
+		},
+		{
+			valor: cifra(clientesNumber) + statsConfig.clientes.suffix,
+			titulo: 'Clientes',
+			detalle: 'atendidos'
+		},
+		{
+			valor: cifra(profesionales) + statsConfig.profesionales.suffix,
+			titulo: 'Profesionales',
+			detalle: 'especializados'
+		},
+		{
+			valor: cifra(experiencia) + statsConfig.experiencia.suffix,
+			titulo: 'Años de',
+			detalle: 'experiencia'
+		}
+	];
 
 	/** Separador de miles colombiano: 1.174, no 1174. */
 	const cifra = (valor: number) => valor.toLocaleString('es-CO');
@@ -214,31 +238,31 @@
 
 	const characteristics: Characteristic[] = [
 		{
-			icon: '🎯',
+			icon: 'excelencia',
 			title: 'Excelencia Operativa',
 			description:
 				'Expertos éticos, con trayectoria y resultados medibles. Cada servicio se ejecuta con planes claros, seguimiento riguroso e informes conformes que impulsan decisiones efectivas.'
 		},
 		{
-			icon: '⚡',
+			icon: 'rapidez',
 			title: 'Agilidad y Tecnología',
 			description:
 				'Simplificamos procesos, optimizamos tiempos y conectamos equipos mediante herramientas digitales, automatización y plataformas modernas.'
 		},
 		{
-			icon: '💡',
+			icon: 'innovacion',
 			title: 'Innovación Continua',
 			description:
 				'Nos actualizamos permanentemente para dinamizar sistemas de gestión, adaptándonos a normativas, tendencias y contextos cambiantes.'
 		},
 		{
-			icon: '🌍',
+			icon: 'vision-global',
 			title: 'Visión Global',
 			description:
 				'Acción Local: Entendemos la diversidad del mercado y actuamos con flexibilidad estratégica en empresas públicas y privadas de múltiples sectores.'
 		},
 		{
-			icon: '🔒',
+			icon: 'confidencialidad',
 			title: 'Confidencialidad y Proyección',
 			description:
 				'Protegemos la información con protocolos éticos, proyectándola con claridad, impacto y propósito.'
@@ -253,7 +277,7 @@
 		{ name: 'Equidad Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Mapfre Seguros', logo: '/clientes/equidad.png' },
 		{ name: 'Bolívar', logo: '/clientes/bolivar.png' },
-		{ name: 'La Previsora Seguros', logo: '/clientes/bolivar.png' },
+		{ name: 'La Previsora Seguros', logo: '/clientes/previsora.png' },
 		{ name: 'QBE Seguros', logo: '/clientes/qbe.webp' }
 	];
 
@@ -551,14 +575,14 @@
 											rel="noopener"
 											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
 										>
-											<span>🎓</span>
+											<Icono nombre="cursos" class="h-4 w-4" />
 											<span>Cursos</span>
 										</a>
 										<a
 											href={resolve('/validar-certificado')}
 											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
 										>
-											<span>✓</span>
+											<Icono nombre="check" class="h-4 w-4" />
 											<span>Validar cursos</span>
 										</a>
 									</div>
@@ -701,7 +725,8 @@
 						on:click={() => (formacionDropdownOpen = !formacionDropdownOpen)}
 						class="flex w-full items-center justify-between rounded-xl border border-blue-400/30 bg-blue-500/20 px-4 py-3 text-sm font-medium text-white backdrop-blur-md transition-all duration-200 hover:bg-blue-500/30 hover:shadow-lg hover:shadow-blue-500/20 active:scale-[0.98]"
 					>
-						<span>📚 Formación</span>
+						<Icono nombre="cursos" class="h-4 w-4" />
+						<span>Formación</span>
 						<svg
 							class="h-4 w-4 transition-transform duration-300"
 							class:rotate-180={formacionDropdownOpen}
@@ -730,14 +755,17 @@
 								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
-								🎓 Cursos
+								<span class="flex items-center gap-2"
+									><Icono nombre="cursos" class="h-4 w-4" />Cursos</span
+								>
 							</a>
 							<a
 								href={resolve('/validar-certificado')}
 								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
-								✓ Validar cursos
+								<Icono nombre="check" class="h-4 w-4" />
+								Validar cursos
 							</a>
 						</div>
 					{/if}
@@ -839,15 +867,9 @@
 		<!-- Header Minimalista -->
 		<div class="mb-6 text-center sm:mb-8">
 			<div class="mb-2">
-				<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-					Nuestro portafolio
-				</p>
-				<h2 class="mb-1 text-xl font-bold text-gray-900 sm:text-2xl lg:text-3xl">
-					Servicios <span class="text-blue-600">Profesionales</span>
+				<h2 class="mb-1 text-xl font-bold text-balance text-gray-900 sm:text-2xl lg:text-3xl">
+					Servicios profesionales
 				</h2>
-				<div
-					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-blue-400 sm:w-16"
-				></div>
 			</div>
 
 			<p class="mx-auto max-w-2xl text-xs leading-relaxed text-gray-600 sm:text-sm">
@@ -872,152 +894,30 @@
 				</p>
 			</div>
 
-			<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-				<!-- Profesionales -->
-				<div class="group relative">
-					<div
-						class="relative overflow-hidden rounded-2xl border border-blue-500/20 bg-linear-to-br from-blue-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/10"
-					>
-						<!-- Efecto de brillo animado -->
-						<div
-							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-						></div>
-
-						<!-- Partículas decorativas -->
-						{#if hasAnimated}
-							<div
-								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-blue-400"
-								in:scale={{ duration: 600, delay: 0 }}
-							></div>
-						{/if}
-
-						<div class="relative z-10 text-center">
-							<!-- Número -->
-							<div class="mb-3 flex items-center justify-center">
-								<span
-									class="bg-linear-to-r from-blue-600 to-cyan-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-								>
-									{cifra(serviciosPrestados)}{statsConfig.servicios.suffix}
-								</span>
-							</div>
-
-							<!-- Línea decorativa -->
-							<div
-								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-blue-500 to-cyan-500"
-							></div>
-
-							<!-- Descripción -->
-							<h4 class="text-base font-semibold text-gray-900">Servicios</h4>
-							<p class="text-sm text-gray-600">prestados</p>
-						</div>
+			<!--
+				Franja de cifras. Antes eran cuatro tarjetas con cuatro gradientes
+				distintos, y el color no codificaba nada: los cuatro salían del mismo
+				remapeo de marca. Aquí las cifras van en un solo tono y separadas por
+				filetes, que es lo que son — una tira de datos, no cuatro objetos.
+			-->
+			<dl class="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-gray-200 lg:grid-cols-4">
+				{#each cifrasClave as dato (dato.titulo)}
+					<div class="bg-white px-6 py-8 text-center">
+						<dt class="sr-only">{dato.titulo} {dato.detalle}</dt>
+						<dd>
+							<span
+								class="block text-4xl font-bold tracking-tight text-marca-800 tabular-nums md:text-5xl"
+							>
+								{dato.valor}
+							</span>
+							<span class="mt-2 block text-sm text-gray-600">
+								{dato.titulo}
+								<span class="block font-medium text-gray-900">{dato.detalle}</span>
+							</span>
+						</dd>
 					</div>
-				</div>
-
-				<!-- Cubrimiento -->
-				<div class="group relative">
-					<div
-						class="relative overflow-hidden rounded-2xl border border-purple-500/20 bg-linear-to-br from-purple-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-purple-500/40 hover:shadow-2xl hover:shadow-purple-500/10"
-					>
-						<div
-							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-purple-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-						></div>
-
-						{#if hasAnimated}
-							<div
-								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-purple-400"
-								in:scale={{ duration: 600, delay: 200 }}
-							></div>
-						{/if}
-
-						<div class="relative z-10 text-center">
-							<div class="mb-3 flex items-center justify-center">
-								<span
-									class="bg-linear-to-r from-purple-600 to-pink-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-								>
-									{cifra(clientesNumber)}{statsConfig.clientes.suffix}
-								</span>
-							</div>
-
-							<div
-								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-purple-500 to-pink-500"
-							></div>
-
-							<h4 class="text-base font-semibold text-gray-900">Clientes</h4>
-							<p class="text-sm text-gray-600">atendidos</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Clientes -->
-				<div class="group relative">
-					<div
-						class="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-linear-to-br from-emerald-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-emerald-500/40 hover:shadow-2xl hover:shadow-emerald-500/10"
-					>
-						<div
-							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-emerald-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-						></div>
-
-						{#if hasAnimated}
-							<div
-								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-emerald-400"
-								in:scale={{ duration: 600, delay: 400 }}
-							></div>
-						{/if}
-
-						<div class="relative z-10 text-center">
-							<div class="mb-3 flex items-center justify-center">
-								<span
-									class="bg-linear-to-r from-emerald-600 to-teal-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-								>
-									{cifra(profesionales)}{statsConfig.profesionales.suffix}
-								</span>
-							</div>
-
-							<div
-								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-emerald-500 to-teal-500"
-							></div>
-
-							<h4 class="text-base font-semibold text-gray-900">Profesionales</h4>
-							<p class="text-sm text-gray-600">especializados</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- Años de experiencia -->
-				<div class="group relative">
-					<div
-						class="relative overflow-hidden rounded-2xl border border-orange-500/20 bg-linear-to-br from-orange-500/5 to-transparent p-8 backdrop-blur-sm transition-all duration-500 hover:border-orange-500/40 hover:shadow-2xl hover:shadow-orange-500/10"
-					>
-						<div
-							class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-orange-500/10 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-						></div>
-
-						{#if hasAnimated}
-							<div
-								class="absolute top-4 right-4 h-2 w-2 animate-ping rounded-full bg-orange-400"
-								in:scale={{ duration: 600, delay: 600 }}
-							></div>
-						{/if}
-
-						<div class="relative z-10 text-center">
-							<div class="mb-3 flex items-center justify-center">
-								<span
-									class="bg-linear-to-r from-orange-600 to-amber-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl"
-								>
-									{experiencia}{statsConfig.experiencia.suffix}
-								</span>
-							</div>
-
-							<div
-								class="mx-auto mb-3 h-1 w-12 rounded-full bg-linear-to-r from-orange-500 to-amber-500"
-							></div>
-
-							<h4 class="text-base font-semibold text-gray-900">Años de</h4>
-							<p class="text-sm text-gray-600">experiencia</p>
-						</div>
-					</div>
-				</div>
-			</div>
+				{/each}
+			</dl>
 		</div>
 	</div>
 </section>
@@ -1067,15 +967,9 @@
 		{#if characteristicsVisible || mounted}
 			<!-- Encabezado mejorado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
-				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-					Nuestro compromiso
-				</p>
-				<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
-					<span class="text-blue-600">Características</span> que nos definen
+				<h2 class="mb-3 text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
+					Características que nos definen
 				</h2>
-				<div
-					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
-				></div>
 			</div>
 
 			<!-- Card destacada principal -->
@@ -1088,23 +982,7 @@
 						class="absolute inset-0 bg-linear-to-br from-blue-50 via-transparent to-orange-50 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
 					></div>
 
-					<!-- Número decorativo grande -->
-					<div
-						class="absolute -top-6 -left-6 text-[150px] leading-none font-bold text-blue-500/5 select-none"
-					>
-						01
-					</div>
-
 					<div class="relative z-10">
-						<!-- Badge con número -->
-						<div
-							class="mb-4 inline-flex items-center gap-2 rounded-full bg-linear-to-r from-blue-500 to-blue-600 px-4 py-1.5 text-white shadow-lg"
-						>
-							<span class="text-xs font-bold">01</span>
-							<div class="h-3 w-px bg-white/30"></div>
-							<span class="text-xs font-semibold">Principal</span>
-						</div>
-
 						<h3
 							class="mb-4 text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600 sm:text-2xl lg:text-3xl"
 						>
@@ -1132,7 +1010,7 @@
 								<span>Agilidad</span>
 							</div>
 							<div class="flex items-center gap-2 text-xs text-gray-500 sm:text-sm">
-								<div class="h-2 w-2 rounded-full bg-purple-500"></div>
+								<div class="h-2 w-2 rounded-full bg-marca-500"></div>
 								<span>Confidencialidad</span>
 							</div>
 						</div>
@@ -1186,15 +1064,9 @@
 		<div class="relative z-10 container mx-auto max-w-7xl">
 			<!-- Header -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
-				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-400 uppercase sm:text-sm">
-					Nuestra experiencia
-				</p>
-				<h2 class="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
-					Proyectos que <span class="text-blue-400">transforman</span>
+				<h2 class="mb-3 text-2xl font-bold text-balance text-white sm:text-3xl lg:text-4xl">
+					Proyectos que transforman
 				</h2>
-				<div
-					class="mx-auto h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
-				></div>
 			</div>
 
 			<!-- 3D Carousel Container -->
@@ -1356,12 +1228,12 @@
 					<div
 						class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm"
 					>
-						<span class="text-4xl">👥</span>
+						<Icono nombre="equipo" class="h-9 w-9 text-white" />
 					</div>
 				</div>
 
 				<!-- Título -->
-				<h2 class="mb-3 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
+				<h2 class="mb-3 text-2xl font-bold text-balance text-white sm:text-3xl lg:text-4xl">
 					Trabaja con Nosotros
 				</h2>
 
@@ -1377,7 +1249,7 @@
 					<div
 						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-2 text-2xl sm:text-3xl">🎯</div>
+						<Icono nombre="excelencia" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
 						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
 							Proyectos Desafiantes
 						</h3>
@@ -1389,7 +1261,7 @@
 					<div
 						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-2 text-2xl sm:text-3xl">📚</div>
+						<Icono nombre="cursos" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
 						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
 							Desarrollo Profesional
 						</h3>
@@ -1401,7 +1273,7 @@
 					<div
 						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
 					>
-						<div class="mb-2 text-2xl sm:text-3xl">🤝</div>
+						<Icono nombre="colaboracion" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
 						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
 							Ambiente Colaborativo
 						</h3>
@@ -1460,19 +1332,13 @@
 		{#if mounted}
 			<!-- Encabezado -->
 			<div in:fly={{ y: 30, duration: 800 }} class="mb-8 text-center sm:mb-10">
-				<p class="mb-2 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-					Hablemos
-				</p>
-				<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
-					¿Listo para <span class="text-blue-600">transformar</span> tu empresa?
+				<h2 class="mb-3 text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
+					¿Listo para transformar tu empresa?
 				</h2>
 				<p class="mx-auto max-w-2xl text-sm text-gray-600 sm:text-base">
 					Estamos aquí para asesorarte. Elige la forma que prefieras para ponerte en contacto con
 					nosotros.
 				</p>
-				<div
-					class="mx-auto mt-4 h-0.5 w-12 rounded-full bg-linear-to-r from-blue-600 to-orange-600 sm:w-16"
-				></div>
 			</div>
 
 			<!-- Grid de métodos de contacto -->
@@ -1881,11 +1747,8 @@
 <section id="novedades" class="bg-white p-8">
 	<div class="container mx-auto max-w-6xl">
 		<div class="mb-8 text-center">
-			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-				En redes
-			</p>
-			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
-				Lo que estamos <span class="text-blue-600">haciendo</span>
+			<h2 class="mb-3 text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
+				Lo que estamos haciendo
 			</h2>
 			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-gray-600">
 				Campañas institucionales, simulacros, capacitaciones en campo y jornadas con nuestros
@@ -1937,11 +1800,8 @@
 <section id="cobertura" class="bg-white p-8">
 	<div class="container mx-auto max-w-6xl">
 		<div class="mb-8 text-center">
-			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-				Dónde operamos
-			</p>
-			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
-				Cobertura en <span class="text-blue-600">cinco regiones</span>
+			<h2 class="mb-3 text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
+				Cobertura en cinco regiones
 			</h2>
 			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-gray-600">
 				Desde la sede en Yopal acompañamos operaciones del corredor llanero y del eje Bogotá–Boyacá,
@@ -1977,11 +1837,8 @@
 <section id="faq" class="bg-gray-50 p-8">
 	<div class="container mx-auto max-w-4xl">
 		<div class="mb-8 text-center">
-			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
-				Resolvemos dudas
-			</p>
-			<h2 class="text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
-				Preguntas <span class="text-blue-600">frecuentes</span>
+			<h2 class="text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
+				Preguntas frecuentes
 			</h2>
 		</div>
 
@@ -2067,7 +1924,7 @@
 							</a>
 							<a
 								href="https://www.instagram.com/segispro_auditores/"
-								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-pink-600"
+								class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/10 transition-all duration-300 hover:scale-110 hover:bg-realce-600"
 								aria-label="Instagram de SEGISPRO"
 								target="_blank"
 								rel="noopener noreferrer"

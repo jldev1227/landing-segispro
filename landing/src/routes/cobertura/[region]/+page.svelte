@@ -62,11 +62,8 @@
 				<span class="text-white">{region.nombre}</span>
 			</nav>
 
-			<p class="mb-3 text-sm font-semibold tracking-wide text-blue-400 uppercase">
-				Cobertura SEGISPRO
-			</p>
-			<h1 class="mb-5 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-				Seguridad y salud en el trabajo en <span class="text-blue-400">{region.nombre}</span>
+			<h1 class="mb-5 text-3xl font-bold text-balance text-white sm:text-4xl lg:text-5xl">
+				Seguridad y salud en el trabajo en {region.nombre}
 			</h1>
 			<p class="max-w-3xl text-base leading-relaxed text-gray-300 sm:text-lg">
 				{region.enfoque}

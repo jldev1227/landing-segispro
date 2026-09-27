@@ -1,4 +1,8 @@
 @import 'tailwindcss';
+/* Geist variable, servida desde node_modules — sin llamada a Google Fonts.
+   El archivo trae un @font-face por subconjunto con su unicode-range, así que
+   quien lee español solo descarga el latino. */
+@import '@fontsource-variable/geist/wght.css';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
@@ -15,6 +19,14 @@
  * del 4,5:1 que exige WCAG AA, así que en claro solo sirven como relleno.
  */
 @theme {
+	/* Tipografía. Antes no había ninguna declarada: la landing corría sobre la
+	   fuente del sistema, así que la marca cambiaba de cara entre macOS y Windows.
+	   Geist es un grotesco de ingeniería, y sus cifras tabulares importan aquí
+	   porque la página se apoya en números (1.174 servicios, 315 clientes). */
+	--font-sans:
+		'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+		Arial, sans-serif;
+
 	/* Navy — color primario, el que puede llevar texto en cualquier paso alto. */
 	--color-marca-50: #f3f6fa;
 	--color-marca-100: #e3eaf2;
@@ -137,9 +149,4 @@
 	--color-amber-500: var(--color-realce-500);
 	--color-amber-600: var(--color-realce-600);
 	--color-amber-700: var(--color-realce-700);
-
-	--color-purple-500: var(--color-marca-500);
-	--color-purple-600: var(--color-marca-600);
-	--color-pink-500: var(--color-realce-500);
-	--color-pink-600: var(--color-realce-600);
 }

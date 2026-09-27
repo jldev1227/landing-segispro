@@ -25,7 +25,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	'consultoria-asesoria': {
 		slug: 'consultoria-asesoria',
 		title: 'Consultoría y Auditoría',
-		icon: '🧩',
+		icon: 'consultoria',
 		tagline: 'Transformamos sistemas en resultados medibles.',
 		description: `En Segispro Ingeniería SAS, la consultoría es una alianza estratégica para dinamizar la gestión organizacional. Acompañamos a empresas públicas y privadas en el diseño, documentación, implementación y evaluación de sistemas de gestión, alineados con estándares nacionales e internacionales. Cada intervención se adapta al contexto, con enfoque técnico, humano y sostenible, e integra herramientas digitales que facilitan el seguimiento, la trazabilidad y la toma de decisiones en tiempo real.`,
 		benefits: [
@@ -41,17 +41,17 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		],
 		additionalSections: [
 			{
-				title: '🧩 Consultoría',
+				title: 'Consultoría',
 				content:
 					'Transformamos sistemas en resultados medibles. En Segispro Ingeniería SAS, la consultoría es una alianza estratégica para dinamizar la gestión organizacional. Acompañamos a empresas públicas y privadas en el diseño, documentación, implementación y evaluación de sistemas de gestión, alineados con estándares nacionales e internacionales. Cada intervención se adapta al contexto, con enfoque técnico, humano y sostenible, e integra herramientas digitales que facilitan el seguimiento, la trazabilidad y la toma de decisiones en tiempo real.'
 			},
 			{
-				title: '🔍 Auditoría',
+				title: 'Auditoría',
 				content:
 					'Auditorías que enseñan, transforman y generan confianza. La auditoría no es solo verificación: es una herramienta estratégica para el aprendizaje, la mejora continua y el fortalecimiento institucional. Realizamos auditorías internas y a proveedores, orientadas a normas certificables, con enfoque ético, práctico y formativo. Incorporamos plataformas digitales, formularios inteligentes y tableros de control que dinamizan el ejercicio, facilitan la trazabilidad y permiten visualizar hallazgos en tiempo real.'
 			},
 			{
-				title: '🤝 Auditoría a Proveedores',
+				title: 'Auditoría a Proveedores',
 				content:
 					'Confianza que se construye desde la verificación. Evaluamos el desempeño de proveedores y contratistas frente a requisitos técnicos, normativos y estratégicos. Nuestras auditorías fortalecen la cadena de valor, previenen riesgos y aseguran que cada aliado esté alineado con los estándares de la organización.'
 			}
@@ -163,7 +163,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	formacion: {
 		slug: 'formacion',
 		title: 'Formación, Capacitación y Campañas',
-		icon: '🎓',
+		icon: 'formacion',
 		tagline: 'Formamos equipos que inspiran, previenen y transforman.',
 		description: `En Segispro Ingeniería SAS, la formación no es solo transferencia de conocimiento: es una experiencia que moviliza, conecta y transforma. Diseñamos programas a la medida que fortalecen la cultura organizacional, el talento humano y la gestión preventiva, integrando metodologías participativas, herramientas digitales y narrativas institucionales que generan impacto real.`,
 		benefits: [
@@ -177,7 +177,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		],
 		additionalSections: [
 			{
-				title: '🧠 Formación Especializada',
+				title: 'Formación Especializada',
 				content:
 					'Programas que conectan el saber técnico con el propósito institucional. Ofrecemos cursos y capacitaciones diseñadas para fortalecer competencias, cumplir requisitos normativos y transformar el clima organizacional.',
 				items: [
@@ -194,7 +194,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🎓 Modalidades',
+				title: 'Modalidades',
 				content: '',
 				items: [
 					'In-Company: adaptados al contexto y objetivos del cliente',
@@ -204,7 +204,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🚧 Campañas Institucionales',
+				title: 'Campañas Institucionales',
 				content:
 					'Intervenciones que movilizan la cultura preventiva. Diseñamos campañas que sensibilizan, educan y transforman comportamientos, integrando recursos visuales, gamificación y formatos digitales.',
 				items: [
@@ -218,7 +218,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🎨 Recursos creativos',
+				title: 'Recursos creativos',
 				content: '',
 				items: [
 					'Personajes institucionales',
@@ -228,7 +228,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🛡️ Simulacros y Capacitaciones Normativas',
+				title: 'Simulacros y Capacitaciones Normativas',
 				content:
 					'Preparación que fortalece la respuesta y el cumplimiento legal. Ejecutamos simulacros y capacitaciones alineadas con normativas SST, ambientales y viales, que fortalecen la cultura preventiva y la capacidad de respuesta.',
 				items: [
@@ -245,7 +245,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	'campanas-estudios': {
 		slug: 'campanas-estudios',
 		title: 'Estudios',
-		icon: '�',
+		icon: 'estudios',
 		tagline: 'Evaluamos para transformar.',
 		description: `En Segispro Ingeniería SAS, los estudios técnicos no son solo mediciones: son herramientas estratégicas que permiten tomar decisiones informadas, prevenir riesgos y fortalecer la gestión organizacional. Cada diagnóstico se adapta al contexto del cliente, integrando rigor técnico, enfoque humano y trazabilidad digital.`,
 		benefits: [
@@ -257,7 +257,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		],
 		additionalSections: [
 			{
-				title: '🌿 Estudios Ambientales',
+				title: 'Estudios Ambientales',
 				content: 'Cuidamos el entorno laboral y proyectamos sostenibilidad.',
 				items: [
 					'Medición de niveles de iluminación (luxometría) – Garantiza confort visual, cumplimiento normativo y prevención de fatiga ocular',
@@ -266,7 +266,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🩺 Estudios de Salud Laboral',
+				title: 'Estudios de Salud Laboral',
 				content: 'Protegemos el bienestar físico, mental y emocional de los equipos.',
 				items: [
 					'Diagnóstico de factores psicosociales – Evalúa clima laboral, estrés y carga mental con instrumentos validados y enfoque humano',
@@ -276,7 +276,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🚦 Estudios Viales y Operativos',
+				title: 'Estudios Viales y Operativos',
 				content: 'Fortalecemos la seguridad en movimiento.',
 				items: [
 					'Monitoreo y medición de velocidad con radar (PESV) – Registra velocidades en operación para prevenir incidentes y cumplir con la Resolución 40595',
@@ -288,7 +288,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	digitalizacion: {
 		slug: 'digitalizacion',
 		title: 'Digitalización y Proyectos Especiales',
-		icon: '⚙️',
+		icon: 'sistemas',
 		tagline: 'Tecnología que transforma la gestión en agilidad, trazabilidad y control.',
 		description: `Impulsamos la optimización de los sistemas de gestión mediante la integración de herramientas tecnológicas, automatización de procesos, formularios inteligentes y apps personalizadas. Digitalizamos matrices, formatos, indicadores, planes de acción y procesos clave, adaptándolos al contexto de cada organización.`,
 		benefits: [
@@ -300,7 +300,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		],
 		additionalSections: [
 			{
-				title: '💻 Digitalización',
+				title: 'Digitalización',
 				content:
 					'Tecnología que transforma la gestión en agilidad, trazabilidad y control. Impulsamos la optimización de los sistemas de gestión mediante la integración de herramientas tecnológicas, automatización de procesos, formularios inteligentes y apps personalizadas. Digitalizamos matrices, formatos, indicadores, planes de acción y procesos clave, adaptándolos al contexto de cada organización.'
 			},
@@ -341,7 +341,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	'proyectos-especiales': {
 		slug: 'proyectos-especiales',
 		title: 'Proyectos Especiales',
-		icon: '🛠️',
+		icon: 'proyectos-especiales',
 		tagline: 'Soluciones únicas para desafíos únicos.',
 		description: `Diseñamos proyectos especiales que nacen de la escucha activa, la co-creación y la comprensión profunda de las necesidades del cliente. Integramos conocimiento técnico, creatividad y herramientas digitales para construir soluciones innovadoras, flexibles y alineadas con los objetivos estratégicos de cada organización.`,
 		benefits: [
@@ -353,7 +353,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 		],
 		additionalSections: [
 			{
-				title: '🛠️ Proyectos Especiales',
+				title: 'Proyectos Especiales',
 				content:
 					'Soluciones únicas para desafíos únicos. Diseñamos proyectos especiales que nacen de la escucha activa, la co-creación y la comprensión profunda de las necesidades del cliente. Integramos conocimiento técnico, creatividad y herramientas digitales para construir soluciones innovadoras, flexibles y alineadas con los objetivos estratégicos de cada organización.'
 			},
@@ -381,7 +381,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 				]
 			},
 			{
-				title: '🚗 Proyecto Integral de Seguridad Vial',
+				title: 'Proyecto Integral de Seguridad Vial',
 				content:
 					'Una estrategia completa para transformar la cultura vial y reducir riesgos operacionales. Este proyecto combina consultoría, auditoría, formación, campañas y control técnico, alineado con la norma ISO 39001 y la Resolución 40595 (PESV). Integra herramientas digitales, gamificación y evaluación técnica para lograr resultados medibles.',
 				items: [
@@ -408,7 +408,7 @@ export const serviciosData: Record<string, ServiceDetail> = {
 	interventoria: {
 		slug: 'interventoria',
 		title: 'Interventoría',
-		icon: '�',
+		icon: 'interventoria',
 		tagline: 'Supervisión estratégica que garantiza cumplimiento, calidad y transformación.',
 		description: `En Segispro Ingeniería SAS ejercemos interventoría como un servicio especializado que asegura la correcta ejecución de contratos, proyectos y procesos, conforme a los requisitos técnicos, legales, administrativos y normativos vigentes en Colombia. Más que vigilar, acompañamos con visión estratégica, herramientas digitales y observaciones constructivas que promueven la mejora continua.`,
 		benefits: [

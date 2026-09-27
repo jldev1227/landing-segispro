@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icono from './Icono.svelte';
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 
@@ -274,9 +275,6 @@
 							class="card-inner group relative flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-300 hover:border-blue-500"
 						>
 							<!-- Gradiente de profundidad -->
-							<div
-								class="absolute inset-0 rounded-2xl bg-linear-to-br from-blue-500/5 via-transparent to-purple-500/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-							></div>
 
 							<!-- Contenido -->
 							<div class="relative z-10 flex flex-1 flex-col">
@@ -288,7 +286,7 @@
 										<span
 											class="icon-inner block transform transition-all duration-300 group-hover:scale-110 group-hover:rotate-12"
 										>
-											{char.icon}
+											<Icono nombre={char.icon} class="h-7 w-7 text-white" />
 										</span>
 									</div>
 
@@ -320,9 +318,6 @@
 							</div>
 
 							<!-- Sombra 3D mejorada -->
-							<div
-								class="card-shadow absolute inset-0 -z-10 rounded-2xl bg-linear-to-br from-blue-500/20 to-purple-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100"
-							></div>
 
 							<!-- Brillo que sigue al mouse -->
 							<div

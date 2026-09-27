@@ -2,36 +2,37 @@
 	import { onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import { serviciosData } from '$lib/data/servicios';
+	import Icono from './Icono.svelte';
 
 	interface ServiceItem {
 		title: string;
 		items: string[];
-		icon: string;
+		icono: string;
 	}
 
 	interface ServiceGroup {
 		header: string;
 		headerColor: string;
 		sections: ServiceItem[];
-		emoji: string;
+		icono: string;
 		accentColor: string;
 		link: string;
 	}
 
 	export let visible = false;
 
-	// Transformar serviciosData al formato del carrusel
+	// Los grupos del carrusel son un resumen del portafolio, no `serviciosData`
+	// completo: aquí solo entran las categorías que caben en el riel del home.
 	const serviceGroups: ServiceGroup[] = [
 		{
 			header: 'Consultoría y Auditoría',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '🧩',
+			icono: 'consultoria',
 			accentColor: 'blue',
 			sections: [
 				{
 					title: 'NORMAS ISO PRINCIPALES',
-					icon: '📋',
+					icono: 'normas-iso',
 					items: [
 						'ISO 9001 - Calidad',
 						'ISO 14001 - Ambiental',
@@ -41,12 +42,12 @@
 				},
 				{
 					title: 'CERTIFICACIONES',
-					icon: '🧾',
+					icono: 'certificaciones',
 					items: ['BASC', 'RUC / RUC Transporte', 'NORSOK S-006']
 				},
 				{
 					title: 'NORMATIVA COLOMBIANA',
-					icon: '⚖️',
+					icono: 'normativa',
 					items: ['SG-SST Decreto 1072', 'PESV Res. 40595', 'SARLAFT Res. 2328', 'TRAST']
 				}
 			],
@@ -55,12 +56,12 @@
 		{
 			header: 'Formación, Capacitación y Campañas',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '🎓',
+			icono: 'formacion',
 			accentColor: 'blue',
 			sections: [
 				{
 					title: 'CURSOS ESPECIALIZADOS',
-					icon: '📚',
+					icono: 'cursos',
 					items: [
 						'Manejo Defensivo',
 						'Mercancías Peligrosas',
@@ -70,12 +71,12 @@
 				},
 				{
 					title: 'CAMPAÑAS INSTITUCIONALES',
-					icon: '📢',
+					icono: 'campanas',
 					items: ['Seguridad Vial', 'Vida Saludable', 'Identificación de Peligros', 'Cultura Ética']
 				},
 				{
 					title: 'SIMULACROS Y PRÁCTICA',
-					icon: '🚨',
+					icono: 'simulacros',
 					items: [
 						'Simulacros Ambientales',
 						'Primeros Auxilios',
@@ -89,17 +90,17 @@
 		{
 			header: 'Estudios Técnicos',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '📟',
+			icono: 'estudios',
 			accentColor: 'blue',
 			sections: [
 				{
 					title: 'ESTUDIOS AMBIENTALES',
-					icon: '🌿',
+					icono: 'estudios-ambientales',
 					items: ['Luxometría', 'Sonometría', 'Evaluaciones Ambientales']
 				},
 				{
 					title: 'SALUD LABORAL',
-					icon: '🩺',
+					icono: 'salud-laboral',
 					items: [
 						'Factores Psicosociales',
 						'Tamizajes de Salud',
@@ -109,7 +110,7 @@
 				},
 				{
 					title: 'ESTUDIOS VIALES',
-					icon: '🚦',
+					icono: 'estudios-viales',
 					items: ['Medición con Radar', 'Evaluación de Respuesta', 'Inspecciones Viales']
 				}
 			],
@@ -118,12 +119,12 @@
 		{
 			header: 'Digitalización y Proyectos Especiales',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '⚙️',
+			icono: 'sistemas',
 			accentColor: 'blue',
 			sections: [
 				{
 					title: 'DIGITALIZACIÓN',
-					icon: '💻',
+					icono: 'digitalizacion',
 					items: [
 						'Formatos Digitales',
 						'Tableros de Control',
@@ -133,7 +134,7 @@
 				},
 				{
 					title: 'PROYECTOS ESPECIALES',
-					icon: '🛠️',
+					icono: 'proyectos-especiales',
 					items: [
 						'Modelos de Gestión',
 						'Herramientas a Medida',
@@ -143,7 +144,7 @@
 				},
 				{
 					title: 'PROYECTO INTEGRAL VIAL',
-					icon: '🚗',
+					icono: 'seguridad-vial',
 					items: [
 						'Plan PESV ISO 39001',
 						'Auditoría Vial',
@@ -157,17 +158,17 @@
 		{
 			header: 'Interventoría',
 			headerColor: 'from-blue-600 to-blue-700',
-			emoji: '📋',
+			icono: 'interventoria',
 			accentColor: 'blue',
 			sections: [
 				{
 					title: 'TIPOS DE INTERVENTORÍA',
-					icon: '🔍',
+					icono: 'auditoria',
 					items: ['Obras Civiles', 'Seguridad Vial', 'Sistemas de Gestión', 'Proyectos Especiales']
 				},
 				{
 					title: 'METODOLOGÍA',
-					icon: '📊',
+					icono: 'medicion',
 					items: [
 						'Matrices de Seguimiento',
 						'Informes Trazables',
@@ -293,9 +294,10 @@
 										? 'scale-110 bg-blue-600'
 										: 'bg-gray-100 group-hover:scale-105'}"
 								>
-									<span class={currentIndex === index ? 'grayscale-0' : 'opacity-70 grayscale'}>
-										{group.emoji}
-									</span>
+									<Icono
+										nombre={group.icono}
+										class="h-5 w-5 {currentIndex === index ? 'text-white' : 'text-gray-600'}"
+									/>
 								</div>
 								<div class="min-w-0 flex-1 text-left">
 									<h4
@@ -354,7 +356,10 @@
 											<div
 												class="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-white/10 text-3xl backdrop-blur-sm"
 											>
-												{serviceGroups[currentIndex].emoji}
+												<Icono
+													nombre={serviceGroups[currentIndex].icono}
+													class="h-7 w-7 text-white"
+												/>
 											</div>
 											<div class="min-w-0 flex-1">
 												<h3 class="mb-1.5 text-2xl font-bold text-white">
@@ -386,7 +391,7 @@
 													<div
 														class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-lg shadow-lg transition-all duration-300 group-hover/card:scale-110 group-hover/card:rotate-6"
 													>
-														{section.icon}
+														<Icono nombre={section.icono} class="h-5 w-5 text-white" />
 													</div>
 													<h4 class="flex-1 text-xs font-bold tracking-wider text-white uppercase">
 														{section.title}
@@ -481,7 +486,7 @@
 								<div
 									class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-2xl backdrop-blur-sm sm:h-12 sm:w-12 sm:text-3xl"
 								>
-									{group.emoji}
+									<Icono nombre={group.icono} class="h-6 w-6 text-white" />
 								</div>
 								<div class="min-w-0 flex-1">
 									<h3 class="mb-1.5 text-lg font-bold text-white sm:text-xl">
@@ -510,7 +515,7 @@
 										<div
 											class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-blue-400 to-blue-500 text-base shadow-lg sm:h-9 sm:w-9 sm:text-lg"
 										>
-											{section.icon}
+											<Icono nombre={section.icono} class="h-4 w-4 text-white" />
 										</div>
 										<h4
 											class="flex-1 text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs"

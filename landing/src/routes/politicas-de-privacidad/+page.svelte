@@ -86,12 +86,9 @@
 					</svg>
 					<span class="text-sm font-semibold text-blue-600">Legal</span>
 				</div>
-				<h1 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-					Política de <span class="text-blue-600">Privacidad</span>
+				<h1 class="text-4xl font-bold text-balance text-gray-900 md:text-5xl lg:text-6xl">
+					Política de privacidad
 				</h1>
-				<div
-					class="mx-auto h-1.5 w-24 rounded-full bg-linear-to-r from-blue-600 to-orange-600"
-				></div>
 			</div>
 
 			<!-- Content Card -->

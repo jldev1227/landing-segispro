@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Icono from '$lib/components/Icono.svelte';
 	import { fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { resolve } from '$app/paths';
@@ -82,7 +83,7 @@
 				<div
 					class="mb-6 inline-flex h-24 w-24 items-center justify-center rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 text-5xl shadow-2xl"
 				>
-					{servicio.icon}
+					<Icono nombre={servicio.icon} class="h-12 w-12 text-white" />
 				</div>
 				<h1 class="mb-4 text-4xl font-bold text-white md:text-5xl lg:text-6xl">
 					{servicio.title}
