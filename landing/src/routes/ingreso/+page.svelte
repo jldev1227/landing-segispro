@@ -38,10 +38,7 @@
 >
 	<!-- Grid pattern de fondo -->
 	<div class="absolute inset-0 opacity-5">
-		<div
-			class="absolute inset-0"
-			style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.5) 1px, transparent 0); background-size: 40px 40px;"
-		></div>
+		<div class="absolute inset-0"></div>
 	</div>
 
 	<!-- Gradiente radial -->

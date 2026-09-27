@@ -517,9 +517,7 @@
 										>
 											<Icono nombre={section.icono} class="h-4 w-4 text-white" />
 										</div>
-										<h4
-											class="flex-1 text-[10px] font-bold tracking-wider text-white uppercase sm:text-xs"
-										>
+										<h4 class="flex-1 text-xs font-bold tracking-wider text-white uppercase">
 											{section.title}
 										</h4>
 									</div>
@@ -559,7 +557,7 @@
 
 									{#if section.items.length === 0}
 										<div class="flex items-center justify-center py-2.5">
-											<p class="text-[10px] text-blue-200 italic sm:text-xs">Próximamente</p>
+											<p class="text-xs text-blue-200 italic">Próximamente</p>
 										</div>
 									{/if}
 								</div>

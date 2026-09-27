@@ -168,7 +168,7 @@
 	/* Wrapper del card con scale en hover */
 	.client-card-wrapper:hover .client-card {
 		transform: translateY(-8px) scale(1.02);
-		box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
+		box-shadow: 0 12px 28px -8px rgba(34, 58, 84, 0.22);
 	}
 
 	/* Efecto de profundidad */

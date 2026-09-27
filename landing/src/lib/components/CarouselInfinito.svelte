@@ -453,10 +453,10 @@
 	@keyframes breathe {
 		0%,
 		100% {
-			box-shadow: 0 10px 40px rgba(59, 130, 246, 0.15);
+			box-shadow: 0 8px 24px -6px rgba(34, 58, 84, 0.16);
 		}
 		50% {
-			box-shadow: 0 20px 60px rgba(59, 130, 246, 0.25);
+			box-shadow: 0 16px 36px -8px rgba(34, 58, 84, 0.24);
 		}
 	}
 

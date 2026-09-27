@@ -128,7 +128,7 @@
 					<span class="text-sm font-semibold text-blue-600">Verificación</span>
 				</div>
 				<h1 class="mb-4 text-4xl font-bold text-gray-900 md:text-5xl lg:text-6xl">
-					Validar <span class="text-blue-600">Certificado</span>
+					Validar certificado
 				</h1>
 				<p class="mx-auto max-w-2xl text-lg text-gray-600">
 					Ingresa el código UUID de tu certificado para verificar su autenticidad y obtener los

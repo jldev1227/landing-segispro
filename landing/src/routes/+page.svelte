@@ -98,6 +98,13 @@
 	/** Separador de miles colombiano: 1.174, no 1174. */
 	const cifra = (valor: number) => valor.toLocaleString('es-CO');
 
+	/** Las tres cifras del hero. Mismo snapshot que la franja de más abajo. */
+	const pruebaHero = [
+		{ valor: cifra(metricas.serviciosPrestados), etiqueta: 'servicios ejecutados' },
+		{ valor: cifra(metricas.clientesAtendidos), etiqueta: 'empresas atendidas' },
+		{ valor: String(metricas.aniosOperacion), etiqueta: 'años de operación' }
+	];
+
 	// Función para animar contador
 	function animateCounter(
 		start: number,
@@ -799,63 +806,80 @@
 	</div>
 {/if}
 
-<!-- Hero Section Ultra-Compacto -->
-<section
-	id="inicio"
-	class="relative overflow-hidden bg-linear-to-br from-white via-gray-50 to-blue-50 px-8 pt-24 pb-10 sm:pt-22 lg:pt-24"
->
+<!--
+	Hero. Antes abría con «tu aliado estratégico en seguridad y salud en el
+	trabajo», cierto para cualquier firma SST del país, y en móvil no mostraba
+	ninguna imagen. Ahora nombra el servicio, la región y el sector, y pone la
+	prueba verificable —el conteo real de lo ejecutado— en el primer pliegue,
+	que es el posicionamiento de la empresa: trayectoria comprobable, no
+	declarada.
+-->
+<section id="inicio" class="relative bg-white px-6 pt-24 pb-12 sm:px-8 lg:pt-28 lg:pb-16">
 	<div class="container mx-auto max-w-7xl">
-		<div class="grid items-center gap-6 lg:grid-cols-2 lg:gap-8">
-			<!-- Contenido Izquierdo -->
+		<div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
 			<div class="relative z-10">
-				{#if heroVisible}
-					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
-						<h1 class="mb-2 text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl xl:text-5xl">
-							<span class="text-blue-600">SEGISPRO</span><br />
-							<span class="text-gray-900">tu aliado estratégico en</span><br />
-							<span class="text-gray-900">seguridad y salud en el trabajo</span>
-						</h1>
-					</div>
+				<h1
+					class="text-3xl leading-[1.1] font-bold tracking-tight text-balance text-marca-800 sm:text-4xl lg:text-5xl"
+				>
+					Auditorías, formación y estudios técnicos en seguridad y salud en el trabajo
+				</h1>
 
-					<div in:fly={{ y: 30, duration: 800, delay: 200, easing: quintOut }}>
-						<p class="mb-3 max-w-xl text-sm leading-relaxed text-gray-700 sm:mb-4">
-							Mejora y evoluciona con SEGISPRO Ingeniería. Transformamos tus retos empresariales en
-							oportunidades con consultorías, auditorías, interventoría y formación a la medida, en
-							Casanare, Meta, Boyacá, Bogotá y Cundinamarca.
-						</p>
+				<p class="mt-5 max-w-[60ch] text-base leading-relaxed text-gray-600 sm:text-lg">
+					Acompañamos operaciones de hidrocarburos, entidades públicas y transporte en Casanare,
+					Meta, Boyacá, Bogotá y Cundinamarca. Cada servicio se pacta con su alcance, sus fechas y
+					su tarifa.
+				</p>
 
-						<!-- CTA Buttons -->
-						<div class="flex flex-wrap gap-2 sm:gap-3">
-							<a
-								href="#services"
-								class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-blue-700 hover:shadow-xl sm:px-6 sm:py-3"
-							>
-								Ver Servicios
-								<svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										stroke-width="2"
-										d="M19 9l-7 7-7-7"
-									/>
-								</svg>
-							</a>
-							<a
-								href="#contacto"
-								class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 bg-white px-5 py-2.5 text-sm font-semibold text-blue-600 transition-all duration-300 hover:bg-blue-50 sm:px-6 sm:py-3"
-							>
-								Contactar
-							</a>
+				<div class="mt-8 flex flex-wrap gap-3">
+					<a
+						href="#contacto"
+						class="inline-flex items-center gap-2 rounded-lg bg-marca-600 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-marca-700"
+					>
+						Solicitar cotización
+					</a>
+					<a
+						href="#services"
+						class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-3 text-sm font-semibold text-marca-700 transition-colors duration-200 hover:border-marca-600 hover:bg-marca-50"
+					>
+						Ver servicios
+					</a>
+				</div>
+
+				<!--
+					La prueba, no el adjetivo. Las tres cifras salen del mismo snapshot
+					que alimenta el resto de la página, congelado desde la API real.
+				-->
+				<dl
+					class="mt-10 flex flex-wrap items-baseline gap-x-8 gap-y-4 border-t border-gray-200 pt-6"
+				>
+					{#each pruebaHero as dato (dato.etiqueta)}
+						<div>
+							<dd class="text-2xl font-bold tracking-tight text-marca-800 tabular-nums sm:text-3xl">
+								{dato.valor}
+							</dd>
+							<dt class="mt-0.5 text-xs text-gray-600">{dato.etiqueta}</dt>
 						</div>
-					</div>
-				{/if}
+					{/each}
+				</dl>
 			</div>
 
-			<!-- Video Carousel Derecho - Estilo Netflix -->
-			<div class="relative hidden lg:block">
-				{#if heroVisible}
-					<VideoCarouselHero visible={heroVisible} />
-				{/if}
+			<div class="relative">
+				<!-- El carrusel solo en escritorio: en móvil pesa y no aporta. -->
+				<div class="hidden lg:block">
+					{#if heroVisible}
+						<VideoCarouselHero visible={heroVisible} />
+					{/if}
+				</div>
+				<!-- Móvil abría sin ninguna imagen. Esta es el LCP, así que va temprana. -->
+				<img
+					src="/slides/hero-movil.webp"
+					alt="Equipo de SEGISPRO durante una jornada de capacitación en sitio"
+					width="900"
+					height="677"
+					fetchpriority="high"
+					decoding="async"
+					class="block aspect-4/3 w-full rounded-2xl object-cover lg:hidden"
+				/>
 			</div>
 		</div>
 	</div>
@@ -957,10 +981,7 @@
 
 	<!-- Patrón de fondo sutil -->
 	<div class="absolute inset-0 opacity-[0.02]">
-		<div
-			class="absolute inset-0"
-			style="background-image: radial-gradient(circle at 2px 2px, rgb(59, 130, 246) 1px, transparent 0); background-size: 40px 40px;"
-		></div>
+		<div class="absolute inset-0"></div>
 	</div>
 
 	<div class="relative z-10 container mx-auto max-w-6xl">
@@ -1049,17 +1070,11 @@
 	>
 		<!-- Fondo animado -->
 		<div class="absolute inset-0 opacity-20">
-			<div
-				class="absolute inset-0"
-				style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.3) 1px, transparent 0); background-size: 50px 50px;"
-			></div>
+			<div class="absolute inset-0"></div>
 		</div>
 
 		<!-- Glow effect -->
-		<div
-			class="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"
-			style="background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.4), transparent 70%);"
-		></div>
+		<div class="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"></div>
 
 		<div class="relative z-10 container mx-auto max-w-7xl">
 			<!-- Header -->
@@ -1322,10 +1337,7 @@
 
 	<!-- Patrón de fondo sutil -->
 	<div class="absolute inset-0 opacity-[0.02]">
-		<div
-			class="absolute inset-0"
-			style="background-image: radial-gradient(circle at 2px 2px, rgb(59, 130, 246) 1px, transparent 0); background-size: 40px 40px;"
-		></div>
+		<div class="absolute inset-0"></div>
 	</div>
 
 	<div class="relative z-10 container mx-auto max-w-6xl">
@@ -1621,7 +1633,7 @@
 								</svg>
 							</div>
 							<p class="mb-2 font-medium text-gray-600">Yopal, Casanare, Colombia</p>
-							<p class="text-sm text-gray-500">Cargando mapa...</p>
+							<p class="text-sm text-gray-600">Cargando mapa...</p>
 						</div>
 					</div>
 				{/if}
@@ -2092,7 +2104,7 @@
 					<div class="flex flex-col items-center justify-between gap-6 md:flex-row">
 						<!-- Texto -->
 						<div class="text-center md:text-left">
-							<p class="mb-1 text-xl font-semibold text-blue-400">Agenda tu cita</p>
+							<p class="mb-1 text-xl font-semibold text-blue-300">Agenda tu cita</p>
 							<p class="text-lg text-gray-300">
 								Únete a nosotros para explorar nuevas oportunidades<br class="hidden md:inline" />
 								y alcanzar juntos grandes logros
@@ -2176,9 +2188,7 @@
 
 	/* GPU acceleration hints */
 	.gallery-card {
-		box-shadow:
-			0 25px 50px -12px rgba(0, 0, 0, 0.5),
-			0 0 80px rgba(59, 130, 246, 0.2);
+		box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.55);
 		will-change: transform, filter, opacity;
 		transform-style: preserve-3d;
 		backface-visibility: hidden;
@@ -2207,18 +2217,14 @@
 	}
 
 	.gallery-card:hover {
-		box-shadow:
-			0 35px 60px -12px rgba(0, 0, 0, 0.6),
-			0 0 100px rgba(59, 130, 246, 0.4);
+		box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.65);
 	}
 
 	/* ===== RESPONSIVE ===== */
 	@media (max-width: 1023px) {
 		.gallery-card {
 			/* Reduce sombras en móvil para mejor performance */
-			box-shadow:
-				0 15px 30px -8px rgba(0, 0, 0, 0.5),
-				0 0 50px rgba(59, 130, 246, 0.2);
+			box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.55);
 		}
 	}
 

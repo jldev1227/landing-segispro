@@ -68,9 +68,7 @@
 			<span class="text-gray-900">Cobertura</span>
 		</nav>
 
-		<h1 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">
-			Dónde <span class="text-blue-600">operamos</span>
-		</h1>
+		<h1 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">Dónde operamos</h1>
 		<p class="mb-10 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
 			Desde nuestra sede en Yopal acompañamos a empresas públicas y privadas del corredor llanero y
 			del eje Bogotá–Boyacá. Cada región tiene su propia mezcla de riesgo, normatividad sectorial y
