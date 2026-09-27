@@ -1,35 +1,50 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { serviciosData } from '$lib/data/servicios';
 	import { fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import { onMount } from 'svelte';
-	import { resolveRoute } from '$app/paths';
+	import { resolve } from '$app/paths';
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl, REGIONES } from '$lib/seo/site';
+	import {
+		breadcrumbSchema,
+		graph,
+		organizationSchema,
+		serviceSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
 
-	let mounted = false;
+	let { data } = $props();
+	const servicio = $derived(data.servicio);
 
-	$: slug = $page.params.slug as string;
-	$: servicio = serviciosData[slug as keyof typeof serviciosData];
+	const path = $derived(`/servicios/${servicio.slug}`);
+	const regiones = REGIONES.map((region) => region.nombre).join(', ');
 
-	onMount(() => {
-		mounted = true;
-		window.scrollTo(0, 0);
-	});
+	const title = $derived(`${servicio.title} | SEGISPRO Ingeniería`);
+	/** La meta descripción se arma con el tagline, que es la frase más corta y comercial. */
+	const description = $derived(
+		`${servicio.tagline} ${servicio.description.replace(/\s+/g, ' ').slice(0, 110).trim()}…`.slice(
+			0,
+			158
+		)
+	);
+
+	const schema = $derived(
+		graph([
+			organizationSchema(),
+			websiteSchema(),
+			webPageSchema({ url: absoluteUrl(path), title, description }),
+			breadcrumbSchema([
+				{ name: 'Servicios', path: '/#services' },
+				{ name: servicio.title, path }
+			]),
+			serviceSchema({ name: servicio.title, description: servicio.tagline, path })
+		])
+	);
 </script>
 
-<svelte:head>
-	<title>{servicio?.title} - SEGISPRO</title>
-	<meta name="description" content={servicio?.description.substring(0, 160)} />
-</svelte:head>
+<Seo {title} {description} {path} {schema} />
 
-{#if !servicio}
-	<div class="flex min-h-screen items-center justify-center bg-gray-50">
-		<div class="text-center">
-			<h1 class="mb-4 text-4xl font-bold text-gray-900">Servicio no encontrado</h1>
-			<a href="/#services" class="text-blue-600 hover:text-blue-700">Volver a servicios</a>
-		</div>
-	</div>
-{:else if mounted}
+{#if servicio}
 	<!-- Hero Section -->
 	<section
 		class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black px-6 pt-32 pb-20"
@@ -51,7 +66,7 @@
 			<!-- Breadcrumb -->
 			<nav class="mb-8" in:fly={{ y: -20, duration: 500, easing: quintOut }}>
 				<ol class="flex items-center gap-2 text-sm text-gray-400">
-					<li><a href={resolveRoute('/')} class="hover:text-white">Inicio</a></li>
+					<li><a href={resolve('/')} class="hover:text-white">Inicio</a></li>
 					<li>/</li>
 					<li><a href="/#services" class="hover:text-white">Servicios</a></li>
 					<li>/</li>
@@ -214,6 +229,29 @@
 					</div>
 				{/each}
 			{/if}
+
+			<!-- Cobertura: enlaza el servicio con cada región donde se presta -->
+			<div class="mt-16">
+				<h2 class="mb-2 text-2xl font-bold text-gray-900">
+					{servicio.title} en {regiones}
+				</h2>
+				<p class="mb-6 text-sm leading-relaxed text-gray-600">
+					Este servicio se presta en toda nuestra área de cobertura, con desplazamiento a locación y
+					acompañamiento presencial o remoto según el alcance contratado.
+				</p>
+				<ul class="flex flex-wrap gap-2">
+					{#each REGIONES as region (region.slug)}
+						<li>
+							<a
+								href={resolve('/cobertura/[region]', { region: region.slug })}
+								class="inline-block rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-blue-400 hover:text-blue-700"
+							>
+								{region.nombre}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</div>
 
 			<!-- CTA -->
 			<div

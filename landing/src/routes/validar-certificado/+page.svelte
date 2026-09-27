@@ -1,10 +1,33 @@
 <script lang="ts">
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl } from '$lib/seo/site';
+	import {
+		breadcrumbSchema,
+		graph,
+		organizationSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
+
+	const seoTitle = 'Validar certificado SEGISPRO en línea | Verificación por código UUID';
+	const seoDescription =
+		'Verifica la autenticidad de un certificado de capacitación emitido por SEGISPRO Ingeniería con su código UUID único: titular, curso y fecha de emisión.';
+	const seoSchema = graph([
+		organizationSchema(),
+		websiteSchema(),
+		webPageSchema({
+			url: absoluteUrl('/validar-certificado'),
+			title: seoTitle,
+			description: seoDescription
+		}),
+		breadcrumbSchema([{ name: 'Validar certificado', path: '/validar-certificado' }])
+	]);
 	import { onMount } from 'svelte';
 	import { fly, scale } from 'svelte/transition';
 	import type { Certificado } from '$lib/data/certificados';
 	import { resolveRoute } from '$app/paths';
 
-	let mounted = false;
+	let mounted = true;
 	let uuid = '';
 	let loading = false;
 	let certificado: Certificado | null = null;
@@ -56,14 +79,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>Validar Certificado - SEGISPRO</title>
-	<meta
-		name="description"
-		content="Valida la autenticidad de tu certificado emitido por SEGISPRO mediante su código UUID único."
-	/>
-	<meta name="robots" content="index, follow" />
-</svelte:head>
+<Seo title={seoTitle} description={seoDescription} path="/validar-certificado" schema={seoSchema} />
 
 <!-- Header Simple -->
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">

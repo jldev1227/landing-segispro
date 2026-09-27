@@ -1,14 +1,27 @@
 <script lang="ts">
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl } from '$lib/seo/site';
+	import {
+		faqSchema,
+		graph,
+		organizationSchema,
+		serviceListSchema,
+		serviceSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
 	import { onMount } from 'svelte';
 	import { fade, fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import { resolveRoute } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { User } from 'lucide-svelte';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
 	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
 	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
+	import { serviciosData } from '$lib/data/servicios';
+	import { REGIONES } from '$lib/seo/site';
 
 	// Variable de entorno para la app Segispro
 	const SEGISPRO_APP_URL = import.meta.env.VITE_APP_SEGISPRO || 'http://localhost:5174';
@@ -40,18 +53,22 @@
 		{ id: 'nosotros', label: 'Nosotros' },
 		{ id: 'experience', label: 'Experiencia' }
 	];
-	let mounted = false;
-	let heroVisible = false;
-	let servicesVisible = false;
-	let characteristicsVisible = false;
+	// Estos indicadores arrancan en `true` para que el HTML servido ya traiga el
+	// contenido: con `false` el rastreador recibía un documento sin <h1> ni texto.
+	// Los observers los siguen tocando, pero solo confirman lo que ya está visible.
+	let mounted = true;
+	let heroVisible = true;
+	let characteristicsVisible = true;
 
 	// Estados para los contadores
 	let hasAnimated = false;
 	let statsSection: HTMLElement | undefined;
-	let profesionales = 0;
-	let cubrimiento = 0;
-	let clientesNumber = 0;
-	let experiencia = 0;
+	// Se inicializan en su valor final para que el HTML servido muestre las cifras
+	// reales; `startAnimation` vuelve a 0 y anima solo en el navegador.
+	let profesionales = 20;
+	let cubrimiento = 15;
+	let clientesNumber = 125;
+	let experiencia = 15;
 
 	// Configuración de las estadísticas
 	const statsConfig = {
@@ -91,6 +108,13 @@
 
 	// Iniciar animación
 	function startAnimation() {
+		// Los contadores llegan con su valor final desde el servidor: se vuelven a 0
+		// justo antes de animar para que el conteo se aprecie.
+		profesionales = 0;
+		cubrimiento = 0;
+		clientesNumber = 0;
+		experiencia = 0;
+
 		// Animar contadores con delays escalonados
 		setTimeout(() => {
 			animateCounter(
@@ -138,7 +162,6 @@
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
 						if (entry.target.id === 'hero') heroVisible = true;
-						if (entry.target.id === 'services') servicesVisible = true;
 						if (entry.target.id === 'characteristics') characteristicsVisible = true;
 					}
 					if (entry.isIntersecting && !mapLoaded) {
@@ -521,122 +544,62 @@
 		}
 	}
 
-	// Datos estructurados JSON-LD para Google
-	const schemaData = {
-		'@context': 'https://schema.org',
-		'@type': 'ProfessionalService',
-		name: 'SEGISPRO Ingeniería',
-		image: 'https://www.segispro.com/assets/logo.png',
-		'@id': 'https://www.segispro.com',
-		url: 'https://www.segispro.com',
-		telephone: '+573104853340',
-		email: 'administracion@segispro.com',
-		address: {
-			'@type': 'PostalAddress',
-			streetAddress: 'Yopal',
-			addressLocality: 'Yopal',
-			addressRegion: 'Casanare',
-			postalCode: '850001',
-			addressCountry: 'CO'
+	// Datos estructurados: un único `@graph` con organización, sitio, página,
+	// migas y el listado de servicios del portafolio.
+	const servicios = Object.values(serviciosData);
+
+	const seoTitle =
+		'SEGISPRO | Consultoría, auditorías y capacitaciones SST en Casanare, Meta, Boyacá y Bogotá';
+	const seoDescription =
+		'Desde 2009 implementamos sistemas de gestión en seguridad y salud en el trabajo, medio ambiente y calidad: consultoría, auditoría, interventoría, formación, simulacros, campañas y estudios. Yopal, Villavicencio, Tunja, Bogotá y Cundinamarca.';
+
+	const preguntasFrecuentes = [
+		{
+			pregunta: '¿Qué servicios presta SEGISPRO Ingeniería?',
+			respuesta:
+				'Consultoría y auditoría de sistemas de gestión (ISO 9001, ISO 14001, ISO 45001), interventoría, formación y capacitación, simulacros, campañas institucionales, estudios ambientales y de salud laboral, y digitalización de procesos HSEQ.'
 		},
-		geo: {
-			'@type': 'GeoCoordinates',
-			latitude: 5.336674979441651,
-			longitude: -72.38573869384264
+		{
+			pregunta: '¿En qué ciudades y departamentos opera SEGISPRO?',
+			respuesta:
+				'La sede está en Yopal, Casanare, y atendemos de forma permanente Casanare, Meta, Boyacá, Bogotá D.C. y Cundinamarca, incluyendo Villavicencio, Puerto Gaitán, Tunja, Duitama, Sogamoso y la Sabana de Bogotá.'
 		},
-		openingHoursSpecification: {
-			'@type': 'OpeningHoursSpecification',
-			dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-			opens: '08:00',
-			closes: '18:00'
+		{
+			pregunta: '¿SEGISPRO certifica en ISO 45001 o ISO 9001?',
+			respuesta:
+				'SEGISPRO no es organismo certificador: acompaña el diseño, la implementación y la auditoría interna del sistema de gestión para que la organización llegue preparada a la auditoría de certificación con el ente acreditado que elija.'
 		},
-		foundingDate: '2009',
-		description:
-			'Desde 2009, somos líderes en soluciones integrales mediante Sistemas de Gestión en seguridad, salud laboral, medio ambiente y calidad para empresas públicas y privadas.',
-		areaServed: {
-			'@type': 'Country',
-			name: 'Colombia'
+		{
+			pregunta: '¿Cómo valido un certificado emitido por SEGISPRO?',
+			respuesta:
+				'Cada certificado tiene un código UUID único que se consulta en la página de validación de certificados del sitio, que confirma titular, curso y fecha de emisión.'
 		},
-		priceRange: '$$',
-		sameAs: [
-			'https://www.facebook.com/SEGISPRO',
-			'https://co.linkedin.com/company/segispro-ingenieria-sas',
-			'https://www.instagram.com/segispro_auditores/'
-		]
-	};
+		{
+			pregunta: '¿Las capacitaciones son virtuales o presenciales?',
+			respuesta:
+				'Hay cursos virtuales, presenciales e híbridos. Los simulacros y las campañas institucionales se ejecutan siempre de forma presencial en la sede del cliente.'
+		}
+	];
+
+	const schemaData = graph([
+		organizationSchema(),
+		websiteSchema(),
+		webPageSchema({ url: absoluteUrl('/'), title: seoTitle, description: seoDescription }),
+		serviceListSchema(
+			servicios.map((servicio) => ({ name: servicio.title, path: `/servicios/${servicio.slug}` }))
+		),
+		...servicios.map((servicio) =>
+			serviceSchema({
+				name: servicio.title,
+				description: servicio.tagline,
+				path: `/servicios/${servicio.slug}`
+			})
+		),
+		faqSchema(preguntasFrecuentes)
+	]);
 </script>
 
-<svelte:head>
-	<!-- Title optimizado -->
-	<title
-		>SEGISPRO - Capacitaciones y Auditorías en Seguridad y Salud Laboral | Yopal, Casanare</title
-	>
-
-	<!-- Meta descripción -->
-	<meta
-		name="description"
-		content="Desde 2009, SEGISPRO ofrece capacitaciones, auditorías y sistemas de gestión en seguridad, salud laboral, medio ambiente y calidad para empresas en Yopal, Casanare y toda Colombia."
-	/>
-
-	<!-- Meta keywords -->
-	<meta
-		name="keywords"
-		content="capacitaciones empresariales, auditorías SST, seguridad laboral, salud ocupacional, sistemas de gestión, HSEQ, Yopal, Casanare, Colombia, SEGISPRO"
-	/>
-
-	<!-- Autor y copyright -->
-	<meta name="author" content="SEGISPRO Ingeniería" />
-	<meta name="copyright" content="SEGISPRO © 2025" />
-
-	<!-- Open Graph (Facebook, LinkedIn) -->
-	<meta property="og:type" content="website" />
-	<meta
-		property="og:title"
-		content="SEGISPRO - Tu aliado estratégico en seguridad y salud laboral"
-	/>
-	<meta
-		property="og:description"
-		content="Capacitaciones personalizadas y auditorías especializadas para empresas. Más de 15 años de experiencia en sistemas de gestión HSEQ."
-	/>
-	<meta property="og:url" content="https://www.segispro.com" />
-	<meta property="og:image" content="https://www.segispro.com/og-image.jpg" />
-	<meta property="og:locale" content="es_CO" />
-	<meta property="og:site_name" content="SEGISPRO" />
-
-	<!-- Twitter Card -->
-	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="SEGISPRO - Capacitaciones y Auditorías SST" />
-	<meta
-		name="twitter:description"
-		content="Líderes en soluciones integrales de seguridad, salud laboral y medio ambiente desde 2009."
-	/>
-	<meta name="twitter:image" content="https://www.segispro.com/twitter-card.jpg" />
-
-	<!-- Canonical URL -->
-	<link rel="canonical" href="https://www.segispro.com" />
-
-	<!-- Robots -->
-	<meta
-		name="robots"
-		content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-	/>
-
-	<!-- Viewport y responsive -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-	<!-- Idioma -->
-	<meta name="language" content="es-CO" />
-
-	<!-- Tema de color para navegadores móviles -->
-	<meta name="theme-color" content="#2563eb" />
-
-	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="/favicon.png" />
-	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-	<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-	{@html `<script type='application/ld+json'>${JSON.stringify(schemaData)}</script>`}
-</svelte:head>
+<Seo title={seoTitle} description={seoDescription} path="/" schema={schemaData} />
 
 <svelte:window bind:scrollY />
 
@@ -719,14 +682,14 @@
 								>
 									<div class="p-1.5">
 										<a
-											href="/capacitaciones"
+											href={resolve('/capacitaciones')}
 											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
 										>
 											<span>🎓</span>
 											<span>Cursos</span>
 										</a>
 										<a
-											href={resolveRoute('/validar-certificado')}
+											href={resolve('/validar-certificado')}
 											class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 transition-colors duration-200 hover:bg-white/60"
 										>
 											<span>✓</span>
@@ -895,14 +858,14 @@
 							transition:fly={{ y: -10, duration: 200 }}
 						>
 							<a
-								href="/capacitaciones"
+								href={resolve('/capacitaciones')}
 								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
 								🎓 Cursos
 							</a>
 							<a
-								href={resolveRoute('/validar-certificado')}
+								href={resolve('/validar-certificado')}
 								class="block rounded-lg px-3 py-2 text-sm text-gray-200 transition-all duration-200 hover:bg-white/10 hover:text-white"
 								on:click={() => (mobileMenuOpen = false)}
 							>
@@ -953,14 +916,16 @@
 					<div in:fly={{ y: 50, duration: 800, easing: quintOut }}>
 						<h1 class="mb-2 text-2xl leading-tight font-bold sm:text-3xl lg:text-4xl xl:text-5xl">
 							<span class="text-blue-600">SEGISPRO</span><br />
-							<span class="text-gray-900">tu aliado estratégico.</span>
+							<span class="text-gray-900">tu aliado estratégico en</span><br />
+							<span class="text-gray-900">seguridad y salud en el trabajo</span>
 						</h1>
 					</div>
 
 					<div in:fly={{ y: 30, duration: 800, delay: 200, easing: quintOut }}>
 						<p class="mb-3 max-w-xl text-sm leading-relaxed text-gray-700 sm:mb-4">
 							Mejora y evoluciona con SEGISPRO Ingeniería. Transformamos tus retos empresariales en
-							oportunidades con consultorías, auditorías y formación a la medida.
+							oportunidades con consultorías, auditorías, interventoría y formación a la medida, en
+							Casanare, Meta, Boyacá, Bogotá y Cundinamarca.
 						</p>
 
 						<!-- CTA Buttons -->
@@ -1979,7 +1944,7 @@
 			<div in:fly={{ y: 30, duration: 800, delay: 600 }} class="text-center">
 				<!-- Desktop version -->
 				<div
-					class="hidden sm:inline-flex items-center gap-8 rounded-full border border-gray-100 bg-white px-8 py-5 shadow-xl"
+					class="hidden items-center gap-8 rounded-full border border-gray-100 bg-white px-8 py-5 shadow-xl sm:inline-flex"
 				>
 					<div class="flex items-center gap-3">
 						<div class="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
@@ -2014,18 +1979,18 @@
 						<!-- Response time -->
 						<div class="flex items-center justify-center gap-3">
 							<div class="h-3 w-3 animate-pulse rounded-full bg-green-500"></div>
-							<span class="text-sm font-medium text-gray-700 text-center">
+							<span class="text-center text-sm font-medium text-gray-700">
 								Respondemos en menos de 24 horas
 							</span>
 						</div>
-						
+
 						<!-- Divider -->
-						<div class="w-full h-px bg-gray-200"></div>
-						
+						<div class="h-px w-full bg-gray-200"></div>
+
 						<!-- Schedule -->
 						<div class="flex items-center justify-center gap-3">
 							<svg
-								class="h-5 w-5 text-blue-500 flex-shrink-0"
+								class="h-5 w-5 flex-shrink-0 text-blue-500"
 								fill="none"
 								stroke="currentColor"
 								viewBox="0 0 24 24"
@@ -2037,7 +2002,7 @@
 									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
 								/>
 							</svg>
-							<div class="text-sm font-medium text-gray-700 text-center">
+							<div class="text-center text-sm font-medium text-gray-700">
 								<div>Lun - Vie: 8:00 AM - 6:00 PM</div>
 								<div>Sáb: 8:00 AM - 12:00 PM</div>
 							</div>
@@ -2050,6 +2015,70 @@
 </section>
 
 <!-- Footer -->
+
+<!-- Cobertura geográfica -->
+<section id="cobertura" class="bg-white p-8">
+	<div class="container mx-auto max-w-6xl">
+		<div class="mb-8 text-center">
+			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
+				Dónde operamos
+			</p>
+			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
+				Cobertura en <span class="text-blue-600">cinco regiones</span>
+			</h2>
+			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-gray-600">
+				Desde la sede en Yopal acompañamos operaciones del corredor llanero y del eje Bogotá–Boyacá,
+				con desplazamiento a locación.
+			</p>
+		</div>
+
+		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+			{#each REGIONES as region (region.slug)}
+				<a
+					href={resolve('/cobertura/[region]', { region: region.slug })}
+					class="group rounded-2xl border border-gray-200 bg-white p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"
+				>
+					<h3 class="mb-2 text-lg font-bold text-gray-900 group-hover:text-blue-600">
+						{region.nombre}
+					</h3>
+					<p class="mb-3 text-sm leading-relaxed text-gray-600">{region.enfoque}</p>
+					<p class="text-xs text-gray-500">{region.ciudades.slice(0, 5).join(' · ')}</p>
+				</a>
+			{/each}
+
+			<a
+				href={resolve('/cobertura')}
+				class="flex items-center justify-center rounded-2xl border-2 border-dashed border-blue-300 bg-blue-50 p-6 text-center font-semibold text-blue-700 transition-colors hover:bg-blue-100"
+			>
+				Ver toda la cobertura →
+			</a>
+		</div>
+	</div>
+</section>
+
+<!-- Preguntas frecuentes -->
+<section id="faq" class="bg-gray-50 p-8">
+	<div class="container mx-auto max-w-4xl">
+		<div class="mb-8 text-center">
+			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
+				Resolvemos dudas
+			</p>
+			<h2 class="text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
+				Preguntas <span class="text-blue-600">frecuentes</span>
+			</h2>
+		</div>
+
+		<dl class="space-y-4">
+			{#each preguntasFrecuentes as item (item.pregunta)}
+				<div class="rounded-2xl border border-gray-200 bg-white p-5">
+					<dt class="mb-2 font-semibold text-gray-900">{item.pregunta}</dt>
+					<dd class="text-sm leading-relaxed text-gray-600">{item.respuesta}</dd>
+				</div>
+			{/each}
+		</dl>
+	</div>
+</section>
+
 <footer
 	class="relative overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-gray-900 px-6 py-16 text-white"
 >
@@ -2338,7 +2367,7 @@
 						</p>
 						<div class="flex items-center gap-6">
 							<a
-								href={resolveRoute('/politicas-de-privacidad')}
+								href={resolve('/politicas-de-privacidad')}
 								class="text-sm text-gray-400 transition-colors hover:text-blue-400"
 							>
 								Política de Privacidad

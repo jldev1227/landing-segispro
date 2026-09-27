@@ -5,6 +5,7 @@
 	import { capacitaciones } from '$lib/data/capacitaciones';
 	import { goto } from '$app/navigation';
 	import { resolveRoute } from '$app/paths';
+	import Seo from '$lib/seo/Seo.svelte';
 
 	// Obtener el curso por slug
 	$: slug = $page.params.slug;
@@ -128,11 +129,14 @@
 	$: precioFinal = curso?.precioDescuento || curso?.precio || 0;
 </script>
 
-<svelte:head>
-	{#if curso}
-		<title>Pago - {curso.titulo} - SEGISPRO</title>
-	{/if}
-</svelte:head>
+{#if curso}
+	<Seo
+		title={`Pago · ${curso.titulo} | SEGISPRO`}
+		description="Formaliza la inscripción a tu capacitación SEGISPRO."
+		path={`/capacitaciones/${slug}/pago`}
+		noindex
+	/>
+{/if}
 
 {#if curso}
 	<main class="min-h-screen bg-linear-to-b from-gray-50 to-white py-12">

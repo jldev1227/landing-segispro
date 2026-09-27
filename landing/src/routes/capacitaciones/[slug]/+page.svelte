@@ -4,6 +4,16 @@
 	import { page } from '$app/stores';
 	import { resolveRoute } from '$app/paths';
 	import { capacitaciones } from '$lib/data/capacitaciones';
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl } from '$lib/seo/site';
+	import {
+		breadcrumbSchema,
+		courseSchema,
+		graph,
+		organizationSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
 
 	// Obtener el curso por slug
 	$: slug = $page.params.slug;
@@ -21,20 +31,35 @@
 		}).format(precio);
 	}
 
-	// Si no existe el curso, redireccionar
-	$: if (!curso) {
-		if (typeof window !== 'undefined') {
-			window.location.href = '/capacitaciones';
-		}
-	}
+	// Metadatos de la ficha del curso
+	$: path = `/capacitaciones/${slug}`;
+	$: title = curso ? `${curso.titulo} | Capacitación SEGISPRO` : 'Capacitación | SEGISPRO';
+	$: description = curso ? curso.descripcion.slice(0, 158) : '';
+	$: horas = curso ? Number.parseInt(curso.duracion, 10) : undefined;
+	$: schema = curso
+		? graph([
+				organizationSchema(),
+				websiteSchema(),
+				webPageSchema({ url: absoluteUrl(path), title, description }),
+				breadcrumbSchema([
+					{ name: 'Capacitaciones', path: '/capacitaciones' },
+					{ name: curso.titulo, path }
+				]),
+				courseSchema({
+					name: curso.titulo,
+					description: curso.descripcionLarga,
+					path,
+					modalidad: curso.modalidad,
+					duracionHoras: Number.isFinite(horas) ? horas : undefined,
+					precio: curso.precioDescuento ?? curso.precio
+				})
+			])
+		: null;
 </script>
 
-<svelte:head>
-	{#if curso}
-		<title>{curso.titulo} - SEGISPRO Capacitaciones</title>
-		<meta name="description" content={curso.descripcion} />
-	{/if}
-</svelte:head>
+{#if curso}
+	<Seo {title} {description} {path} {schema} />
+{/if}
 
 {#if curso}
 	<main class="min-h-screen bg-linear-to-b from-gray-50 to-white">

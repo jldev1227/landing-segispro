@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Seo from '$lib/seo/Seo.svelte';
 	import { fly, scale, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
@@ -24,6 +25,13 @@
 		isLoading = false;
 	}
 </script>
+
+<Seo
+	title="Ingreso a la plataforma | SEGISPRO"
+	description="Acceso privado a la plataforma de SEGISPRO Ingeniería."
+	path="/ingreso"
+	noindex
+/>
 
 <div
 	class="relative min-h-screen overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black"

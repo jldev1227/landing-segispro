@@ -3,8 +3,44 @@
 	import { fade, fly, scale } from 'svelte/transition';
 	import { resolveRoute } from '$app/paths';
 	import { capacitaciones, categorias, modalidades, niveles } from '$lib/data/capacitaciones';
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl } from '$lib/seo/site';
+	import {
+		breadcrumbSchema,
+		graph,
+		organizationSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
 
-	let mounted = false;
+	const seoTitle = 'Capacitaciones y cursos en SST, auditoría y seguridad vial | SEGISPRO';
+	const seoDescription =
+		'Catálogo de capacitaciones certificadas de SEGISPRO: auditoría interna ISO 9001 e ISO 45001, gestión de riesgos ARL, seguridad vial, ergonomía, primeros auxilios y liderazgo. Virtual, presencial e híbrida.';
+
+	/** Listado de cursos: cada ficha lleva su propio schema `Course`. */
+	const seoSchema = graph([
+		organizationSchema(),
+		websiteSchema(),
+		webPageSchema({
+			url: absoluteUrl('/capacitaciones'),
+			title: seoTitle,
+			description: seoDescription
+		}),
+		breadcrumbSchema([{ name: 'Capacitaciones', path: '/capacitaciones' }]),
+		{
+			'@type': 'ItemList',
+			name: 'Catálogo de capacitaciones SEGISPRO',
+			itemListElement: capacitaciones.map((curso, i) => ({
+				'@type': 'ListItem',
+				position: i + 1,
+				name: curso.titulo,
+				url: absoluteUrl(`/capacitaciones/${curso.slug}`)
+			}))
+		}
+	]);
+
+	// Arranca abierto para que el catálogo viaje en el HTML servido.
+	let mounted = true;
 	let filtroCategoria = 'Todas';
 	let filtroModalidad = 'Todas';
 	let filtroNivel = 'Todos';
@@ -53,13 +89,7 @@
 	});
 </script>
 
-<svelte:head>
-	<title>Capacitaciones y Cursos - SEGISPRO</title>
-	<meta
-		name="description"
-		content="Descubre nuestro catálogo de capacitaciones profesionales en seguridad industrial, auditorías, gestión de riesgos y más. Certifícate con SEGISPRO."
-	/>
-</svelte:head>
+<Seo title={seoTitle} description={seoDescription} path="/capacitaciones" schema={seoSchema} />
 
 <!-- Header Simple -->
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">

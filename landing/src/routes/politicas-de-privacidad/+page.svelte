@@ -1,23 +1,44 @@
 <script lang="ts">
+	import Seo from '$lib/seo/Seo.svelte';
+	import { absoluteUrl } from '$lib/seo/site';
+	import {
+		breadcrumbSchema,
+		graph,
+		organizationSchema,
+		webPageSchema,
+		websiteSchema
+	} from '$lib/seo/schema';
+
+	const seoTitle = 'Política de privacidad y tratamiento de datos | SEGISPRO Ingeniería';
+	const seoDescription =
+		'Cómo SEGISPRO Ingeniería recolecta, usa y protege los datos personales de clientes, aspirantes y participantes de capacitaciones, conforme a la Ley 1581 de 2012.';
+	const seoSchema = graph([
+		organizationSchema(),
+		websiteSchema(),
+		webPageSchema({
+			url: absoluteUrl('/politicas-de-privacidad'),
+			title: seoTitle,
+			description: seoDescription
+		}),
+		breadcrumbSchema([{ name: 'Política de privacidad', path: '/politicas-de-privacidad' }])
+	]);
 	import { onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
 	import { resolveRoute } from '$app/paths';
 
-	let mounted = false;
+	let mounted = true;
 
 	onMount(() => {
 		mounted = true;
 	});
 </script>
 
-<svelte:head>
-	<title>Política de Privacidad - SEGISPRO</title>
-	<meta
-		name="description"
-		content="Conoce cómo SEGISPRO protege y gestiona tus datos personales. Política de privacidad completa."
-	/>
-	<meta name="robots" content="index, follow" />
-</svelte:head>
+<Seo
+	title={seoTitle}
+	description={seoDescription}
+	path="/politicas-de-privacidad"
+	schema={seoSchema}
+/>
 
 <!-- Header Simple -->
 <header class="fixed top-0 right-0 left-0 z-50 bg-white shadow-md">
