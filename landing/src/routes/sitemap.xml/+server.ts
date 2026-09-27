@@ -17,6 +17,7 @@ interface Entrada {
 const entradas: Entrada[] = [
 	{ path: '/', changefreq: 'weekly', priority: '1.0' },
 	{ path: '/cobertura', changefreq: 'monthly', priority: '0.9' },
+	{ path: '/trabaja-con-nosotros', changefreq: 'monthly', priority: '0.9' },
 	{ path: '/validar-certificado', changefreq: 'monthly', priority: '0.6' },
 	{ path: '/politicas-de-privacidad', changefreq: 'yearly', priority: '0.3' },
 	...Object.keys(serviciosData).map(

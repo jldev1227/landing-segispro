@@ -62,6 +62,11 @@
 				<li><a href="mailto:{CONTACT.email}" class="hover:text-blue-400">{CONTACT.email}</a></li>
 				<li>{CONTACT.ciudad}, {CONTACT.departamento}, Colombia</li>
 				<li>
+					<a href={resolve('/trabaja-con-nosotros')} class="hover:text-blue-400"
+						>Trabaja con nosotros</a
+					>
+				</li>
+				<li>
 					<a href={resolve('/politicas-de-privacidad')} class="hover:text-blue-400"
 						>Política de privacidad</a
 					>
@@ -70,8 +75,12 @@
 		</div>
 	</div>
 
+	<!--
+		`gray-500` sobre `gray-900` da 3,66:1 y a 12px WCAG AA exige 4,5:1.
+		`gray-400` lo sube a 6,8:1 sin cambiar el peso visual de la línea.
+	-->
 	<div
-		class="container mx-auto mt-10 max-w-6xl border-t border-gray-800 pt-6 text-xs text-gray-500"
+		class="container mx-auto mt-10 max-w-6xl border-t border-gray-800 pt-6 text-xs text-gray-400"
 	>
 		© {new Date().getFullYear()} SEGISPRO Ingeniería S.A.S. Todos los derechos reservados.
 	</div>

@@ -32,6 +32,12 @@
 					Cobertura
 				</a>
 				<a
+					href={resolve('/trabaja-con-nosotros')}
+					class="hidden text-sm font-medium text-gray-700 transition-colors hover:text-blue-600 sm:block"
+				>
+					Trabaja con nosotros
+				</a>
+				<a
 					href={resolve('/validar-certificado')}
 					class="text-sm font-medium text-gray-700 transition-colors hover:text-blue-600"
 				>
