@@ -253,6 +253,14 @@
 				</ul>
 			</div>
 
+			<!-- Quien busca trabajo en esta especialidad llega por aquí -->
+			<p class="mt-8 text-sm leading-relaxed text-gray-600">
+				¿Eres profesional en esta área y quieres ejecutar servicios con nosotros?
+				<a href={resolve('/trabaja-con-nosotros')} class="font-semibold text-blue-700 underline">
+					Envía tu hoja de vida
+				</a>.
+			</p>
+
 			<!-- CTA -->
 			<div
 				class="mt-20 rounded-3xl bg-linear-to-br from-blue-600 to-blue-500 p-10 text-center text-white shadow-2xl"

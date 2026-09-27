@@ -129,6 +129,21 @@
 			</ul>
 		</section>
 
+		<section class="mt-16 rounded-2xl border border-gray-200 bg-white p-8">
+			<h2 class="mb-3 text-2xl font-bold text-gray-900">Trabaja con nosotros</h2>
+			<p class="mb-6 max-w-3xl text-sm leading-relaxed text-gray-600">
+				Las actividades de estas cinco regiones las ejecuta una red de profesionales independientes.
+				Si eres auditor, capacitador, consultor o especialista en estudios técnicos, puedes
+				enviarnos tu hoja de vida.
+			</p>
+			<a
+				href={resolve('/trabaja-con-nosotros')}
+				class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+			>
+				Enviar mi hoja de vida
+			</a>
+		</section>
+
 		<section class="mt-16">
 			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Preguntas frecuentes</h2>
 			<dl class="space-y-4">

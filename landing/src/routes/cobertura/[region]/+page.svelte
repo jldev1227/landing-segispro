@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/seo/Seo.svelte';
 	import { CAMPUS_CURSOS, CONTACT, absoluteUrl } from '$lib/seo/site';
+	import metricas from '$lib/data/metricas.json';
 	import {
 		breadcrumbSchema,
 		graph,
@@ -131,6 +132,23 @@
 						<p class="text-sm leading-relaxed text-gray-600">{servicio.tagline}</p>
 					</a>
 				{/each}
+			</div>
+
+			<div class="mt-10 rounded-2xl border border-gray-200 bg-white p-8">
+				<h2 class="mb-3 text-2xl font-bold text-gray-900">
+					¿Eres profesional de SST y trabajas en {region.nombre}?
+				</h2>
+				<p class="mb-6 max-w-3xl text-sm leading-relaxed text-gray-600">
+					Buscamos auditores, capacitadores, consultores y especialistas en estudios técnicos para
+					ejecutar servicios en {region.ciudades.slice(0, 3).join(', ')} y el resto de {region.nombre}.
+					La red la integran {metricas.profesionales} profesionales y la contratación es por actividad.
+				</p>
+				<a
+					href={resolve('/trabaja-con-nosotros')}
+					class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+				>
+					Enviar mi hoja de vida
+				</a>
 			</div>
 
 			<div class="mt-10 rounded-2xl bg-blue-600 p-8 text-center text-white">

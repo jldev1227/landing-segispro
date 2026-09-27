@@ -173,6 +173,68 @@
 						</div>
 					</section>
 
+					<!-- Hojas de vida -->
+					<section class="mb-10">
+						<h2 class="mb-4 text-2xl font-bold text-gray-900">Hojas de vida y postulaciones</h2>
+						<div class="space-y-4 text-gray-700">
+							<p class="leading-relaxed">
+								Cuando envías tu hoja de vida por el formulario de «Trabaja con nosotros» recogemos
+								el nombre, el correo electrónico, el teléfono, la ciudad, el área de interés, los
+								años de experiencia, el mensaje que escribas y el archivo que adjuntes. Estos datos
+								se usan únicamente para evaluar tu perfil y contactarte cuando exista una
+								oportunidad que encaje con él.
+							</p>
+							<p class="leading-relaxed">
+								El archivo se almacena cifrado en Microsoft Azure y solo accede a él el personal de
+								SEGISPRO con rol de administrador o de gestión de hojas de vida. También guardamos
+								una huella criptográfica de tu dirección IP —no la dirección en sí— para detectar
+								envíos automatizados.
+							</p>
+							<p class="leading-relaxed">
+								Puedes solicitar en cualquier momento el acceso, la corrección o la supresión de
+								estos datos escribiendo a
+								<a href="mailto:administracion@segispro.com" class="text-blue-700 underline"
+									>administracion@segispro.com</a
+								>, conforme a la Ley 1581 de 2012 y al Decreto 1377 de 2013.
+							</p>
+						</div>
+					</section>
+
+					<!-- Servicios de terceros -->
+					<section class="mb-10">
+						<h2 class="mb-4 text-2xl font-bold text-gray-900">Servicios de terceros</h2>
+						<div class="space-y-4 text-gray-700">
+							<p class="leading-relaxed">
+								<strong>Facebook.</strong> La sección de novedades muestra nuestras publicaciones mediante
+								el Page Plugin de Facebook. Ese bloque se carga desde los servidores de Meta y puede
+								instalar cookies de terceros y registrar tu visita si tienes sesión iniciada en Facebook.
+								El contenido solo se carga cuando llegas a esa sección de la página.
+							</p>
+							<p class="leading-relaxed">
+								<strong>Google reCAPTCHA.</strong> El formulario de hojas de vida está protegido con
+								reCAPTCHA v3, que analiza tu interacción con la página para distinguir personas de
+								programas automatizados. Aplican la
+								<a
+									href="https://policies.google.com/privacy"
+									target="_blank"
+									rel="noopener"
+									class="text-blue-700 underline">política de privacidad</a
+								>
+								y los
+								<a
+									href="https://policies.google.com/terms"
+									target="_blank"
+									rel="noopener"
+									class="text-blue-700 underline">términos de servicio</a
+								> de Google.
+							</p>
+							<p class="leading-relaxed">
+								<strong>Vercel Analytics.</strong> Medimos el tráfico del sitio de forma agregada y sin
+								cookies: no se crea un identificador que permita seguirte entre visitas.
+							</p>
+						</div>
+					</section>
+
 					<!-- Con quién compartimos tus datos -->
 					<section class="mb-10">
 						<h2 class="mb-4 text-2xl font-bold text-gray-900">Con quién compartimos tus datos</h2>

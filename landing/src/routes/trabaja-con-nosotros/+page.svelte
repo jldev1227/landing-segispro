@@ -179,6 +179,40 @@
 		</div>
 	</section>
 
+	<section class="px-4 py-14 sm:px-6">
+		<div class="container mx-auto max-w-5xl">
+			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl">En qué se trabaja</h2>
+			<p class="mb-8 max-w-3xl text-sm leading-relaxed text-gray-600">
+				Reparto real de los {metricas.serviciosPrestados.toLocaleString('es-CO')} servicios ejecutados
+				hasta hoy. Sirve para saber dónde hay volumen antes de postularse.
+			</p>
+
+			<ul class="space-y-3">
+				{#each metricas.porCategoria as categoria (categoria.etiqueta)}
+					{@const proporcion = Math.round((categoria.total / metricas.serviciosPrestados) * 100)}
+					<li class="flex items-center gap-4">
+						<span class="w-56 shrink-0 text-sm font-medium text-gray-900">{categoria.etiqueta}</span
+						>
+						<span class="h-2.5 flex-1 overflow-hidden rounded-full bg-gray-100">
+							<span
+								class="block h-full rounded-full bg-blue-600"
+								style="width: {Math.max(proporcion, 1)}%"
+							></span>
+						</span>
+						<span class="w-20 shrink-0 text-right text-sm text-gray-600 tabular-nums">
+							{categoria.total.toLocaleString('es-CO')}
+						</span>
+					</li>
+				{/each}
+			</ul>
+
+			<p class="mt-6 text-xs text-gray-500">
+				Cifras tomadas del sistema de gestión de SEGISPRO; solo cuentan las actividades
+				efectivamente ejecutadas.
+			</p>
+		</div>
+	</section>
+
 	<section class="bg-gray-50 px-4 py-14 sm:px-6">
 		<div class="container mx-auto max-w-5xl">
 			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Cómo es el proceso</h2>

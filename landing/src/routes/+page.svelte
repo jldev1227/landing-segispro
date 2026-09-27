@@ -19,9 +19,9 @@
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
 	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
-	import { uploadHojaDeVida } from '$lib/api/uploadHojaDeVida';
 	import { serviciosData } from '$lib/data/servicios';
-	import { CAMPUS_CURSOS, REGIONES } from '$lib/seo/site';
+	import { CAMPUS_CURSOS, FACEBOOK_URL, REGIONES } from '$lib/seo/site';
+	import FacebookFeed from '$lib/components/FacebookFeed.svelte';
 	import metricas from '$lib/data/metricas.json';
 
 	// Variable de entorno para la app Segispro
@@ -32,19 +32,6 @@
 	let activeSection = 'inicio';
 	let carouselVisible = false;
 	let formacionDropdownOpen = false;
-
-	// Modal de trabajo
-	let cvModalOpen = false;
-	let cvFile: File | null = null;
-	let cvFileName = '';
-	let cvUploading = false;
-	let cvUploadSuccess = false;
-	let cvUploadError = '';
-
-	// Estado avanzado del modal de CV
-	let isDragActive = false;
-	let uploadingProgress = 0;
-	let uploadInterval: ReturnType<typeof setInterval> | null = null;
 
 	$: isScrolled = scrollY > 50;
 
@@ -419,113 +406,6 @@
 	function handleKeydown(e: KeyboardEvent) {
 		if (e.key === 'ArrowLeft') goToPrev();
 		if (e.key === 'ArrowRight') goToNext();
-	}
-
-	// Funciones del modal de CV
-	function openCvModal() {
-		cvModalOpen = true;
-		cvUploadSuccess = false;
-		cvUploadError = '';
-		document.body.style.overflow = 'hidden';
-	}
-
-	function closeCvModal() {
-		cvModalOpen = false;
-		cvFile = null;
-		cvFileName = '';
-		cvUploading = false;
-		cvUploadSuccess = false;
-		cvUploadError = '';
-		document.body.style.overflow = '';
-	}
-
-	function processFile(file: File) {
-		// Validar que sea PDF
-		if (file.type !== 'application/pdf') {
-			cvUploadError = 'Por favor, selecciona solo archivos PDF';
-			cvFile = null;
-			cvFileName = '';
-			return;
-		}
-
-		// Validar tamaño (máximo 50MB)
-		if (file.size > 50 * 1024 * 1024) {
-			cvUploadError = 'El archivo no debe superar los 50MB';
-			cvFile = null;
-			cvFileName = '';
-			return;
-		}
-
-		cvFile = file;
-		cvFileName = file.name;
-		cvUploadError = '';
-	}
-
-	function handleFileSelect(event: Event) {
-		const input = event.target as HTMLInputElement;
-		const file = input.files?.[0];
-		if (file) processFile(file);
-	}
-
-	function onDragOver(e: DragEvent) {
-		e.preventDefault();
-		isDragActive = true;
-	}
-
-	function onDragLeave(e: DragEvent) {
-		e.preventDefault();
-		isDragActive = false;
-	}
-
-	function onDrop(e: DragEvent) {
-		e.preventDefault();
-		isDragActive = false;
-		const file = e.dataTransfer?.files?.[0];
-		if (file) processFile(file);
-	}
-
-	async function submitCV() {
-		if (!cvFile) {
-			cvUploadError = 'Por favor selecciona un archivo PDF';
-			return;
-		}
-
-		cvUploading = true;
-		cvUploadError = '';
-		uploadingProgress = 0;
-
-		// Simular progreso mientras se realiza la subida (fetch no expone upload progress)
-		if (uploadInterval) clearInterval(uploadInterval);
-		uploadInterval = setInterval(() => {
-			uploadingProgress = Math.min(95, uploadingProgress + 4);
-		}, 150);
-
-		try {
-			const resp = await uploadHojaDeVida(cvFile);
-			if (!resp.ok) {
-				throw new Error(resp.error || 'Error subiendo CV');
-			}
-
-			uploadingProgress = 100;
-			if (uploadInterval) {
-				clearInterval(uploadInterval);
-				uploadInterval = null;
-			}
-			cvUploadSuccess = true;
-			cvUploading = false;
-			setTimeout(() => closeCvModal(), 1600);
-		} catch (err) {
-			if (uploadInterval) {
-				clearInterval(uploadInterval);
-				uploadInterval = null;
-			}
-			console.error(err);
-			cvUploading = false;
-			cvUploadError =
-				err instanceof Error
-					? err.message
-					: 'Ocurrió un error al enviar tu hoja de vida. Intenta nuevamente.';
-		}
 	}
 
 	// Datos estructurados: un único `@graph` con organización, sitio, página,
@@ -1531,12 +1411,12 @@
 					</div>
 				</div>
 
-				<!-- CTA Button -->
-				<button
-					on:click={openCvModal}
-					class="group relative inline-flex cursor-pointer items-center gap-2 overflow-hidden rounded-xl bg-white px-6 py-3 text-base font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:text-lg"
+				<!-- CTA -->
+				<a
+					href={resolve('/trabaja-con-nosotros')}
+					class="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-white px-6 py-3 text-base font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:text-lg"
 				>
-					<span class="relative z-10">Enviar mi Hoja de Vida</span>
+					<span class="relative z-10">Enviar mi hoja de vida</span>
 					<svg
 						class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
 						fill="none"
@@ -1550,17 +1430,10 @@
 							d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
 						/>
 					</svg>
-
-					<!-- Efecto hover -->
-					<div
-						class="absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-blue-500/20 to-transparent transition-transform duration-1000 group-hover:translate-x-full"
-					></div>
-				</button>
+				</a>
 
 				<!-- Nota -->
-				<p class="mt-4 text-xs text-blue-200 sm:text-sm">
-					Solo aceptamos archivos PDF · Tamaño máximo: 50MB
-				</p>
+				<p class="mt-4 text-xs text-blue-200 sm:text-sm">PDF, DOC o DOCX · Tamaño máximo: 8 MB</p>
 			</div>
 		</div>
 	</section>
@@ -2004,6 +1877,62 @@
 
 <!-- Footer -->
 
+<!-- Facebook -->
+<section id="novedades" class="bg-white p-8">
+	<div class="container mx-auto max-w-6xl">
+		<div class="mb-8 text-center">
+			<p class="mb-1 text-xs font-semibold tracking-wide text-blue-600 uppercase sm:text-sm">
+				En redes
+			</p>
+			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl lg:text-4xl">
+				Lo que estamos <span class="text-blue-600">haciendo</span>
+			</h2>
+			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-gray-600">
+				Campañas institucionales, simulacros, capacitaciones en campo y jornadas con nuestros
+				clientes. Publicamos el día a día de la operación en Facebook.
+			</p>
+		</div>
+
+		<!--
+			El plugin se renderiza para el ancho que declara el atributo `width` del
+			iframe, no para el que le dé el CSS: si la columna es más estrecha, el
+			contenido se recorta. Por eso la columna reserva los 500px exactos.
+		-->
+		<div class="grid items-start gap-8 lg:grid-cols-[1fr_500px]">
+			<div class="space-y-4">
+				<h3 class="text-lg font-bold text-gray-900">Síguenos</h3>
+				<p class="text-sm leading-relaxed text-gray-600">
+					En nuestra página encontrarás las campañas de seguridad vial, los simulacros de emergencia
+					y las jornadas de capacitación que ejecutamos en Casanare, Meta, Boyacá, Bogotá y
+					Cundinamarca.
+				</p>
+				<a
+					href={FACEBOOK_URL}
+					target="_blank"
+					rel="noopener"
+					class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+				>
+					Abrir nuestra página de Facebook
+				</a>
+				<p class="text-xs leading-relaxed text-gray-500">
+					El muro se carga desde Facebook y usa cookies de terceros. Consulta nuestra
+					<a href={resolve('/politicas-de-privacidad')} class="underline">política de privacidad</a
+					>.
+				</p>
+			</div>
+
+			<!--
+				Facebook fija el plugin en 500px y no lo estira, así que el envoltorio
+				se limita a ese ancho y se centra: si no, en una columna queda un hueco
+				blanco a la derecha del muro.
+			-->
+			<div class="mx-auto w-full max-w-[500px] lg:mx-0">
+				<FacebookFeed />
+			</div>
+		</div>
+	</div>
+</section>
+
 <!-- Cobertura geográfica -->
 <section id="cobertura" class="bg-white p-8">
 	<div class="container mx-auto max-w-6xl">
@@ -2369,260 +2298,8 @@
 </footer>
 
 <!-- Modal de Hoja de Vida - Animado con Dropzone -->
-{#if cvModalOpen}
-	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-md"
-		role="button"
-		tabindex="0"
-		aria-label="Cerrar modal"
-		on:click={closeCvModal}
-		on:keydown={(e) => (e.key === 'Escape' || e.key === 'Enter') && closeCvModal()}
-		in:fade={{ duration: 200 }}
-		out:fade={{ duration: 150 }}
-	>
-		<div
-			on:mousedown|stopPropagation
-			on:click|stopPropagation
-			on:keydown|stopPropagation
-			class="animate-in fade-in zoom-in relative w-full max-w-md rounded-lg border border-neutral-200 bg-white p-7 shadow-[0_25px_80px_rgba(0,0,0,0.35)] duration-200"
-			role="dialog"
-			aria-modal="true"
-			aria-labelledby="cv-title"
-			tabindex="0"
-			in:fly={{ y: 12, duration: 220, delay: 80, opacity: 0.6 }}
-			out:fly={{ y: -8, duration: 180, opacity: 0 }}
-		>
-			<!-- Glow decorativo -->
-			<div
-				class="animate-glow pointer-events-none absolute -inset-20 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(37,99,235,0.25),transparent_60%)]"
-			></div>
-
-			<!-- Header -->
-			<div class="mb-6 flex items-center justify-between">
-				<div class="flex items-center gap-3">
-					<div
-						class="flex h-10 w-10 items-center justify-center rounded-md bg-blue-600 text-white shadow-md"
-					>
-						<svg
-							class="animate-float h-5 w-5"
-							fill="none"
-							stroke="currentColor"
-							viewBox="0 0 24 24"
-						>
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M9 12h6m-6 4h6M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"
-							/>
-						</svg>
-					</div>
-					<h3 id="cv-title" class="text-lg font-semibold text-neutral-900">
-						Adjuntar Hoja de Vida (PDF)
-					</h3>
-				</div>
-				<button
-					on:click={closeCvModal}
-					class="rounded-md p-2 transition hover:bg-neutral-100"
-					aria-label="Cerrar modal"
-				>
-					<svg
-						class="h-5 w-5 text-neutral-700"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M6 18L18 6M6 6l12 12"
-						/>
-					</svg>
-				</button>
-			</div>
-
-			{#if !cvUploadSuccess}
-				<!-- Upload Zone -->
-				<label
-					for="cv-upload"
-					class="dropzone group relative block cursor-pointer overflow-hidden rounded-md border-2 border-dashed p-8 text-center transition"
-					class:dropzone--active={isDragActive}
-					on:dragover|preventDefault={onDragOver}
-					on:dragleave={onDragLeave}
-					on:drop={onDrop}
-				>
-					<input
-						id="cv-upload"
-						type="file"
-						class="hidden"
-						accept=".pdf"
-						on:change={handleFileSelect}
-					/>
-
-					<!-- Shimmer -->
-					<span
-						class="pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/50 to-transparent opacity-0 transition group-hover:opacity-100"
-						style="mask-image: linear-gradient(90deg, transparent 0%, black 40%, black 60%, transparent 100%);"
-					></span>
-
-					{#if cvFile}
-						<div
-							class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-md bg-blue-100 text-blue-600"
-						>
-							<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12h6m-6 4h6M5 7h14M5 7v10a2 2 0 002 2h10a2 2 0 002-2V7"
-								/>
-							</svg>
-						</div>
-						<p class="font-medium text-neutral-900">{cvFileName}</p>
-						<p class="mt-1 text-sm text-neutral-500">Listo para enviar</p>
-					{:else}
-						<div
-							class="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-md bg-neutral-100 text-neutral-500"
-						>
-							<svg class="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6h.1a5 5 0 011 9.9M12 12v8m0 0l-3-3m3 3l3-3"
-								/>
-							</svg>
-						</div>
-						<p class="font-medium text-neutral-800">Arrastra tu PDF o haz clic</p>
-						<p class="mt-1 text-xs text-neutral-500">Formato PDF — Máx 50MB</p>
-
-						<!-- Hint -->
-						<div class="mt-4 flex items-center justify-center gap-2 text-xs text-blue-600">
-							<svg
-								class="h-4 w-4 animate-bounce"
-								fill="none"
-								stroke="currentColor"
-								viewBox="0 0 24 24"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 5v14m0 0l-4-4m4 4l4-4"
-								/>
-							</svg>
-							Suelta el archivo aquí
-						</div>
-					{/if}
-
-					<!-- Border shine -->
-					<span
-						class="pointer-events-none absolute inset-0 rounded-md ring-0 transition duration-300 group-hover:ring-2 group-hover:ring-blue-400/40"
-					></span>
-				</label>
-
-				{#if cvUploadError}
-					<p class="mt-3 text-center text-sm text-red-500">{cvUploadError}</p>
-				{/if}
-
-				<!-- Botón y progreso -->
-				<div class="mt-6">
-					<button
-						on:click={submitCV}
-						disabled={!cvFile || cvUploading}
-						class="flex w-full items-center justify-center gap-2 rounded-md bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
-					>
-						{#if cvUploading}
-							<svg
-								class="h-5 w-5 animate-spin"
-								viewBox="0 0 24 24"
-								fill="none"
-								aria-label="Cargando"
-							>
-								<circle
-									class="opacity-25"
-									cx="12"
-									cy="12"
-									r="10"
-									stroke="currentColor"
-									stroke-width="4"
-								></circle>
-								<path
-									class="opacity-75"
-									fill="currentColor"
-									d="M4 12a8 8 0 018-8V0C5.37 0 0 5.37 0 12h4z"
-								></path>
-							</svg>
-							Enviando... {uploadingProgress}%
-						{:else}
-							Enviar
-						{/if}
-					</button>
-
-					{#if cvUploading}
-						<div class="mt-3 h-2 w-full overflow-hidden rounded-full bg-neutral-200">
-							<div
-								class="h-full w-0 rounded-full bg-blue-600 transition-[width] duration-150"
-								style={`width: ${uploadingProgress}%`}
-							></div>
-						</div>
-					{/if}
-				</div>
-			{:else}
-				<!-- Success -->
-				<div class="py-8 text-center">
-					<div
-						class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-600"
-					>
-						<svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M5 13l4 4L19 7"
-							/>
-						</svg>
-					</div>
-					<h4 class="mb-2 text-lg font-semibold text-neutral-900">¡Hoja de vida recibida!</h4>
-					<p class="mb-6 text-neutral-600">Un miembro de nuestro equipo la revisará.</p>
-					<button
-						on:click={closeCvModal}
-						class="rounded-md bg-neutral-200 px-6 py-2 transition hover:bg-neutral-300"
-					>
-						Cerrar
-					</button>
-				</div>
-			{/if}
-		</div>
-	</div>
-{/if}
 
 <style>
-	/* ===== CV MODAL ENHANCEMENTS ===== */
-	.animate-glow {
-		animation: glowPulse 6s ease-in-out infinite;
-	}
-
-	@keyframes glowPulse {
-		0% {
-			opacity: 0.35;
-			transform: scale(0.98);
-		}
-		50% {
-			opacity: 0.6;
-			transform: scale(1.02);
-		}
-		100% {
-			opacity: 0.35;
-			transform: scale(0.98);
-		}
-	}
-
-	.animate-float {
-		animation: floatIcon 3s ease-in-out infinite;
-	}
-
 	@keyframes floatIcon {
 		0% {
 			transform: translateY(0);
@@ -2633,17 +2310,6 @@
 		100% {
 			transform: translateY(0);
 		}
-	}
-
-	.dropzone {
-		border-color: #e5e7eb; /* gray-200 */
-		background-color: #fafafa; /* neutral-50 */
-	}
-
-	.dropzone--active {
-		border-color: rgb(37 99 235); /* blue-600 */
-		background-color: rgba(37, 99, 235, 0.06);
-		box-shadow: inset 0 0 0 4px rgba(37, 99, 235, 0.08);
 	}
 
 	/* ===== GLOBAL STYLES ===== */
