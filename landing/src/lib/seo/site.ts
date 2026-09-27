@@ -28,7 +28,7 @@ export const CONTACT = {
 	longitud: -72.38573869384264
 } as const;
 
-/** Página de Facebook. La usa el Page Plugin y el grafo `sameAs`. */
+/** Página de Facebook. La usan el grafo `sameAs` y el enlace de novedades. */
 export const FACEBOOK_URL = 'https://www.facebook.com/SEGISPRO';
 
 export const SOCIAL = [

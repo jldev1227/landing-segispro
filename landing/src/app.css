@@ -1,8 +1,11 @@
 @import 'tailwindcss';
-/* Geist variable, servida desde node_modules — sin llamada a Google Fonts.
-   El archivo trae un @font-face por subconjunto con su unicode-range, así que
-   quien lee español solo descarga el latino. */
-@import '@fontsource-variable/geist/wght.css';
+/* Archivo y Archivo Narrow, servidas desde node_modules — sin llamada a Google
+   Fonts. Grotescas de linaje señalético: la estrecha compone las bandas de
+   leyenda en versales, la normal lleva la prosa. Cada archivo trae un
+   @font-face por subconjunto con su unicode-range, así que quien lee español
+   solo descarga el latino: 34 KB y 18 KB. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/archivo-narrow/wght.css';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
@@ -19,13 +22,34 @@
  * del 4,5:1 que exige WCAG AA, así que en claro solo sirven como relleno.
  */
 @theme {
-	/* Tipografía. Antes no había ninguna declarada: la landing corría sobre la
-	   fuente del sistema, así que la marca cambiaba de cara entre macOS y Windows.
-	   Geist es un grotesco de ingeniería, y sus cifras tabulares importan aquí
-	   porque la página se apoya en números (1.174 servicios, 315 clientes). */
+	/* Tipografía del mundo señalético. Archivo lleva la prosa; Archivo Narrow
+	   compone las bandas de leyenda en versales, que es donde una señal real
+	   aprieta la letra para que quepa el mensaje en la placa. */
 	--font-sans:
-		'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
-		Arial, sans-serif;
+		'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+		'Helvetica Neue', Arial, sans-serif;
+	--font-leyenda:
+		'Archivo Narrow Variable', 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+
+	/* ── Código de color de seguridad, traducido a la marca ──────────────────
+	   ISO 7010 asigna el significado a la forma y al color a la vez: el círculo
+	   obliga, el triángulo advierte, el cuadrado indica condición segura. El
+	   código original es rojo-amarillo-azul; aquí se traduce a la identidad, que
+	   descartó el rojo. Se conserva el significado y cambian los tonos.
+
+	   La forma no es decorativa: es la mitad del mensaje. Por eso `Placa.svelte`
+	   ata geometría y color en un solo `tipo`, y no se pueden combinar mal desde
+	   el sitio de uso. */
+	--color-obliga: #223a54; /* lo normativo: decretos, ISO, resoluciones */
+	--color-obliga-tinta: #ffffff; /* 11,66:1 */
+	--color-advierte: #ffad2b; /* el riesgo que se mide y se gestiona */
+	--color-advierte-tinta: #1b1b1b; /* 9,24:1 */
+	--color-segura: #00bf62; /* la capacidad que se entrega */
+	--color-segura-tinta: #08301d; /* 5,95:1 */
+
+	/* Sustrato de placa y tinta de cuerpo. Blanco de rótulo, nunca crema. */
+	--color-placa: #ffffff;
+	--color-tinta: #16202e; /* 16,40:1 sobre blanco */
 
 	/* Navy — color primario, el que puede llevar texto en cualquier paso alto. */
 	--color-marca-50: #f3f6fa;

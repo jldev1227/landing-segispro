@@ -11,18 +11,17 @@
 		websiteSchema
 	} from '$lib/seo/schema';
 	import { onMount } from 'svelte';
-	import { fade, fly, scale } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { resolve } from '$app/paths';
 	import { User } from 'lucide-svelte';
 	import CarouselInfinito from '$lib/components/CarouselInfinito.svelte';
 	import Icono from '$lib/components/Icono.svelte';
+	import Placa from '$lib/components/Placa.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
-	import VideoCarouselHero from '$lib/components/VideoCarouselHero.svelte';
 	import { serviciosData } from '$lib/data/servicios';
 	import { CAMPUS_CURSOS, FACEBOOK_URL, REGIONES } from '$lib/seo/site';
-	import FacebookFeed from '$lib/components/FacebookFeed.svelte';
 	import metricas from '$lib/data/metricas.json';
 
 	// Variable de entorno para la app Segispro
@@ -46,7 +45,6 @@
 	// contenido: con `false` el rastreador recibía un documento sin <h1> ni texto.
 	// Los observers los siguen tocando, pero solo confirman lo que ya está visible.
 	let mounted = true;
-	let heroVisible = true;
 	let characteristicsVisible = true;
 
 	// Estados para los contadores
@@ -97,6 +95,95 @@
 
 	/** Separador de miles colombiano: 1.174, no 1174. */
 	const cifra = (valor: number) => valor.toLocaleString('es-CO');
+
+	/**
+	 * Jornadas fotografiadas en sitio. Los pies describen lo que se ve, porque
+	 * antes el `alt` decía «Imagen 1» y eso no sirve ni al lector de pantalla ni
+	 * al buscador.
+	 */
+	const jornadas = [
+		{
+			src: '/slides/slide-2.webp',
+			alt: 'Personal de operaciones reunido durante una jornada de capacitación en planta',
+			pie: 'Capacitación en planta'
+		},
+		{
+			src: '/slides/slide-3.webp',
+			alt: 'Brigada y personal contratista en una campaña de seguridad vial en estación',
+			pie: 'Campaña de seguridad vial'
+		},
+		{
+			src: '/slides/slide-4.webp',
+			alt: 'Asistentes en una sesión de formación en seguridad y salud en el trabajo',
+			pie: 'Formación SST'
+		},
+		{
+			src: '/slides/slide-5.webp',
+			alt: 'Equipo operativo durante un simulacro de respuesta a emergencias',
+			pie: 'Simulacro de emergencias'
+		},
+		{
+			src: '/slides/slide-6.webp',
+			alt: 'Jornada de acompañamiento con personal de un cliente en campo',
+			pie: 'Acompañamiento en campo'
+		},
+		{
+			src: '/slides/slide-1.webp',
+			alt: 'Grupo de trabajadores al cierre de una jornada de capacitación',
+			pie: 'Cierre de jornada'
+		}
+	];
+
+	/**
+	 * El portafolio como placas. La forma clasifica y no es intercambiable:
+	 * círculo para lo que obliga la norma, triángulo para lo que mide riesgo,
+	 * cuadrado para la capacidad que se entrega.
+	 */
+	const placasServicio = [
+		{
+			slug: 'consultoria-asesoria',
+			tipo: 'obliga' as const,
+			icono: 'consultoria',
+			leyenda: 'Consultoría y auditoría',
+			detalle: 'ISO 9001, 14001, 45001 y 39001; SG-SST Decreto 1072; auditoría a proveedores.'
+		},
+		{
+			slug: 'interventoria',
+			tipo: 'obliga' as const,
+			icono: 'interventoria',
+			leyenda: 'Interventoría',
+			detalle: 'Supervisión técnica y administrativa de contratos, con informes conformes.'
+		},
+		{
+			slug: 'campanas-estudios',
+			tipo: 'advierte' as const,
+			icono: 'estudios',
+			leyenda: 'Estudios técnicos',
+			detalle:
+				'Luxometría, sonometría, factores psicosociales, análisis de puestos y estudios viales.'
+		},
+		{
+			slug: 'formacion',
+			tipo: 'segura' as const,
+			icono: 'formacion',
+			leyenda: 'Formación y campañas',
+			detalle: 'Cursos especializados, campañas institucionales y simulacros en sitio.'
+		},
+		{
+			slug: 'digitalizacion',
+			tipo: 'segura' as const,
+			icono: 'digitalizacion',
+			leyenda: 'Digitalización',
+			detalle: 'Formatos digitales, tableros de control e integración con plataformas.'
+		},
+		{
+			slug: 'proyectos-especiales',
+			tipo: 'segura' as const,
+			icono: 'proyectos-especiales',
+			leyenda: 'Proyectos especiales',
+			detalle: 'Modelos de gestión, herramientas a medida y metodologías propias.'
+		}
+	].map((p) => ({ ...p, href: resolve(`/servicios/${p.slug}`) }));
 
 	/** Las tres cifras del hero. Mismo snapshot que la franja de más abajo. */
 	const pruebaHero = [
@@ -163,7 +250,6 @@
 			(entries) => {
 				entries.forEach((entry) => {
 					if (entry.isIntersecting) {
-						if (entry.target.id === 'hero') heroVisible = true;
 						if (entry.target.id === 'characteristics') characteristicsVisible = true;
 					}
 					if (entry.isIntersecting && !mapLoaded) {
@@ -198,9 +284,7 @@
 		});
 
 		// Animación inicial del héroe
-		setTimeout(() => {
-			heroVisible = true;
-		}, 100);
+		setTimeout(() => {}, 100);
 
 		setTimeout(() => {
 			carouselVisible = true;
@@ -807,80 +891,89 @@
 {/if}
 
 <!--
-	Hero. Antes abría con «tu aliado estratégico en seguridad y salud en el
-	trabajo», cierto para cualquier firma SST del país, y en móvil no mostraba
-	ninguna imagen. Ahora nombra el servicio, la región y el sector, y pone la
-	prueba verificable —el conteo real de lo ejecutado— en el primer pliegue,
-	que es el posicionamiento de la empresa: trayectoria comprobable, no
-	declarada.
+	Primer pliegue en el mundo señalético.
+
+	No es un hero a dos columnas con foto de archivo. Es una banda de leyenda
+	sobre campo navy —la placa de obligación— con la acción principal dentro de
+	la misma banda como placa verde, porque en una señal real la instrucción no
+	flota encima del cartel: es parte del cartel.
+
+	Debajo, el portafolio como muro de placas. La forma clasifica: círculo para
+	lo normativo, triángulo para lo que mide riesgo, cuadrado para lo que se
+	entrega. Y contra el borde, la tira de conteo estampada, que es la prueba.
 -->
-<section id="inicio" class="relative bg-white px-6 pt-24 pb-12 sm:px-8 lg:pt-28 lg:pb-16">
-	<div class="container mx-auto max-w-7xl">
-		<div class="grid items-center gap-10 lg:grid-cols-[1.05fr_1fr] lg:gap-14">
-			<div class="relative z-10">
-				<h1
-					class="text-3xl leading-[1.1] font-bold tracking-tight text-balance text-marca-800 sm:text-4xl lg:text-5xl"
-				>
-					Auditorías, formación y estudios técnicos en seguridad y salud en el trabajo
-				</h1>
+<section id="inicio" class="bg-placa pt-20">
+	<!-- Banda de leyenda -->
+	<div class="bg-obliga">
+		<div class="container mx-auto max-w-7xl px-6 py-10 sm:px-8 sm:py-14">
+			<div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+				<div class="max-w-3xl">
+					<h1
+						class="font-leyenda text-3xl leading-[1.08] font-bold tracking-[0.02em] text-balance text-obliga-tinta uppercase sm:text-4xl lg:text-5xl"
+					>
+						Auditorías, formación y estudios técnicos en seguridad y salud en el trabajo
+					</h1>
+					<p class="mt-5 max-w-[58ch] text-base leading-relaxed text-marca-100 sm:text-lg">
+						Acompañamos operaciones de hidrocarburos, entidades públicas y transporte en Casanare,
+						Meta, Boyacá, Bogotá y Cundinamarca. Cada servicio se pacta con su alcance, sus fechas y
+						su tarifa.
+					</p>
+				</div>
 
-				<p class="mt-5 max-w-[60ch] text-base leading-relaxed text-gray-600 sm:text-lg">
-					Acompañamos operaciones de hidrocarburos, entidades públicas y transporte en Casanare,
-					Meta, Boyacá, Bogotá y Cundinamarca. Cada servicio se pacta con su alcance, sus fechas y
-					su tarifa.
-				</p>
-
-				<div class="mt-8 flex flex-wrap gap-3">
+				<!-- La acción es otra placa del mismo sistema, no un botón flotando. -->
+				<div class="flex shrink-0 flex-wrap items-center gap-3">
 					<a
 						href="#contacto"
-						class="inline-flex items-center gap-2 rounded-lg bg-marca-600 px-6 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-marca-700"
+						class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 					>
 						Solicitar cotización
 					</a>
 					<a
 						href="#services"
-						class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-6 py-3 text-sm font-semibold text-marca-700 transition-colors duration-200 hover:border-marca-600 hover:bg-marca-50"
+						class="border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 					>
 						Ver servicios
 					</a>
 				</div>
-
-				<!--
-					La prueba, no el adjetivo. Las tres cifras salen del mismo snapshot
-					que alimenta el resto de la página, congelado desde la API real.
-				-->
-				<dl
-					class="mt-10 flex flex-wrap items-baseline gap-x-8 gap-y-4 border-t border-gray-200 pt-6"
-				>
-					{#each pruebaHero as dato (dato.etiqueta)}
-						<div>
-							<dd class="text-2xl font-bold tracking-tight text-marca-800 tabular-nums sm:text-3xl">
-								{dato.valor}
-							</dd>
-							<dt class="mt-0.5 text-xs text-gray-600">{dato.etiqueta}</dt>
-						</div>
-					{/each}
-				</dl>
 			</div>
+		</div>
+	</div>
 
-			<div class="relative">
-				<!-- El carrusel solo en escritorio: en móvil pesa y no aporta. -->
-				<div class="hidden lg:block">
-					{#if heroVisible}
-						<VideoCarouselHero visible={heroVisible} />
-					{/if}
-				</div>
-				<!-- Móvil abría sin ninguna imagen. Esta es el LCP, así que va temprana. -->
-				<img
-					src="/slides/hero-movil.webp"
-					alt="Equipo de SEGISPRO durante una jornada de capacitación en sitio"
-					width="900"
-					height="677"
-					fetchpriority="high"
-					decoding="async"
-					class="block aspect-4/3 w-full rounded-2xl object-cover lg:hidden"
+	<!-- Muro de placas: el portafolio clasificado por forma -->
+	<div class="container mx-auto max-w-7xl px-6 py-12 sm:px-8 sm:py-16">
+		<div class="grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+			{#each placasServicio as placa (placa.slug)}
+				<Placa
+					tipo={placa.tipo}
+					icono={placa.icono}
+					leyenda={placa.leyenda}
+					detalle={placa.detalle}
+					href={placa.href}
 				/>
-			</div>
+			{/each}
+		</div>
+	</div>
+
+	<!--
+		La tira de conteo. Es la prueba del posicionamiento, así que va estampada
+		contra el borde: cifras tabulares, un solo tono, sin tarjetas.
+	-->
+	<div class="border-t-2 border-tinta">
+		<div class="container mx-auto max-w-7xl px-6 sm:px-8">
+			<dl class="flex flex-wrap items-baseline gap-x-12 gap-y-5 py-7">
+				{#each pruebaHero as dato (dato.etiqueta)}
+					<div class="flex items-baseline gap-3">
+						<dd class="text-3xl font-bold tracking-tight text-tinta tabular-nums sm:text-4xl">
+							{dato.valor}
+						</dd>
+						<dt
+							class="font-leyenda text-xs font-bold tracking-[0.08em] text-gray-600 uppercase sm:text-sm"
+						>
+							{dato.etiqueta}
+						</dt>
+					</div>
+				{/each}
+			</dl>
 		</div>
 	</div>
 </section>
@@ -1756,55 +1849,59 @@
 <!-- Footer -->
 
 <!-- Facebook -->
-<section id="novedades" class="bg-white p-8">
-	<div class="container mx-auto max-w-6xl">
-		<div class="mb-8 text-center">
-			<h2 class="mb-3 text-2xl font-bold text-balance text-gray-900 sm:text-3xl lg:text-4xl">
-				Lo que estamos haciendo
-			</h2>
-			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-gray-600">
-				Campañas institucionales, simulacros, capacitaciones en campo y jornadas con nuestros
-				clientes. Publicamos el día a día de la operación en Facebook.
-			</p>
-		</div>
-
-		<!--
-			El plugin se renderiza para el ancho que declara el atributo `width` del
-			iframe, no para el que le dé el CSS: si la columna es más estrecha, el
-			contenido se recorta. Por eso la columna reserva los 500px exactos.
-		-->
-		<div class="grid items-start gap-8 lg:grid-cols-[1fr_500px]">
-			<div class="space-y-4">
-				<h3 class="text-lg font-bold text-gray-900">Síguenos</h3>
-				<p class="text-sm leading-relaxed text-gray-600">
-					En nuestra página encontrarás las campañas de seguridad vial, los simulacros de emergencia
-					y las jornadas de capacitación que ejecutamos en Casanare, Meta, Boyacá, Bogotá y
-					Cundinamarca.
-				</p>
-				<a
-					href={FACEBOOK_URL}
-					target="_blank"
-					rel="noopener"
-					class="inline-flex items-center gap-2 rounded-full bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+<!--
+	Novedades. Antes era un iframe de la página de Facebook: no se puede maquetar,
+	mete su propia tipografía en medio de la página, no lo indexa el buscador y
+	obliga a cargar el rastreador de Meta en el primer render. Ahora es fotografía
+	propia con su pie, y el enlace a Facebook queda fuera del marco, donde sí
+	cuenta como enlace.
+-->
+<section id="novedades" class="border-t border-gray-200 bg-placa">
+	<div class="container mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-20">
+		<div class="flex flex-wrap items-end justify-between gap-6">
+			<div class="max-w-2xl">
+				<h2
+					class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
 				>
-					Abrir nuestra página de Facebook
-				</a>
-				<p class="text-xs leading-relaxed text-gray-500">
-					El muro se carga desde Facebook y usa cookies de terceros. Consulta nuestra
-					<a href={resolve('/politicas-de-privacidad')} class="underline">política de privacidad</a
-					>.
+					La operación, en sitio
+				</h2>
+				<p class="mt-3 max-w-[62ch] text-base leading-relaxed text-gray-600">
+					Campañas institucionales, simulacros, capacitaciones en campo y jornadas con nuestros
+					clientes. Esto es trabajo ejecutado, fotografiado donde ocurrió.
 				</p>
 			</div>
-
-			<!--
-				Facebook fija el plugin en 500px y no lo estira, así que el envoltorio
-				se limita a ese ancho y se centra: si no, en una columna queda un hueco
-				blanco a la derecha del muro.
-			-->
-			<div class="mx-auto w-full max-w-[500px] lg:mx-0">
-				<FacebookFeed />
-			</div>
+			<a
+				href={FACEBOOK_URL}
+				target="_blank"
+				rel="noopener"
+				class="border-b-2 border-obliga pb-1 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga uppercase transition-colors hover:border-segura hover:text-segura"
+			>
+				Más en Facebook
+			</a>
 		</div>
+
+		<ul class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+			{#each jornadas as j (j.src)}
+				<li>
+					<figure>
+						<img
+							src={j.src}
+							alt={j.alt}
+							width="1280"
+							height="960"
+							loading="lazy"
+							decoding="async"
+							class="aspect-4/3 w-full object-cover"
+						/>
+						<figcaption
+							class="mt-3 font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+						>
+							{j.pie}
+						</figcaption>
+					</figure>
+				</li>
+			{/each}
+		</ul>
 	</div>
 </section>
 
