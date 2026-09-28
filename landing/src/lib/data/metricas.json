@@ -6,6 +6,45 @@
 	"ciudadesAtendidas": 41,
 	"departamentosAtendidos": 5,
 	"aniosOperacion": 17,
+	"zonas": [
+		{
+			"municipio": "Yopal",
+			"departamento": "Casanare",
+			"servicios": 574,
+			"empresas": 227
+		},
+		{
+			"municipio": "Tauramena",
+			"departamento": "Casanare",
+			"servicios": 56,
+			"empresas": 17
+		},
+		{
+			"municipio": "Aguazul",
+			"departamento": "Casanare",
+			"servicios": 44,
+			"empresas": 21
+		},
+		{
+			"municipio": "Villanueva",
+			"departamento": "Casanare",
+			"servicios": 41,
+			"empresas": 23
+		},
+		{
+			"municipio": "Paz de Ariporo",
+			"departamento": "Casanare",
+			"servicios": 14,
+			"empresas": 7
+		},
+		{
+			"municipio": "Monterrey",
+			"departamento": "Casanare",
+			"servicios": 9,
+			"empresas": 5
+		}
+	],
+	"serviciosLocalizados": 776,
 	"porCategoria": [
 		{
 			"etiqueta": "Consultoría",
@@ -68,5 +107,5 @@
 			"categorias": ["CURSO"]
 		}
 	],
-	"calculadoEn": "2026-09-27T21:32:43.414Z"
+	"calculadoEn": "2026-09-28T00:43:38.442Z"
 }

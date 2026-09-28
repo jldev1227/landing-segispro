@@ -174,3 +174,26 @@
 	--color-amber-600: var(--color-realce-600);
 	--color-amber-700: var(--color-realce-700);
 }
+
+/*
+	Movimiento reducido.
+
+	Vivía en el `<style>` de la portada. Con `:global` ahí dentro la regla se
+	aplicaba a todo, sí, pero solo en las páginas que cargaran ese componente:
+	al llevar el sistema señalético a las fichas de servicio, a cobertura y a
+	postulación, esas rutas se quedaron con sus transiciones intactas para quien
+	pide en su sistema que no haya movimiento. Aquí lo carga cualquier ruta.
+*/
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}

@@ -13,6 +13,7 @@
  *   API_STATS_URL=http://localhost:3001/api/public/stats node scripts/sync-metricas.mjs
  */
 import { writeFile, readFile } from 'node:fs/promises';
+import { format, resolveConfig } from 'prettier';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,6 +42,26 @@ function validar(datos) {
 	}
 }
 
+/**
+ * Campos que una API más vieja que el snapshot todavía no devuelve. Si faltan
+ * en la respuesta se conservan los del snapshot anterior: sin esto, sincronizar
+ * contra un despliegue atrasado borraría las zonas de cobertura y la página se
+ * quedaría sin el tablero, que es peor que mostrar la cifra de la semana pasada.
+ */
+const OPCIONALES = ['zonas', 'serviciosLocalizados'];
+
+function conservados(datos, previo) {
+	if (!previo) return datos;
+	const fusionado = { ...datos };
+	for (const campo of OPCIONALES) {
+		if (fusionado[campo] === undefined && previo[campo] !== undefined) {
+			fusionado[campo] = previo[campo];
+			console.warn(`  La API no devolvió "${campo}"; se conserva el valor anterior.`);
+		}
+	}
+	return fusionado;
+}
+
 async function anterior() {
 	try {
 		return JSON.parse(await readFile(destino, 'utf8'));
@@ -59,7 +80,15 @@ try {
 	validar(datos);
 
 	const previo = await anterior();
-	await writeFile(destino, `${JSON.stringify(datos, null, '\t')}\n`, 'utf8');
+	// El JSON se escribe pasado por prettier con la configuración del proyecto.
+	// Sin esto, `JSON.stringify` parte los arrays cortos en varias líneas, el
+	// fichero versionado queda distinto del que produce `npm run format`, y cada
+	// sincronización ensuciaba el diff con doscientas líneas que no son datos.
+	// `format` no lee `.prettierrc` por su cuenta: hay que resolverlo aparte, o
+	// escribe con los ajustes de fábrica y el fichero vuelve a quedar distinto.
+	const ajustes = await resolveConfig(destino);
+	const json = JSON.stringify(conservados(datos, previo), null, '\t');
+	await writeFile(destino, await format(json, { ...ajustes, filepath: destino }), 'utf8');
 
 	const delta = previo ? datos.serviciosPrestados - previo.serviciosPrestados : null;
 	console.log(

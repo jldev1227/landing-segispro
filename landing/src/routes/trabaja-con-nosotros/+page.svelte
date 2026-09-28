@@ -31,6 +31,36 @@
 
 	const regiones = REGIONES.map((region) => region.nombre).join(', ');
 
+	/**
+	 * Clase de los campos del formulario. Se declara una vez porque son nueve
+	 * controles y antes la cadena de Tailwind iba copiada en cada uno: bastaba
+	 * olvidar uno para que se descolgara del resto.
+	 *
+	 * Esquina viva y filete fino, como el resto del sistema; el foco se ve con
+	 * un contorno navy de 2px y no con un halo difuminado.
+	 */
+	const CAMPO =
+		'w-full border border-gray-300 bg-placa px-4 py-3 text-sm text-tinta placeholder:text-gray-500 focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga';
+
+	/** Tira de conteo de la banda de leyenda. Mismo snapshot que el home. */
+	const prueba = [
+		{ valor: String(metricas.profesionales), etiqueta: 'profesionales activos' },
+		{
+			valor: metricas.serviciosPrestados.toLocaleString('es-CO'),
+			etiqueta: 'servicios ejecutados'
+		},
+		{ valor: String(metricas.ciudadesAtendidas), etiqueta: 'municipios' },
+		{ valor: String(metricas.aniosOperacion), etiqueta: 'años operando' }
+	];
+
+	/**
+	 * La barra mide contra la categoría mayor, no contra el total: con
+	 * «Consultoría» en el 74 % todas las demás quedaban en una raya de un píxel
+	 * y el reparto no se leía.
+	 */
+	const categoriaMayor = Math.max(1, ...metricas.porCategoria.map((c) => c.total));
+	const proporcionCategoria = (total: number) => Math.round((total / categoriaMayor) * 100);
+
 	// ── Formulario ────────────────────────────────────────────────────────────
 	let nombre = $state('');
 	let correo = $state('');
@@ -111,155 +141,208 @@
 
 <Seo {title} {description} path="/trabaja-con-nosotros" {schema} />
 
-<PageHeader />
+<PageHeader activa="trabaja" />
 
-<main class="min-h-screen bg-white pt-20">
-	<section class="bg-linear-to-br from-gray-900 via-gray-800 to-black px-4 py-16 sm:px-6">
-		<div class="container mx-auto max-w-5xl">
-			<nav aria-label="Ruta de navegación" class="mb-6 text-sm text-gray-400">
-				<a href={resolve('/')} class="hover:text-blue-400">Inicio</a>
-				<span class="mx-2">/</span>
-				<span class="text-white">Trabaja con nosotros</span>
+<main class="bg-placa pt-20">
+	<!--
+		Banda de leyenda. Era un degradado gris-a-negro con las cifras sueltas en
+		cuatro columnas; ahora es la placa de obligación del sistema, con la misma
+		tira de conteo estampada que el primer pliegue del home. Las cifras son las
+		mismas del sistema de gestión, que es lo que un profesional necesita para
+		decidir si vale la pena postularse.
+	-->
+	<section class="bg-obliga">
+		<div class="container mx-auto max-w-5xl px-6 py-10 sm:px-8 sm:py-14">
+			<nav aria-label="Ruta de navegación">
+				<ol
+					class="flex flex-wrap items-center gap-2 font-leyenda text-xs tracking-[0.06em] text-marca-300 uppercase"
+				>
+					<li><a href={resolve('/')} class="transition-colors hover:text-white">Inicio</a></li>
+					<li aria-hidden="true">·</li>
+					<li class="text-white">Trabaja con nosotros</li>
+				</ol>
 			</nav>
 
-			<h1 class="mb-5 text-3xl font-bold text-balance text-white sm:text-4xl lg:text-5xl">
-				Trabaja con SEGISPRO
-			</h1>
-			<p class="max-w-3xl text-base leading-relaxed text-gray-300 sm:text-lg">
-				Buscamos auditores, capacitadores, consultores y especialistas en estudios técnicos para
-				ejecutar servicios en {regiones}. La contratación es por actividad: cada servicio se pacta
-				con su alcance, sus fechas y su tarifa.
-			</p>
+			<div class="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+				<div class="max-w-3xl">
+					<p class="font-leyenda text-xs font-bold tracking-[0.12em] text-segura uppercase">
+						Red de profesionales
+					</p>
+					<h1
+						class="mt-3 font-leyenda text-3xl leading-[1.1] font-bold tracking-[0.02em] text-balance text-obliga-tinta uppercase sm:text-4xl lg:text-5xl"
+					>
+						Trabaja con SEGISPRO
+					</h1>
+					<p class="mt-5 max-w-[58ch] text-base leading-relaxed text-marca-100 sm:text-lg">
+						Buscamos auditores, capacitadores, consultores y especialistas en estudios técnicos para
+						ejecutar servicios en {regiones}. La contratación es por actividad: cada servicio se
+						pacta con su alcance, sus fechas y su tarifa.
+					</p>
+				</div>
 
-			<dl class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
-				<div>
-					<dt class="text-xs tracking-wide text-gray-400 uppercase">Profesionales</dt>
-					<dd class="text-2xl font-bold text-white">{metricas.profesionales}</dd>
-				</div>
-				<div>
-					<dt class="text-xs tracking-wide text-gray-400 uppercase">Servicios ejecutados</dt>
-					<dd class="text-2xl font-bold text-white">
-						{metricas.serviciosPrestados.toLocaleString('es-CO')}
-					</dd>
-				</div>
-				<div>
-					<dt class="text-xs tracking-wide text-gray-400 uppercase">Municipios</dt>
-					<dd class="text-2xl font-bold text-white">{metricas.ciudadesAtendidas}</dd>
-				</div>
-				<div>
-					<dt class="text-xs tracking-wide text-gray-400 uppercase">Años operando</dt>
-					<dd class="text-2xl font-bold text-white">{metricas.aniosOperacion}</dd>
-				</div>
-			</dl>
+				<a
+					href="#postular"
+					class="shrink-0 self-start bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+				>
+					Enviar mi hoja de vida
+				</a>
+			</div>
 		</div>
-	</section>
 
-	<section class="px-4 py-14 sm:px-6">
-		<div class="container mx-auto max-w-5xl">
-			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Perfiles que contratamos</h2>
-			<div class="grid gap-5 md:grid-cols-2">
-				{#each PERFILES as perfil (perfil.titulo)}
-					<article class="rounded-2xl border border-gray-200 bg-white p-6">
-						<h3 class="mb-2 text-lg font-bold text-gray-900">{perfil.titulo}</h3>
-						<p class="mb-4 text-sm leading-relaxed text-gray-600">{perfil.descripcion}</p>
-						<ul class="space-y-2">
-							{#each perfil.requisitos as requisito (requisito)}
-								<li class="flex gap-2 text-sm text-gray-700">
-									<span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-600"></span>
-									<span>{requisito}</span>
-								</li>
-							{/each}
-						</ul>
-					</article>
-				{/each}
+		<!-- Tira de conteo, estampada contra el borde de la banda. -->
+		<div class="border-t border-marca-700">
+			<div class="container mx-auto max-w-5xl px-6 sm:px-8">
+				<dl class="flex flex-wrap items-baseline gap-x-10 gap-y-4 py-6">
+					{#each prueba as dato (dato.etiqueta)}
+						<div class="flex items-baseline gap-2.5">
+							<dd class="text-2xl font-bold text-obliga-tinta tabular-nums sm:text-3xl">
+								{dato.valor}
+							</dd>
+							<dt class="font-leyenda text-xs font-bold tracking-[0.08em] text-marca-200 uppercase">
+								{dato.etiqueta}
+							</dt>
+						</div>
+					{/each}
+				</dl>
 			</div>
 		</div>
 	</section>
 
-	<section class="px-4 py-14 sm:px-6">
-		<div class="container mx-auto max-w-5xl">
-			<h2 class="mb-3 text-2xl font-bold text-gray-900 sm:text-3xl">En qué se trabaja</h2>
-			<p class="mb-8 max-w-3xl text-sm leading-relaxed text-gray-600">
-				Reparto real de los {metricas.serviciosPrestados.toLocaleString('es-CO')} servicios ejecutados
-				hasta hoy. Sirve para saber dónde hay volumen antes de postularse.
+	<section class="container mx-auto max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Perfiles que contratamos
+		</h2>
+		<p class="mt-3 max-w-[64ch] text-base leading-relaxed text-gray-600">
+			No son vacantes con fecha y ubicación: son los perfiles que se buscan de forma recurrente para
+			repartir las actividades que entran.
+		</p>
+
+		<div class="mt-10 grid gap-x-10 gap-y-9 md:grid-cols-2">
+			{#each PERFILES as perfil (perfil.titulo)}
+				<article class="border-t-2 border-tinta pt-5">
+					<h3 class="font-leyenda text-base font-bold tracking-[0.05em] text-tinta uppercase">
+						{perfil.titulo}
+					</h3>
+					<p class="mt-2.5 max-w-[56ch] text-sm leading-relaxed text-gray-600">
+						{perfil.descripcion}
+					</p>
+					<ul class="mt-4 space-y-1.5">
+						{#each perfil.requisitos as requisito (requisito)}
+							<li class="flex gap-2.5 text-sm leading-relaxed text-gray-700">
+								<span class="mt-[0.55em] h-1 w-2.5 shrink-0 bg-segura"></span>
+								<span>{requisito}</span>
+							</li>
+						{/each}
+					</ul>
+				</article>
+			{/each}
+		</div>
+	</section>
+
+	<!--
+		Reparto real del volumen. La barra mide contra la categoría mayor y la
+		cifra va siempre escrita: quien se postula quiere saber dónde hay trabajo,
+		no ver una proporción bonita.
+	-->
+	<section class="border-t border-gray-200 bg-marca-50">
+		<div class="container mx-auto max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
+			<h2
+				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+			>
+				En qué se trabaja
+			</h2>
+			<p class="mt-3 max-w-[66ch] text-base leading-relaxed text-gray-600">
+				Reparto de los {metricas.serviciosPrestados.toLocaleString('es-CO')} servicios ejecutados hasta
+				hoy. Sirve para saber dónde hay volumen antes de postularse.
 			</p>
 
-			<ul class="space-y-3">
+			<ul class="mt-10 space-y-3.5">
 				{#each metricas.porCategoria as categoria (categoria.etiqueta)}
-					{@const proporcion = Math.round((categoria.total / metricas.serviciosPrestados) * 100)}
-					<li class="flex items-center gap-4">
-						<span class="w-56 shrink-0 text-sm font-medium text-gray-900">{categoria.etiqueta}</span
-						>
-						<span class="h-2.5 flex-1 overflow-hidden rounded-full bg-gray-100">
-							<span
-								class="block h-full rounded-full bg-blue-600"
-								style="width: {Math.max(proporcion, 1)}%"
-							></span>
+					<li class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,15rem)_1fr]">
+						<span class="font-leyenda text-sm font-bold tracking-[0.04em] text-tinta uppercase">
+							{categoria.etiqueta}
 						</span>
-						<span class="w-20 shrink-0 text-right text-sm text-gray-600 tabular-nums">
-							{categoria.total.toLocaleString('es-CO')}
-						</span>
+						<div class="flex items-center gap-4">
+							<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
+								<span
+									class="block h-full bg-obliga"
+									style="width: {Math.max(proporcionCategoria(categoria.total), 1)}%"
+								></span>
+							</span>
+							<span class="w-16 shrink-0 text-right text-sm font-bold text-tinta tabular-nums">
+								{categoria.total.toLocaleString('es-CO')}
+							</span>
+						</div>
 					</li>
 				{/each}
 			</ul>
 
-			<p class="mt-6 text-xs text-gray-500">
+			<p class="mt-7 text-xs leading-relaxed text-gray-600">
 				Cifras tomadas del sistema de gestión de SEGISPRO; solo cuentan las actividades
 				efectivamente ejecutadas.
 			</p>
 		</div>
 	</section>
 
-	<section class="bg-gray-50 px-4 py-14 sm:px-6">
-		<div class="container mx-auto max-w-5xl">
-			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Cómo es el proceso</h2>
-			<ol class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-				{#each PASOS as paso, i (paso.titulo)}
-					<li class="rounded-2xl border border-gray-200 bg-white p-5">
-						<span
-							class="mb-3 inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white"
-						>
-							{i + 1}
-						</span>
-						<h3 class="mb-2 font-semibold text-gray-900">{paso.titulo}</h3>
-						<p class="text-sm leading-relaxed text-gray-600">{paso.detalle}</p>
-					</li>
-				{/each}
-			</ol>
-		</div>
+	<section class="container mx-auto max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Cómo es el proceso
+		</h2>
+		<ol class="mt-10 grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-4">
+			{#each PASOS as paso, i (paso.titulo)}
+				<li class="border-t-2 border-tinta pt-5">
+					<span
+						class="font-leyenda text-2xl font-bold text-marca-300 tabular-nums"
+						aria-hidden="true"
+					>
+						{String(i + 1).padStart(2, '0')}
+					</span>
+					<h3 class="mt-2 font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
+						{paso.titulo}
+					</h3>
+					<p class="mt-2 text-sm leading-relaxed text-gray-600">{paso.detalle}</p>
+				</li>
+			{/each}
+		</ol>
 	</section>
 
-	<section id="postular" class="px-4 py-14 sm:px-6">
-		<div class="container mx-auto max-w-3xl">
-			<h2 class="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl">Envía tu hoja de vida</h2>
-			<p class="mb-8 text-sm leading-relaxed text-gray-600">
+	<section id="postular" class="border-t border-gray-200 bg-marca-50">
+		<div class="container mx-auto max-w-3xl px-6 py-14 sm:px-8 sm:py-16">
+			<h2
+				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+			>
+				Envía tu hoja de vida
+			</h2>
+			<p class="mt-3 text-base leading-relaxed text-gray-600">
 				Los campos marcados con asterisco son obligatorios. El archivo puede ir en PDF, DOC o DOCX,
 				hasta 8 MB.
 			</p>
 
 			{#if exito}
-				<div
-					class="rounded-2xl border border-green-200 bg-green-50 p-6"
-					role="status"
-					aria-live="polite"
-				>
-					<h3 class="mb-2 text-lg font-bold text-green-900">¡Listo!</h3>
-					<p class="text-sm leading-relaxed text-green-800">{exito}</p>
+				<div class="mt-10 border-l-4 border-segura bg-placa p-6" role="status" aria-live="polite">
+					<h3 class="font-leyenda text-sm font-bold tracking-[0.08em] text-tinta uppercase">
+						Recibido
+					</h3>
+					<p class="mt-2 text-sm leading-relaxed text-gray-700">{exito}</p>
 				</div>
 			{:else}
 				<form
-					class="space-y-5"
+					class="mt-10 space-y-6"
 					onsubmit={enviar}
 					onfocusin={precargarCaptcha}
 					enctype="multipart/form-data"
 				>
 					{#if errores.length}
-						<div
-							class="rounded-xl border border-red-200 bg-red-50 p-4"
-							role="alert"
-							aria-live="assertive"
-						>
-							<ul class="space-y-1 text-sm text-red-800">
+						<!--
+							El aviso de error usa el ámbar de advertencia del sistema, no un rojo
+							ajeno a la paleta: es exactamente lo que el triángulo significa.
+						-->
+						<div class="border-l-4 border-advierte bg-placa p-4" role="alert" aria-live="assertive">
+							<ul class="space-y-1 text-sm text-tinta">
 								{#each errores as error (error)}
 									<li>{error}</li>
 								{/each}
@@ -267,10 +350,13 @@
 						</div>
 					{/if}
 
-					<div class="grid gap-5 sm:grid-cols-2">
+					<div class="grid gap-6 sm:grid-cols-2">
 						<div>
-							<label for="nombre" class="mb-1.5 block text-sm font-medium text-gray-900">
-								Nombre completo <span class="text-red-600" aria-hidden="true">*</span>
+							<label
+								for="nombre"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
+								Nombre completo <span class="text-advierte" aria-hidden="true">*</span>
 							</label>
 							<input
 								id="nombre"
@@ -281,13 +367,16 @@
 								maxlength="160"
 								autocomplete="name"
 								bind:value={nombre}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+								class={CAMPO}
 							/>
 						</div>
 
 						<div>
-							<label for="correo" class="mb-1.5 block text-sm font-medium text-gray-900">
-								Correo electrónico <span class="text-red-600" aria-hidden="true">*</span>
+							<label
+								for="correo"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
+								Correo electrónico <span class="text-advierte" aria-hidden="true">*</span>
 							</label>
 							<input
 								id="correo"
@@ -297,13 +386,16 @@
 								maxlength="160"
 								autocomplete="email"
 								bind:value={correo}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+								class={CAMPO}
 							/>
 						</div>
 
 						<div>
-							<label for="telefono" class="mb-1.5 block text-sm font-medium text-gray-900">
-								Teléfono <span class="text-red-600" aria-hidden="true">*</span>
+							<label
+								for="telefono"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
+								Teléfono <span class="text-advierte" aria-hidden="true">*</span>
 							</label>
 							<input
 								id="telefono"
@@ -313,12 +405,15 @@
 								maxlength="40"
 								autocomplete="tel"
 								bind:value={telefono}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+								class={CAMPO}
 							/>
 						</div>
 
 						<div>
-							<label for="ciudad" class="mb-1.5 block text-sm font-medium text-gray-900">
+							<label
+								for="ciudad"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
 								Ciudad
 							</label>
 							<input
@@ -328,20 +423,18 @@
 								maxlength="120"
 								autocomplete="address-level2"
 								bind:value={ciudad}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+								class={CAMPO}
 							/>
 						</div>
 
 						<div>
-							<label for="area" class="mb-1.5 block text-sm font-medium text-gray-900">
+							<label
+								for="area"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
 								Área de interés
 							</label>
-							<select
-								id="area"
-								name="areaInteres"
-								bind:value={areaInteres}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-							>
+							<select id="area" name="areaInteres" bind:value={areaInteres} class={CAMPO}>
 								<option value="">Selecciona una</option>
 								{#each AREAS as area (area)}
 									<option value={area}>{area}</option>
@@ -350,7 +443,10 @@
 						</div>
 
 						<div>
-							<label for="experiencia" class="mb-1.5 block text-sm font-medium text-gray-900">
+							<label
+								for="experiencia"
+								class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+							>
 								Años de experiencia
 							</label>
 							<input
@@ -360,13 +456,16 @@
 								min="0"
 								max="60"
 								bind:value={aniosExperiencia}
-								class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+								class={CAMPO}
 							/>
 						</div>
 					</div>
 
 					<div>
-						<label for="mensaje" class="mb-1.5 block text-sm font-medium text-gray-900">
+						<label
+							for="mensaje"
+							class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+						>
 							Cuéntanos sobre tu perfil
 						</label>
 						<textarea
@@ -375,13 +474,16 @@
 							rows="4"
 							maxlength="1000"
 							bind:value={mensaje}
-							class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+							class={CAMPO}
 						></textarea>
 					</div>
 
 					<div>
-						<label for="archivo" class="mb-1.5 block text-sm font-medium text-gray-900">
-							Hoja de vida <span class="text-red-600" aria-hidden="true">*</span>
+						<label
+							for="archivo"
+							class="mb-2 block font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
+						>
+							Hoja de vida <span class="text-advierte" aria-hidden="true">*</span>
 						</label>
 						<input
 							id="archivo"
@@ -390,10 +492,10 @@
 							required
 							accept=".pdf,.doc,.docx"
 							onchange={elegirArchivo}
-							class="w-full rounded-xl border border-gray-300 px-4 py-3 text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-blue-600 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white"
+							class="w-full border border-gray-300 bg-placa px-4 py-3 text-sm text-gray-700 file:mr-4 file:border-0 file:bg-obliga file:px-4 file:py-2 file:font-leyenda file:text-xs file:font-bold file:tracking-[0.07em] file:text-obliga-tinta file:uppercase focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga"
 						/>
 						{#if archivo}
-							<p class="mt-2 text-xs text-gray-500">
+							<p class="mt-2 text-xs text-gray-600">
 								{archivo.name} · {(archivo.size / 1024).toFixed(0)} KB
 							</p>
 						{/if}
@@ -405,13 +507,13 @@
 							type="checkbox"
 							required
 							bind:checked={aceptaPolitica}
-							class="mt-1 h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+							class="mt-1 h-4 w-4 shrink-0 rounded-none border-gray-400 text-obliga focus:ring-obliga"
 						/>
 						<label for="politica" class="text-sm leading-relaxed text-gray-600">
 							Autorizo el tratamiento de mis datos personales conforme a la
 							<a
 								href={resolve('/politicas-de-privacidad')}
-								class="font-medium text-blue-700 underline">política de privacidad</a
+								class="border-b border-obliga font-medium text-obliga">política de privacidad</a
 							>, en los términos de la Ley 1581 de 2012.
 						</label>
 					</div>
@@ -419,12 +521,12 @@
 					<button
 						type="submit"
 						disabled={enviando}
-						class="w-full rounded-xl bg-blue-600 px-6 py-4 text-sm font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+						class="w-full bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-obliga disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
 					>
 						{enviando ? 'Enviando…' : 'Enviar hoja de vida'}
 					</button>
 
-					<p class="text-xs leading-relaxed text-gray-500">
+					<p class="text-xs leading-relaxed text-gray-600">
 						Este sitio está protegido por reCAPTCHA; aplican la
 						<a
 							href="https://policies.google.com/privacy"
@@ -445,18 +547,22 @@
 		</div>
 	</section>
 
-	<section class="bg-gray-50 px-4 py-14 sm:px-6">
-		<div class="container mx-auto max-w-3xl">
-			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Preguntas frecuentes</h2>
-			<dl class="space-y-4">
-				{#each PREGUNTAS as item (item.pregunta)}
-					<div class="rounded-2xl border border-gray-200 bg-white p-5">
-						<dt class="mb-2 font-semibold text-gray-900">{item.pregunta}</dt>
-						<dd class="text-sm leading-relaxed text-gray-600">{item.respuesta}</dd>
-					</div>
-				{/each}
-			</dl>
-		</div>
+	<section class="container mx-auto max-w-4xl px-6 py-14 sm:px-8 sm:py-16">
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Preguntas frecuentes
+		</h2>
+		<dl class="mt-10 divide-y divide-gray-200 border-y border-gray-200">
+			{#each PREGUNTAS as item (item.pregunta)}
+				<div class="grid gap-2 py-6 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-8">
+					<dt class="font-leyenda text-sm font-bold tracking-[0.01em] text-tinta">
+						{item.pregunta}
+					</dt>
+					<dd class="max-w-[68ch] text-sm leading-relaxed text-gray-600">{item.respuesta}</dd>
+				</div>
+			{/each}
+		</dl>
 	</section>
 </main>
 

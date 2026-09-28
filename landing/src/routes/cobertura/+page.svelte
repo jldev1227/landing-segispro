@@ -14,6 +14,7 @@
 	import PageHeader from '$lib/components/PageHeader.svelte';
 	import PageFooter from '$lib/components/PageFooter.svelte';
 	import { serviciosData } from '$lib/data/servicios';
+	import metricas from '$lib/data/metricas.json';
 
 	const title =
 		'Cobertura SEGISPRO: SST, auditorías y capacitaciones en Casanare, Meta, Boyacá, Bogotá y Cundinamarca';
@@ -52,108 +53,220 @@
 	]);
 
 	const servicios = Object.values(serviciosData);
+
+	/**
+	 * Zonas del snapshot: los municipios con más actividad ejecutada. Vienen del
+	 * mismo agregado que alimenta el tablero del home, así que las dos páginas no
+	 * pueden decir cosas distintas.
+	 */
+	const zonas = metricas.zonas ?? [];
+	const zonaMayor = Math.max(1, ...zonas.map((z) => z.servicios));
+	const proporcionZona = (servicios: number) => Math.round((servicios / zonaMayor) * 100);
+	const zonasCubren = zonas.reduce((suma, z) => suma + z.servicios, 0);
 </script>
 
 <Seo {title} {description} path="/cobertura" {schema} />
 
-<PageHeader />
+<PageHeader activa="cobertura" />
 
-<main
-	class="min-h-screen bg-linear-to-br from-white via-gray-50 to-blue-50 px-4 pt-28 pb-20 sm:px-6"
->
-	<div class="container mx-auto max-w-6xl">
-		<nav aria-label="Ruta de navegación" class="mb-6 text-sm text-gray-500">
-			<a href={resolve('/')} class="hover:text-blue-600">Inicio</a>
-			<span class="mx-2">/</span>
-			<span class="text-gray-900">Cobertura</span>
-		</nav>
-
-		<h1 class="mb-4 text-3xl font-bold text-gray-900 sm:text-4xl lg:text-5xl">Dónde operamos</h1>
-		<p class="mb-10 max-w-3xl text-base leading-relaxed text-gray-600 sm:text-lg">
-			Desde nuestra sede en Yopal acompañamos a empresas públicas y privadas del corredor llanero y
-			del eje Bogotá–Boyacá. Cada región tiene su propia mezcla de riesgo, normatividad sectorial y
-			exigencia contractual, y el servicio se ajusta a ella.
-		</p>
-
-		<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-			{#each REGIONES as region (region.slug)}
-				<article
-					class="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-blue-300 hover:shadow-lg"
+<main class="bg-placa pt-20">
+	<section class="bg-obliga">
+		<div class="container mx-auto max-w-6xl px-6 py-10 sm:px-8 sm:py-14">
+			<nav aria-label="Ruta de navegación">
+				<ol
+					class="flex flex-wrap items-center gap-2 font-leyenda text-xs tracking-[0.06em] text-marca-300 uppercase"
 				>
-					<h2 class="mb-2 text-xl font-bold text-gray-900">
-						<a
-							href={resolve('/cobertura/[region]', { region: region.slug })}
-							class="hover:text-blue-600"
-						>
-							{region.nombre}
-						</a>
-					</h2>
-					<p class="mb-4 grow text-sm leading-relaxed text-gray-600">{region.enfoque}</p>
-					<ul class="mb-4 flex flex-wrap gap-1.5">
-						{#each region.sectores as sector (sector)}
-							<li class="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
-								{sector}
-							</li>
-						{/each}
-					</ul>
-					<p class="mb-4 text-xs text-gray-500">
-						{region.ciudades.slice(0, 6).join(' · ')}
-					</p>
-					<a
-						href={resolve('/cobertura/[region]', { region: region.slug })}
-						class="text-sm font-semibold text-blue-600 hover:text-blue-700"
-					>
-						Ver servicios en {region.nombre} →
-					</a>
-				</article>
-			{/each}
-		</div>
+					<li><a href={resolve('/')} class="transition-colors hover:text-white">Inicio</a></li>
+					<li aria-hidden="true">·</li>
+					<li class="text-white">Cobertura</li>
+				</ol>
+			</nav>
 
-		<section class="mt-16">
-			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">
-				Servicios disponibles en todas las regiones
+			<h1
+				class="mt-8 font-leyenda text-3xl leading-[1.1] font-bold tracking-[0.02em] text-balance text-obliga-tinta uppercase sm:text-4xl lg:text-5xl"
+			>
+				Dónde operamos
+			</h1>
+			<p class="mt-5 max-w-[62ch] text-base leading-relaxed text-marca-100 sm:text-lg">
+				Desde la sede en Yopal acompañamos a empresas públicas y privadas del corredor llanero y del
+				eje Bogotá–Boyacá. Cada región tiene su propia mezcla de riesgo, normatividad sectorial y
+				exigencia contractual, y el servicio se ajusta a ella.
+			</p>
+		</div>
+	</section>
+
+	<!--
+		Zonas más frecuentadas. Es el mismo tablero del home, alimentado por el
+		snapshot del sistema de gestión: municipios donde más actividad se ha
+		ejecutado, con el conteo y las empresas distintas atendidas en cada uno.
+
+		El denominador es `serviciosLocalizados` y no el total: no todas las
+		actividades ejecutadas traen municipio registrado, y repartir sobre el
+		total daría a entender que el resto no ocurrió en ninguna parte.
+	-->
+	{#if zonas.length}
+		<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
+			<h2
+				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+			>
+				Zonas más frecuentadas
 			</h2>
-			<ul class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-				{#each servicios as servicio (servicio.slug)}
-					<li>
-						<a
-							href={resolve('/servicios/[slug]', { slug: servicio.slug })}
-							class="block rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-800 transition-colors hover:border-blue-300 hover:text-blue-700"
-						>
-							{servicio.title}
-						</a>
+			<p class="mt-3 max-w-[68ch] text-base leading-relaxed text-gray-600">
+				{zonasCubren.toLocaleString('es-CO')} de los
+				{metricas.serviciosLocalizados.toLocaleString('es-CO')} servicios con municipio registrado se
+				ejecutaron en estos seis. Cifras del sistema de gestión de SEGISPRO, actualizadas al
+				{new Date(metricas.calculadoEn).toLocaleDateString('es-CO', {
+					day: 'numeric',
+					month: 'long',
+					year: 'numeric'
+				})}.
+			</p>
+
+			<ol class="mt-10 space-y-4">
+				{#each zonas as zona (zona.municipio)}
+					<li class="grid gap-x-6 gap-y-1.5 sm:grid-cols-[minmax(0,14rem)_1fr]">
+						<p class="flex items-baseline gap-2">
+							<span class="font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
+								{zona.municipio}
+							</span>
+							<span class="text-xs text-gray-600">{zona.departamento}</span>
+						</p>
+
+						<div class="flex items-center gap-4">
+							<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
+								<span
+									class="block h-full bg-obliga"
+									style="width: {Math.max(proporcionZona(zona.servicios), 2)}%"
+								></span>
+							</span>
+							<span class="shrink-0 text-sm text-gray-600">
+								<span class="font-bold text-tinta tabular-nums"
+									>{zona.servicios.toLocaleString('es-CO')}</span
+								>
+								servicios ·
+								<span class="font-bold text-tinta tabular-nums">{zona.empresas}</span> empresas
+							</span>
+						</div>
+					</li>
+				{/each}
+			</ol>
+
+			<p class="mt-7 max-w-[70ch] text-xs leading-relaxed text-gray-600">
+				Solo cuentan las actividades efectivamente ejecutadas: quedan fuera las anuladas y las que
+				todavía están planificadas o pendientes.
+			</p>
+		</section>
+	{/if}
+
+	<section class="border-t border-gray-200 bg-marca-50">
+		<div class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
+			<h2
+				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+			>
+				Regiones donde operamos
+			</h2>
+
+			<!-- Filetes por celda: cinco regiones en tres columnas dejaban un hueco
+			     gris en la última fila que parecía una región sin nombre. -->
+			<ul class="mt-10 grid border-t border-l border-gray-200 md:grid-cols-2 lg:grid-cols-3">
+				{#each REGIONES as region (region.slug)}
+					<li class="border-r border-b border-gray-200 bg-placa">
+						<article class="flex h-full flex-col p-6">
+							<span class="h-1.5 w-12 bg-segura"></span>
+							<h3
+								class="mt-4 font-leyenda text-base font-bold tracking-[0.05em] text-tinta uppercase"
+							>
+								<a
+									href={resolve('/cobertura/[region]', { region: region.slug })}
+									class="transition-colors hover:text-segura focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-obliga"
+								>
+									{region.nombre}
+								</a>
+							</h3>
+							<p class="mt-2 grow text-sm leading-relaxed text-gray-600">{region.enfoque}</p>
+
+							<ul class="mt-4 flex flex-wrap gap-1.5">
+								{#each region.sectores as sector (sector)}
+									<li
+										class="border border-gray-300 px-2 py-0.5 font-leyenda text-[0.6875rem] font-bold tracking-[0.06em] text-gray-700 uppercase"
+									>
+										{sector}
+									</li>
+								{/each}
+							</ul>
+
+							<p class="mt-4 text-xs leading-relaxed text-gray-600">
+								{region.ciudades.slice(0, 6).join(' · ')}
+							</p>
+						</article>
 					</li>
 				{/each}
 			</ul>
-		</section>
+		</div>
+	</section>
 
-		<section class="mt-16 rounded-2xl border border-gray-200 bg-white p-8">
-			<h2 class="mb-3 text-2xl font-bold text-gray-900">Trabaja con nosotros</h2>
-			<p class="mb-6 max-w-3xl text-sm leading-relaxed text-gray-600">
-				Las actividades de estas cinco regiones las ejecuta una red de profesionales independientes.
-				Si eres auditor, capacitador, consultor o especialista en estudios técnicos, puedes
-				enviarnos tu hoja de vida.
-			</p>
-			<a
-				href={resolve('/trabaja-con-nosotros')}
-				class="inline-flex items-center gap-2 rounded-full border-2 border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 transition-colors hover:bg-blue-50"
-			>
-				Enviar mi hoja de vida
-			</a>
-		</section>
+	<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Servicios disponibles en todas las regiones
+		</h2>
+		<ul class="mt-10 grid border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3">
+			{#each servicios as servicio (servicio.slug)}
+				<li class="border-r border-b border-gray-200 bg-placa">
+					<a
+						href={resolve('/servicios/[slug]', { slug: servicio.slug })}
+						class="block h-full px-5 py-4 font-leyenda text-sm font-bold tracking-[0.04em] text-tinta uppercase transition-colors hover:bg-obliga hover:text-obliga-tinta focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-obliga"
+					>
+						{servicio.title}
+					</a>
+				</li>
+			{/each}
+		</ul>
+	</section>
 
-		<section class="mt-16">
-			<h2 class="mb-6 text-2xl font-bold text-gray-900 sm:text-3xl">Preguntas frecuentes</h2>
-			<dl class="space-y-4">
-				{#each preguntas as item (item.pregunta)}
-					<div class="rounded-2xl border border-gray-200 bg-white p-5">
-						<dt class="mb-2 font-semibold text-gray-900">{item.pregunta}</dt>
-						<dd class="text-sm leading-relaxed text-gray-600">{item.respuesta}</dd>
-					</div>
-				{/each}
-			</dl>
-		</section>
-	</div>
+	<section class="bg-obliga">
+		<div class="container mx-auto max-w-6xl px-6 py-12 sm:px-8 sm:py-14">
+			<div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+				<div class="max-w-[60ch]">
+					<h2
+						class="font-leyenda text-xl leading-tight font-bold tracking-[0.03em] text-balance text-obliga-tinta uppercase sm:text-2xl"
+					>
+						Trabaja con nosotros
+					</h2>
+					<p class="mt-3 text-sm leading-relaxed text-marca-100">
+						Las actividades de estas cinco regiones las ejecuta una red de profesionales
+						independientes. Si eres auditor, capacitador, consultor o especialista en estudios
+						técnicos, puedes enviarnos tu hoja de vida.
+					</p>
+				</div>
+				<a
+					href={resolve('/trabaja-con-nosotros')}
+					class="shrink-0 self-start bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+				>
+					Enviar mi hoja de vida
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="container mx-auto max-w-4xl px-6 py-14 sm:px-8 sm:py-16">
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Preguntas frecuentes
+		</h2>
+		<dl class="mt-10 divide-y divide-gray-200 border-y border-gray-200">
+			{#each preguntas as item (item.pregunta)}
+				<div class="grid gap-2 py-6 sm:grid-cols-[minmax(0,18rem)_1fr] sm:gap-8">
+					<dt class="font-leyenda text-sm font-bold tracking-[0.01em] text-tinta">
+						{item.pregunta}
+					</dt>
+					<dd class="max-w-[68ch] text-sm leading-relaxed text-gray-600">{item.respuesta}</dd>
+				</div>
+			{/each}
+		</dl>
+	</section>
 </main>
 
 <PageFooter />

@@ -17,9 +17,9 @@
 	import Placa from '$lib/components/Placa.svelte';
 	import PageFooter from '$lib/components/PageFooter.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
-	import ServicesCarousel from '$lib/components/ServicesCarousel.svelte';
+	import MuroServicios from '$lib/components/MuroServicios.svelte';
 	import { serviciosData } from '$lib/data/servicios';
-	import { CAMPUS_CURSOS, CONTACT, FACEBOOK_URL, REGIONES } from '$lib/seo/site';
+	import { CAMPUS_CURSOS, CONTACT, FACEBOOK_URL, REGIONES, WHATSAPP_URL } from '$lib/seo/site';
 	import metricas from '$lib/data/metricas.json';
 
 	// Variable de entorno para la app Segispro
@@ -27,7 +27,6 @@
 
 	let mobileMenuOpen = false;
 	let activeSection = 'inicio';
-	let carouselVisible = false;
 
 	const navItems = [
 		{ id: 'inicio', label: 'Inicio' },
@@ -52,10 +51,11 @@
 		{
 			icono: 'telefono',
 			etiqueta: 'Dirección comercial',
-			valor: '+57 310 485 3340',
+			valor: CONTACT.telefonoVisible,
 			acciones: [
-				{ texto: 'Llamar', href: 'tel:+573104853340', externo: false },
-				{ texto: 'WhatsApp', href: 'https://wa.me/573104853340', externo: true }
+				{ texto: 'Llamar', href: `tel:${CONTACT.telefono}`, externo: false },
+				// El mismo destino que el botón flotante, con el mensaje ya redactado.
+				{ texto: 'WhatsApp', href: WHATSAPP_URL, externo: true }
 			]
 		},
 		{
@@ -167,6 +167,36 @@
 		}
 	].map((p) => ({ ...p, href: resolve(`/servicios/${p.slug}`) }));
 
+	/**
+	 * Las zonas más frecuentadas, tomadas del sistema de gestión: son los
+	 * municipios donde más actividad se ha ejecutado, con su conteo y las
+	 * empresas distintas atendidas allí.
+	 *
+	 * El denominador es `serviciosLocalizados`, no el total de servicios: de las
+	 * actividades ejecutadas, solo una parte trae municipio registrado. Repartir
+	 * sobre el total daría a entender que el resto no se hizo en ninguna parte.
+	 *
+	 * La barra es la proporción dentro de lo localizado. Yopal se lleva la
+	 * mayoría, y eso es exactamente lo que la página debe decir: la sede es la
+	 * plaza, no una casilla más de una lista de cinco departamentos.
+	 */
+	const zonas = metricas.zonas ?? [];
+	const zonaMayor = Math.max(1, ...zonas.map((z) => z.servicios));
+	const proporcionZona = (servicios: number) => Math.round((servicios / zonaMayor) * 100);
+	/** Cuánto de lo localizado cae en estos seis municipios. */
+	const zonasCubren = zonas.reduce((suma, z) => suma + z.servicios, 0);
+
+	/**
+	 * Lo que un profesional necesita saber antes de postularse: cuánta gente ya
+	 * está en la red y cuánto volumen se reparte. La promesa vaga —«empresa
+	 * líder», «proyectos innovadores»— no la puede comprobar nadie; esto sí.
+	 */
+	const pruebaRed = [
+		{ valor: String(metricas.profesionales), etiqueta: 'profesionales activos' },
+		{ valor: cifra(metricas.serviciosPrestados), etiqueta: 'servicios ejecutados' },
+		{ valor: String(metricas.ciudadesAtendidas), etiqueta: 'municipios' }
+	];
+
 	/** Las tres cifras del hero. Mismo snapshot que la franja de más abajo. */
 	const pruebaHero = [
 		{ valor: cifra(metricas.serviciosPrestados), etiqueta: 'servicios ejecutados' },
@@ -189,12 +219,26 @@
 			.map((i) => document.getElementById(i.id))
 			.filter((el): el is HTMLElement => el !== null);
 
+		/**
+		 * El observador solo entrega las entradas que **cambiaron**, no todas las
+		 * observadas. Decidir la sección activa mirando únicamente ese lote fallaba
+		 * en el caso más común: al salir la sección de arriba llegaba un lote sin
+		 * ninguna entrada intersecando, no se actualizaba nada, y la navegación se
+		 * quedaba marcando la sección anterior durante toda la siguiente. Por eso
+		 * el estado de cada sección se mantiene aparte y la más alta se elige sobre
+		 * el conjunto completo.
+		 */
+		const dentro = new Map<string, number>();
+
 		const spy = new IntersectionObserver(
 			(entries) => {
-				const visibles = entries
-					.filter((e) => e.isIntersecting)
-					.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-				if (visibles[0]) activeSection = visibles[0].target.id;
+				for (const entrada of entries) {
+					const id = entrada.target.id;
+					if (entrada.isIntersecting) dentro.set(id, entrada.boundingClientRect.top);
+					else dentro.delete(id);
+				}
+				const masAlta = [...dentro.entries()].sort((a, b) => a[1] - b[1])[0];
+				if (masAlta) activeSection = masAlta[0];
 			},
 			{ rootMargin: '-80px 0px -65% 0px', threshold: 0 }
 		);
@@ -217,10 +261,6 @@
 		sections.forEach((section) => {
 			generalObserver.observe(section);
 		});
-
-		setTimeout(() => {
-			carouselVisible = true;
-		}, 200);
 
 		if (mapContainer) {
 			generalObserver.observe(mapContainer);
@@ -611,8 +651,8 @@
 			</p>
 		</div>
 
-		<div class="mt-10">
-			<ServicesCarousel visible={carouselVisible} />
+		<div class="mt-12">
+			<MuroServicios />
 		</div>
 	</div>
 </section>
@@ -729,11 +769,12 @@
 				<h2
 					class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
 				>
-					Cobertura en cinco regiones
+					Dónde se ejecuta el trabajo
 				</h2>
 				<p class="mt-3 max-w-[62ch] text-base leading-relaxed text-gray-600">
 					Desde la sede en Yopal acompañamos operaciones del corredor llanero y del eje
-					Bogotá–Boyacá, con desplazamiento a locación.
+					Bogotá–Boyacá, con desplazamiento a locación. Estas son las zonas donde más se ha
+					ejecutado, no una lista de intenciones.
 				</p>
 			</div>
 			<a
@@ -744,19 +785,86 @@
 			</a>
 		</div>
 
-		<ul class="mt-10 grid gap-px bg-gray-200 sm:grid-cols-2 lg:grid-cols-3">
+		<!--
+			Tablero de zonas. No es una ilustración: son los municipios con más
+			actividad ejecutada según el sistema de gestión, con el conteo y las
+			empresas distintas atendidas en cada uno. La barra mide contra el
+			municipio mayor, y la cifra va siempre escrita al lado, para que el dato
+			no dependa del largo de una barra.
+		-->
+		{#if zonas.length}
+			<div class="mt-12 border-t-2 border-tinta pt-6">
+				<h3 class="font-leyenda text-sm font-bold tracking-[0.09em] text-tinta uppercase">
+					Zonas más frecuentadas
+				</h3>
+				<p class="mt-2 max-w-[68ch] text-sm leading-relaxed text-gray-600">
+					{cifra(zonasCubren)} de los {cifra(metricas.serviciosLocalizados)} servicios con municipio
+					registrado se ejecutaron en estos seis. Cifras del sistema de gestión de SEGISPRO, actualizadas
+					al {new Date(metricas.calculadoEn).toLocaleDateString('es-CO', {
+						day: 'numeric',
+						month: 'long',
+						year: 'numeric'
+					})}.
+				</p>
+
+				<ol class="mt-7 space-y-4">
+					{#each zonas as zona (zona.municipio)}
+						<li class="grid gap-x-6 gap-y-1.5 sm:grid-cols-[minmax(0,13rem)_1fr]">
+							<p class="flex items-baseline gap-2">
+								<span class="font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
+									{zona.municipio}
+								</span>
+								{#if zona.municipio === CONTACT.ciudad}
+									<span
+										class="bg-segura px-1.5 py-0.5 font-leyenda text-[0.625rem] font-bold tracking-[0.09em] text-segura-tinta uppercase"
+									>
+										Sede
+									</span>
+								{/if}
+							</p>
+
+							<div class="flex items-center gap-4">
+								<!-- La barra es decorativa: el dato va escrito a su derecha. -->
+								<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
+									<span
+										class="block h-full bg-obliga"
+										style="width: {Math.max(proporcionZona(zona.servicios), 2)}%"
+									></span>
+								</span>
+								<span class="shrink-0 text-sm text-gray-600">
+									<span class="font-bold text-tinta tabular-nums">{cifra(zona.servicios)}</span>
+									servicios ·
+									<span class="font-bold text-tinta tabular-nums">{zona.empresas}</span> empresas
+								</span>
+							</div>
+						</li>
+					{/each}
+				</ol>
+			</div>
+		{/if}
+
+		<h3 class="mt-14 font-leyenda text-sm font-bold tracking-[0.09em] text-tinta uppercase">
+			Regiones donde operamos
+		</h3>
+
+		<!--
+			Los filetes van en cada celda y no como `gap-px` sobre un fondo gris:
+			son cinco regiones en una rejilla de tres, y el hueco de la última fila
+			se pintaba como una celda gris que parecía una región sin nombre.
+		-->
+		<ul class="mt-6 grid border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3">
 			{#each REGIONES as region (region.slug)}
-				<li class="bg-placa">
+				<li class="border-r border-b border-gray-200 bg-placa">
 					<a
 						href={resolve('/cobertura/[region]', { region: region.slug })}
 						class="group flex h-full flex-col p-6 transition-colors hover:bg-marca-50 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-obliga"
 					>
 						<span class="h-1.5 w-12 bg-segura"></span>
-						<h3
+						<h4
 							class="mt-4 font-leyenda text-base font-bold tracking-[0.05em] text-tinta uppercase"
 						>
 							{region.nombre}
-						</h3>
+						</h4>
 						<p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{region.enfoque}</p>
 						<p class="mt-4 text-xs text-gray-600">
 							{region.ciudades.slice(0, 5).join(' · ')}
@@ -800,113 +908,62 @@
 	</div>
 </section>
 
-<!-- Trabaja con Nosotros Section -->
-{#if mounted}
-	<section
-		class="relative overflow-hidden bg-linear-to-br from-blue-600 via-blue-700 to-blue-900 p-8"
-		in:fly={{ y: 50, duration: 800, delay: 200 }}
-	>
-		<!-- Elementos decorativos -->
-		<div class="absolute top-0 left-0 h-96 w-96 rounded-full bg-white/5 blur-3xl"></div>
-		<div class="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl"></div>
+<!--
+	Trabaja con nosotros. Era el último bloque del mundo anterior: degradado
+	azul, dos orbes con `blur-3xl`, tarjetas de vidrio esmerilado y un botón que
+	crecía al apuntarlo. Nada de eso existe en el resto de la página.
 
-		<!-- Patrón de fondo -->
-		<div class="absolute inset-0 opacity-[0.03]">
-			<div
-				class="absolute inset-0"
-				style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"
-			></div>
-		</div>
-
-		<div class="relative z-10 container mx-auto max-w-5xl">
-			<div class="text-center">
-				<!-- Icono -->
-				<div class="mb-4 flex justify-center">
-					<div
-						class="flex h-16 w-16 items-center justify-center rounded-2xl bg-white/10 backdrop-blur-sm"
-					>
-						<Icono nombre="equipo" class="h-9 w-9 text-white" />
-					</div>
-				</div>
-
-				<!-- Título -->
-				<h2 class="mb-3 text-2xl font-bold text-balance text-white sm:text-3xl lg:text-4xl">
-					Trabaja con Nosotros
+	Ahora es una placa de obligación —campo navy a todo el ancho— con la red de
+	profesionales contada con la cifra real del sistema de gestión, que es el
+	argumento: no «únete a una empresa líder», sino cuánta gente ya trabaja así y
+	cuánto volumen hay que repartir.
+-->
+<section class="bg-obliga">
+	<div class="container mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-16">
+		<div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+			<div class="max-w-3xl">
+				<p class="font-leyenda text-xs font-bold tracking-[0.12em] text-segura uppercase">
+					Red de profesionales
+				</p>
+				<h2
+					class="mt-3 font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-obliga-tinta uppercase sm:text-3xl"
+				>
+					Ejecuta servicios con nosotros
 				</h2>
-
-				<!-- Descripción -->
-				<p class="mx-auto mb-6 max-w-2xl text-sm text-blue-100 sm:text-base lg:text-lg">
-					¿Eres un profesional apasionado por la seguridad, la calidad y el mejoramiento continuo?
-					Únete a nuestro equipo de expertos y haz parte de una empresa líder en consultoría,
-					auditoría y formación.
+				<p class="mt-4 max-w-[64ch] text-base leading-relaxed text-marca-100">
+					Auditores, capacitadores, consultores HSEQ y especialistas en estudios técnicos. La
+					contratación es por actividad: cada servicio se pacta con su alcance, sus fechas y su
+					tarifa.
 				</p>
 
-				<!-- Beneficios -->
-				<div class="mb-8 grid gap-4 sm:gap-6 md:grid-cols-3">
-					<div
-						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
-					>
-						<Icono nombre="excelencia" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
-						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
-							Proyectos Desafiantes
-						</h3>
-						<p class="text-xs text-blue-100 sm:text-sm">
-							Trabaja en proyectos innovadores con clientes de diversos sectores
-						</p>
-					</div>
+				<dl class="mt-8 flex flex-wrap items-baseline gap-x-10 gap-y-4">
+					{#each pruebaRed as dato (dato.etiqueta)}
+						<div class="flex items-baseline gap-2.5">
+							<dd class="text-2xl font-bold text-obliga-tinta tabular-nums sm:text-3xl">
+								{dato.valor}
+							</dd>
+							<dt class="font-leyenda text-xs font-bold tracking-[0.08em] text-marca-200 uppercase">
+								{dato.etiqueta}
+							</dt>
+						</div>
+					{/each}
+				</dl>
+			</div>
 
-					<div
-						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
-					>
-						<Icono nombre="cursos" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
-						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
-							Desarrollo Profesional
-						</h3>
-						<p class="text-xs text-blue-100 sm:text-sm">
-							Capacitaciones constantes y oportunidades de crecimiento
-						</p>
-					</div>
-
-					<div
-						class="rounded-xl bg-white/10 p-4 backdrop-blur-sm transition-all duration-300 hover:bg-white/15 sm:p-6"
-					>
-						<Icono nombre="colaboracion" class="mb-2 h-7 w-7 text-white sm:h-8 sm:w-8" />
-						<h3 class="mb-2 text-sm font-semibold text-white sm:text-base lg:text-lg">
-							Ambiente Colaborativo
-						</h3>
-						<p class="text-xs text-blue-100 sm:text-sm">
-							Equipo multidisciplinario comprometido con la excelencia
-						</p>
-					</div>
-				</div>
-
-				<!-- CTA -->
+			<div class="flex shrink-0 flex-col items-start gap-3">
 				<a
 					href={resolve('/trabaja-con-nosotros')}
-					class="group relative inline-flex items-center gap-2 overflow-hidden rounded-xl bg-white px-6 py-3 text-base font-bold text-blue-700 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl sm:text-lg"
+					class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 				>
-					<span class="relative z-10">Enviar mi hoja de vida</span>
-					<svg
-						class="relative z-10 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1"
-						fill="none"
-						stroke="currentColor"
-						viewBox="0 0 24 24"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-						/>
-					</svg>
+					Enviar mi hoja de vida
 				</a>
-
-				<!-- Nota -->
-				<p class="mt-4 text-xs text-blue-200 sm:text-sm">PDF, DOC o DOCX · Tamaño máximo: 8 MB</p>
+				<p class="font-leyenda text-xs tracking-[0.06em] text-marca-200 uppercase">
+					PDF, DOC o DOCX · hasta 8 MB
+				</p>
 			</div>
 		</div>
-	</section>
-{/if}
+	</div>
+</section>
 
 <!--
 	Contacto.
@@ -1050,23 +1107,5 @@
 	:global(body) {
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-	}
-
-	/*
-		Movimiento reducido. Antes este bloque solo cubría `.gallery-card` y
-		`.carousel-track`, así que dejaba fuera todas las transiciones y las
-		entradas de Svelte. Ahora corta el movimiento en toda la página para quien
-		lo pide en su sistema, y el desplazamiento suave con él.
-	*/
-	@media (prefers-reduced-motion: reduce) {
-		:global(html) {
-			scroll-behavior: auto;
-		}
-
-		:global(*, *::before, *::after) {
-			animation-duration: 0.01ms !important;
-			animation-iteration-count: 1 !important;
-			transition-duration: 0.01ms !important;
-		}
 	}
 </style>

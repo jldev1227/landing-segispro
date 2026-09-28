@@ -28,6 +28,23 @@ export const CONTACT = {
 	longitud: -72.38573869384264
 } as const;
 
+/**
+ * WhatsApp comercial. Es el mismo número de `CONTACT.telefono`, pero el enlace
+ * se declara una vez aquí porque lo usan el bloque de contacto y el botón
+ * flotante, y antes estaba escrito a mano en dos sitios del home: si el número
+ * cambiaba, uno de los dos se quedaba atrás.
+ *
+ * `wa.me` exige el número sin «+» ni separadores.
+ */
+export const WHATSAPP = {
+	numero: CONTACT.telefono.replace(/\D/g, ''),
+	/** Primera línea del chat. Llega prellenada para que el comprador no redacte. */
+	mensaje: 'Hola, quiero cotizar un servicio con SEGISPRO.'
+} as const;
+
+export const WHATSAPP_URL =
+	`https://wa.me/${WHATSAPP.numero}?text=${encodeURIComponent(WHATSAPP.mensaje)}` as const;
+
 /** Página de Facebook. La usan el grafo `sameAs` y el enlace de novedades. */
 export const FACEBOOK_URL = 'https://www.facebook.com/SEGISPRO';
 
