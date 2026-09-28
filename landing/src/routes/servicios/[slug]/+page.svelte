@@ -115,7 +115,7 @@
 				<div class="flex shrink-0 flex-wrap items-center gap-3">
 					<a
 						href="{resolve('/')}#contacto"
-						class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+						class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
 					>
 						Solicitar cotización
 					</a>
@@ -123,7 +123,7 @@
 						href={WHATSAPP_URL}
 						target="_blank"
 						rel="noopener"
-						class="border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+						class="rounded-suave border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
 					>
 						Escribir por WhatsApp
 					</a>
@@ -205,7 +205,7 @@
 						<div class="grid gap-x-8 gap-y-2 py-5 sm:grid-cols-[minmax(0,10rem)_1fr]">
 							<dt>
 								<span
-									class="inline-block bg-obliga px-3 py-1.5 font-leyenda text-xs font-bold tracking-[0.08em] text-obliga-tinta uppercase"
+									class="inline-block rounded-suave bg-obliga px-3 py-1.5 font-leyenda text-xs font-bold tracking-[0.08em] text-obliga-tinta uppercase"
 								>
 									{norma.code}
 								</span>
@@ -264,7 +264,9 @@
 				Se presta en toda el área de cobertura, con desplazamiento a locación y acompañamiento
 				presencial o remoto según el alcance contratado.
 			</p>
-			<ul class="mt-6 flex flex-wrap border-t border-l border-gray-200">
+			<ul
+				class="mt-6 flex flex-wrap overflow-hidden rounded-suave border-t border-l border-gray-200"
+			>
 				{#each REGIONES as region (region.slug)}
 					<li class="border-r border-b border-gray-200 bg-placa">
 						<a
@@ -331,7 +333,7 @@
 						sobre el verde de condición segura, que es el color de la acción.
 					-->
 					<span
-						class="hidden h-16 w-16 shrink-0 items-center justify-center bg-segura sm:flex"
+						class="hidden h-16 w-16 shrink-0 items-center justify-center rounded-suave bg-segura sm:flex"
 						aria-hidden="true"
 					>
 						<Icono nombre={servicio.icon} class="h-8 w-8 text-segura-tinta" />
@@ -352,7 +354,7 @@
 				<div class="flex shrink-0 flex-wrap gap-3">
 					<a
 						href="{resolve('/')}#contacto"
-						class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+						class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
 					>
 						Solicitar cotización
 					</a>

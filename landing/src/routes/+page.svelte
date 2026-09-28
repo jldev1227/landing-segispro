@@ -435,13 +435,13 @@
 					href={CAMPUS_CURSOS}
 					target="_blank"
 					rel="noopener"
-					class="border-2 border-marca-400 px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-white uppercase transition-colors duration-150 hover:border-white"
+					class="rounded-suave border-2 border-marca-400 px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-white uppercase transition-colors duration-150 hover:border-white"
 				>
 					Formación
 				</a>
 				<a
 					href={SEGISPRO_APP_URL}
-					class="bg-segura px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5"
+					class="rounded-suave bg-segura px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5"
 				>
 					Ingreso
 				</a>
@@ -512,7 +512,7 @@
 				<div class="mt-6 grid gap-3">
 					<a
 						href="#contacto"
-						class="bg-segura px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase"
+						class="rounded-suave bg-segura px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase"
 						on:click={() => (mobileMenuOpen = false)}
 					>
 						Solicitar cotización
@@ -521,7 +521,7 @@
 						href={CAMPUS_CURSOS}
 						target="_blank"
 						rel="noopener"
-						class="border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
+						class="rounded-suave border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
 					>
 						Formación
 					</a>
@@ -529,7 +529,7 @@
 						href={CAMPUS_VERIFICAR}
 						target="_blank"
 						rel="noopener"
-						class="border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
+						class="rounded-suave border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
 						on:click={() => (mobileMenuOpen = false)}
 					>
 						Validar certificado
@@ -580,13 +580,13 @@
 				<div class="flex shrink-0 flex-wrap items-center gap-3">
 					<a
 						href="#contacto"
-						class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+						class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 					>
 						Solicitar cotización
 					</a>
 					<a
 						href="#services"
-						class="border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+						class="rounded-suave border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 					>
 						Ver servicios
 					</a>
@@ -747,7 +747,7 @@
 							height="960"
 							loading="lazy"
 							decoding="async"
-							class="aspect-4/3 w-full object-cover"
+							class="aspect-4/3 w-full rounded-suave object-cover"
 						/>
 						<figcaption
 							class="mt-3 font-leyenda text-xs font-bold tracking-[0.07em] text-tinta uppercase"
@@ -806,7 +806,9 @@
 			son cinco regiones en una rejilla de tres, y el hueco de la última fila
 			se pintaba como una celda gris que parecía una región sin nombre.
 		-->
-		<ul class="mt-6 grid border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3">
+		<ul
+			class="mt-6 grid overflow-hidden rounded-suave border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3"
+		>
 			{#each REGIONES as region (region.slug)}
 				<li class="border-r border-b border-gray-200 bg-placa">
 					<a
@@ -908,7 +910,7 @@
 			<div class="flex shrink-0 flex-col items-start gap-3">
 				<a
 					href={resolve('/trabaja-con-nosotros')}
-					class="bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+					class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
 				>
 					Enviar mi hoja de vida
 				</a>
@@ -951,12 +953,14 @@
 		<div class="mt-10 grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:gap-14">
 			<!-- Filetes por elemento: `space-y-px` sobre fondo gris pintaba una banda
 					sobrante bajo el último canal. -->
-			<ul class="divide-y divide-gray-200 border border-gray-200 bg-placa">
+			<ul
+				class="divide-y divide-gray-200 overflow-hidden rounded-suave border border-gray-200 bg-placa"
+			>
 				{#each canalesContacto as canal (canal.valor)}
 					<li class="p-6">
 						<div class="flex items-start gap-4">
 							<span
-								class="flex h-12 w-12 shrink-0 items-center justify-center bg-obliga text-obliga-tinta"
+								class="flex h-12 w-12 shrink-0 items-center justify-center rounded-suave bg-obliga text-obliga-tinta"
 							>
 								<Icono nombre={canal.icono} class="h-6 w-6" />
 							</span>
@@ -971,7 +975,7 @@
 											href={accion.href}
 											target={accion.externo ? '_blank' : undefined}
 											rel={accion.externo ? 'noopener' : undefined}
-											class="border-2 border-obliga px-4 py-2 font-leyenda text-xs font-bold tracking-[0.07em] text-obliga uppercase transition-colors hover:bg-obliga hover:text-obliga-tinta"
+											class="rounded-suave border-2 border-obliga px-4 py-2 font-leyenda text-xs font-bold tracking-[0.07em] text-obliga uppercase transition-colors hover:bg-obliga hover:text-obliga-tinta"
 										>
 											{accion.texto}
 										</a>
@@ -988,7 +992,10 @@
 					El mapa se monta solo cuando la sección entra en pantalla: es un
 					tercero y no tiene por qué participar del primer render.
 				-->
-				<div bind:this={mapContainer} class="aspect-4/3 w-full border border-gray-200 bg-placa">
+				<div
+					bind:this={mapContainer}
+					class="aspect-4/3 w-full overflow-hidden rounded-suave border border-gray-200 bg-placa"
+				>
 					{#if mapLoaded}
 						<iframe
 							title="Ubicación de SEGISPRO Ingeniería en Yopal, Casanare"

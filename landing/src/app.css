@@ -47,6 +47,23 @@
 	--color-segura: #00bf62; /* la capacidad que se entrega */
 	--color-segura-tinta: #08301d; /* 5,95:1 */
 
+	/* ── Radios ──────────────────────────────────────────────────────────────
+	   Un radio único y corto para todas las superficies: botones, campos,
+	   avisos, fichas, el mapa. Lo justo para que la página no se lea como una
+	   hoja de cálculo, no tanto como para que parezca una tarjeta de producto.
+
+	   `--radius-pastilla` es el otro extremo, y solo lo llevan dos cosas: el
+	   acceso flotante a WhatsApp y la placa de obligación, que es un círculo
+	   porque en ISO 7010 el círculo *significa* obligación.
+
+	   Lo que no se redondea es la geometría de `Placa.svelte`. Ahí la forma es
+	   la mitad del mensaje —círculo obliga, triángulo advierte, cuadrado indica
+	   condición segura—, y un cuadrado con las esquinas comidas deja de
+	   distinguirse del círculo a tamaño pequeño. El cuadrado recibe el radio
+	   suave y nada más. */
+	--radius-suave: 0.3125rem; /* 5px */
+	--radius-pastilla: 9999px;
+
 	/* Sustrato de placa y tinta de cuerpo. Blanco de rótulo, nunca crema. */
 	--color-placa: #ffffff;
 	--color-tinta: #16202e; /* 16,40:1 sobre blanco */

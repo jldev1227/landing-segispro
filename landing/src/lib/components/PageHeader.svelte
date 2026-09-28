@@ -93,7 +93,7 @@
 				</a>
 				<a
 					href={SEGISPRO_APP_URL}
-					class="bg-segura px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5"
+					class="rounded-suave bg-segura px-4 py-2.5 font-leyenda text-xs font-bold tracking-[0.07em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5"
 				>
 					Ingreso
 				</a>
@@ -172,7 +172,7 @@
 				<div class="mt-6 grid gap-3">
 					<a
 						href="{resolve('/')}#contacto"
-						class="bg-segura px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase"
+						class="rounded-suave bg-segura px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase"
 						on:click={() => (abierto = false)}
 					>
 						Solicitar cotización
@@ -181,7 +181,7 @@
 						href={CAMPUS_CURSOS}
 						target="_blank"
 						rel="noopener"
-						class="border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
+						class="rounded-suave border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
 					>
 						Formación
 					</a>

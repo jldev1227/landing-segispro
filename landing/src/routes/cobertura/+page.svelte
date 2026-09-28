@@ -130,7 +130,9 @@
 
 			<!-- Filetes por celda: cinco regiones en tres columnas dejaban un hueco
 			     gris en la última fila que parecía una región sin nombre. -->
-			<ul class="mt-10 grid border-t border-l border-gray-200 md:grid-cols-2 lg:grid-cols-3">
+			<ul
+				class="mt-10 grid overflow-hidden rounded-suave border-t border-l border-gray-200 md:grid-cols-2 lg:grid-cols-3"
+			>
 				{#each REGIONES as region (region.slug)}
 					<li class="border-r border-b border-gray-200 bg-placa">
 						<article class="flex h-full flex-col p-6">
@@ -150,7 +152,7 @@
 							<ul class="mt-4 flex flex-wrap gap-1.5">
 								{#each region.sectores as sector (sector)}
 									<li
-										class="border border-gray-300 px-2 py-0.5 font-leyenda text-[0.6875rem] font-bold tracking-[0.06em] text-gray-700 uppercase"
+										class="rounded-suave border border-gray-300 px-2 py-0.5 font-leyenda text-[0.6875rem] font-bold tracking-[0.06em] text-gray-700 uppercase"
 									>
 										{sector}
 									</li>
@@ -173,7 +175,9 @@
 		>
 			Servicios disponibles en todas las regiones
 		</h2>
-		<ul class="mt-10 grid border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3">
+		<ul
+			class="mt-10 grid overflow-hidden rounded-suave border-t border-l border-gray-200 sm:grid-cols-2 lg:grid-cols-3"
+		>
 			{#each servicios as servicio (servicio.slug)}
 				<li class="border-r border-b border-gray-200 bg-placa">
 					<a
@@ -204,7 +208,7 @@
 				</div>
 				<a
 					href={resolve('/trabaja-con-nosotros')}
-					class="shrink-0 self-start bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+					class="shrink-0 self-start rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
 				>
 					Enviar mi hoja de vida
 				</a>

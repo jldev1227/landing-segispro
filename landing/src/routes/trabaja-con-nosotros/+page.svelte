@@ -41,7 +41,7 @@
 	 * un contorno navy de 2px y no con un halo difuminado.
 	 */
 	const CAMPO =
-		'w-full border border-gray-300 bg-placa px-4 py-3 text-sm text-tinta placeholder:text-gray-500 focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga';
+		'w-full rounded-suave border border-gray-300 bg-placa px-4 py-3 text-sm text-tinta placeholder:text-gray-500 focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga';
 
 	/** Tira de conteo de la banda de leyenda. Mismos umbrales que el home. */
 	const prueba = [
@@ -206,7 +206,7 @@
 
 				<a
 					href="#postular"
-					class="shrink-0 self-start bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+					class="shrink-0 self-start rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
 				>
 					Enviar mi hoja de vida
 				</a>
@@ -345,7 +345,11 @@
 			</p>
 
 			{#if exito}
-				<div class="mt-10 border-l-4 border-segura bg-placa p-6" role="status" aria-live="polite">
+				<div
+					class="mt-10 rounded-suave border-l-4 border-segura bg-placa p-6"
+					role="status"
+					aria-live="polite"
+				>
 					<h3 class="font-leyenda text-sm font-bold tracking-[0.08em] text-tinta uppercase">
 						Recibido
 					</h3>
@@ -363,7 +367,11 @@
 							El aviso de error usa el ámbar de advertencia del sistema, no un rojo
 							ajeno a la paleta: es exactamente lo que el triángulo significa.
 						-->
-						<div class="border-l-4 border-advierte bg-placa p-4" role="alert" aria-live="assertive">
+						<div
+							class="rounded-suave border-l-4 border-advierte bg-placa p-4"
+							role="alert"
+							aria-live="assertive"
+						>
 							<ul class="space-y-1 text-sm text-tinta">
 								{#each errores as error (error)}
 									<li>{error}</li>
@@ -514,7 +522,7 @@
 							required
 							accept=".pdf,.doc,.docx"
 							onchange={elegirArchivo}
-							class="w-full border border-gray-300 bg-placa px-4 py-3 text-sm text-gray-700 file:mr-4 file:border-0 file:bg-obliga file:px-4 file:py-2 file:font-leyenda file:text-xs file:font-bold file:tracking-[0.07em] file:text-obliga-tinta file:uppercase focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga"
+							class="w-full rounded-suave border border-gray-300 bg-placa px-4 py-3 text-sm text-gray-700 file:mr-4 file:rounded-suave file:border-0 file:bg-obliga file:px-4 file:py-2 file:font-leyenda file:text-xs file:font-bold file:tracking-[0.07em] file:text-obliga-tinta file:uppercase focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga"
 						/>
 						{#if archivo}
 							<p class="mt-2 text-xs text-gray-600">
@@ -529,7 +537,7 @@
 							type="checkbox"
 							required
 							bind:checked={aceptaPolitica}
-							class="mt-1 h-4 w-4 shrink-0 rounded-none border-gray-400 text-obliga focus:ring-obliga"
+							class="mt-1 h-4 w-4 shrink-0 rounded-[3px] border-gray-400 text-obliga focus:ring-obliga"
 						/>
 						<label for="politica" class="text-sm leading-relaxed text-gray-600">
 							Autorizo el tratamiento de mis datos personales conforme a la
@@ -543,7 +551,7 @@
 					<button
 						type="submit"
 						disabled={enviando}
-						class="w-full bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-obliga disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
+						class="w-full rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-obliga disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 sm:w-auto"
 					>
 						{enviando ? 'Enviando…' : 'Enviar hoja de vida'}
 					</button>

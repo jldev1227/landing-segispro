@@ -200,7 +200,9 @@
 	por delante de la barra de navegación. Encerrados en este contexto, esos
 	valores solo compiten entre ellos.
 -->
-<div class="relative isolate border border-gray-200 bg-marca-50 {alto}">
+<div
+	class="relative isolate overflow-hidden rounded-suave border border-gray-200 bg-marca-50 {alto}"
+>
 	<div bind:this={lienzo} class="h-full w-full"></div>
 
 	{#if !cargado}
@@ -220,7 +222,7 @@
 <ul class="mt-5 flex flex-wrap gap-x-6 gap-y-2">
 	{#each zonas as zona (zona.municipio)}
 		<li class="flex items-center gap-2">
-			<span class="h-2.5 w-2.5 shrink-0 bg-obliga" aria-hidden="true"></span>
+			<span class="h-2.5 w-2.5 shrink-0 rounded-[2px] bg-obliga" aria-hidden="true"></span>
 			<span class="font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
 				{zona.municipio}
 			</span>
@@ -236,6 +238,7 @@
 		display: block;
 		width: 16px;
 		height: 16px;
+		border-radius: var(--radius-suave);
 		background: var(--color-segura);
 		box-shadow: 0 0 0 3px var(--color-placa);
 	}
@@ -255,7 +258,7 @@
 
 	:global(.leaflet-tooltip) {
 		border: 0;
-		border-radius: 0;
+		border-radius: var(--radius-suave);
 		background: var(--color-obliga);
 		color: var(--color-obliga-tinta);
 		font-family: var(--font-leyenda);
@@ -268,5 +271,14 @@
 
 	:global(.leaflet-tooltip-top::before) {
 		border-top-color: var(--color-obliga);
+	}
+
+	/* Los controles traen el redondeo de Leaflet, que es más blando que el del
+	   sistema; se alinean con el resto en vez de convivir dos radios. */
+	:global(.leaflet-bar),
+	:global(.leaflet-bar a:first-child),
+	:global(.leaflet-bar a:last-child),
+	:global(.leaflet-control-attribution) {
+		border-radius: var(--radius-suave);
 	}
 </style>

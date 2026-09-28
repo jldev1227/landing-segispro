@@ -39,7 +39,7 @@
 			sobre un fondo gris, una última fila incompleta pintaba celdas fantasma.
 		-->
 		<ul
-			class="mt-10 grid grid-cols-2 border-t border-l border-gray-200 bg-placa sm:grid-cols-3 lg:grid-cols-4"
+			class="mt-10 grid grid-cols-2 overflow-hidden rounded-suave border-t border-l border-gray-200 bg-placa sm:grid-cols-3 lg:grid-cols-4"
 		>
 			{#each clientes as client (client.name)}
 				<li class="flex h-28 items-center justify-center border-r border-b border-gray-200 px-6">

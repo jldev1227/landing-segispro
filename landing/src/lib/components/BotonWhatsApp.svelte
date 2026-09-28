@@ -3,13 +3,20 @@
 	 * Acceso permanente al WhatsApp comercial: el mismo número del CTA de
 	 * cotización, con el primer mensaje ya redactado.
 	 *
-	 * En el mundo señalético esto es una placa de condición segura —campo verde,
-	 * esquina viva— y no el círculo con sombra difusa de la categoría. La marca
-	 * de WhatsApp se conserva tal cual porque es la que hace reconocible el
-	 * destino de un vistazo; lo que cambia es el soporte.
+	 * Es lo único de la página que va en pastilla completa, junto con la placa
+	 * de obligación. No por capricho: un acceso permanente que flota sobre el
+	 * contenido no pertenece a la retícula de la página, y la forma lo dice
+	 * antes de que se lea. La marca de WhatsApp se conserva tal cual porque es
+	 * la que hace reconocible el destino de un vistazo.
 	 *
 	 * La leyenda se despliega al apuntar y al enfocar, no en reposo: un rótulo
 	 * permanente en la esquina tapa contenido durante toda la visita.
+	 *
+	 * La sombra es lo único difuminado de la página, y está justificada: es el
+	 * único elemento que de verdad flota sobre el contenido, y la elevación es
+	 * lo que lo dice. Antes era un filete duro de 2px, que sobre una placa
+	 * cuadrada se leía como el canto de un rótulo impreso; sobre la pastilla se
+	 * leía como un botón en relieve de los años dos mil.
 	 */
 	import { WHATSAPP_URL } from '$lib/seo/site';
 </script>
@@ -18,7 +25,7 @@
 	href={WHATSAPP_URL}
 	target="_blank"
 	rel="noopener"
-	class="grupo-wa fixed right-4 bottom-4 z-40 flex items-center gap-0 bg-segura text-segura-tinta shadow-[0_2px_0_0_var(--color-tinta)] transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-tinta sm:right-6 sm:bottom-6"
+	class="grupo-wa fixed right-4 bottom-4 z-40 flex items-center gap-0 rounded-pastilla bg-segura text-segura-tinta shadow-[0_4px_14px_-4px_rgba(22,32,46,0.45)] transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-tinta sm:right-6 sm:bottom-6"
 	style="padding-bottom: env(safe-area-inset-bottom, 0px);"
 	aria-label="Escribir por WhatsApp al +57 310 485 3340"
 >
@@ -42,7 +49,7 @@
 
 	<!-- Banda de leyenda. Ocupa ancho cero hasta que se apunta o se enfoca. -->
 	<span
-		class="leyenda-wa max-w-0 overflow-hidden font-leyenda text-sm font-bold tracking-[0.07em] whitespace-nowrap uppercase"
+		class="leyenda-wa max-w-0 overflow-hidden rounded-r-pastilla font-leyenda text-sm font-bold tracking-[0.07em] whitespace-nowrap uppercase"
 	>
 		<span class="block pr-5">Cotizar por WhatsApp</span>
 	</span>

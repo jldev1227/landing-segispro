@@ -38,8 +38,12 @@
 			titulo: 'Advertencia'
 		},
 		// Cuadrado: condición segura. Aquí, lo que SEGISPRO entrega.
+		//
+		// Lleva el radio suave del resto de la página, no más: a partir de ahí
+		// un cuadrado deja de distinguirse de un círculo a este tamaño, y la
+		// distinción es justamente lo que el sistema usa para clasificar.
 		segura: {
-			forma: 'rounded-none items-center',
+			forma: 'rounded-suave items-center',
 			campo: 'bg-segura',
 			tinta: 'text-segura-tinta',
 			titulo: 'Condición segura'
