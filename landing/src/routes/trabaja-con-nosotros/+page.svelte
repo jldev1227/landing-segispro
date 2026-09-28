@@ -47,7 +47,7 @@
 	const prueba = [
 		{ valor: CIFRAS.profesionales, etiqueta: 'profesionales en la red' },
 		{ valor: CIFRAS.servicios, etiqueta: 'servicios ejecutados' },
-		{ valor: CIFRAS.municipios, etiqueta: 'municipios' },
+		{ valor: CIFRAS.empresas, etiqueta: 'empresas atendidas' },
 		{ valor: CIFRAS.anios, etiqueta: 'años operando' }
 	];
 

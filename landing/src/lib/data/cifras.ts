@@ -14,6 +14,11 @@ import metricas from './metricas.json';
  * vídeo— es información de gestión interna. Dice qué líneas están flojas a
  * cualquiera que entre, competencia incluida. El orden sí es útil para quien
  * se postula; el conteo no le sirve de nada.
+ *
+ * El número de municipios no está aquí y no debe volver: publicarlo invita a
+ * compararlo con el mapa nacional del competidor de turno, y el argumento de
+ * SEGISPRO no es extensión sino arraigo. Dónde se trabaja lo enseña el mapa de
+ * cobertura; cuántos son no lo dice nadie.
  */
 
 /** Suelo que se publica para cada cifra. Es una decisión editorial, no un cálculo. */
@@ -32,9 +37,7 @@ export const CIFRAS = {
 	servicios: umbral(UMBRALES.servicios),
 	profesionales: umbral(UMBRALES.profesionales),
 	empresas: umbral(UMBRALES.empresas),
-	anios: String(metricas.aniosOperacion),
-	municipios: String(metricas.ciudadesAtendidas),
-	departamentos: String(metricas.departamentosAtendidos)
+	anios: String(metricas.aniosOperacion)
 } as const;
 
 /**

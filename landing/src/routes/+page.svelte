@@ -177,12 +177,15 @@
 	].map((p) => ({ ...p, href: resolve(`/servicios/${p.slug}`) }));
 
 	/**
-	 * Los municipios donde se ha ejecutado trabajo, para el mapa. En la portada
-	 * va solo el mapa: el tablero de barras que estaba aquí repetía los mismos
-	 * seis municipios que el mapa ya dimensiona con el tamaño del punto. El
-	 * desglose ordenado vive en `/cobertura`, que es donde se va a buscarlo.
+	 * Los municipios de cabecera, para el mapa. Van los seis de más volumen y no
+	 * los diecinueve: con todos, la mitad del mapa eran polígonos de un solo
+	 * servicio y el dibujo dejaba de decir dónde está el trabajo.
+	 *
+	 * En la portada va solo el mapa. El tablero de barras que estaba aquí
+	 * repetía estos mismos municipios, y el desglose ordenado vive en
+	 * `/cobertura`, que es donde se va a buscarlo.
 	 */
-	const municipiosAtendidos = metricas.municipios ?? [];
+	const zonas = metricas.zonas ?? [];
 
 	/**
 	 * Lo que un profesional necesita saber antes de postularse: cuánta gente ya
@@ -195,7 +198,7 @@
 	const pruebaRed = [
 		{ valor: CIFRAS.profesionales, etiqueta: 'profesionales en la red' },
 		{ valor: CIFRAS.servicios, etiqueta: 'servicios ejecutados' },
-		{ valor: CIFRAS.municipios, etiqueta: 'municipios' }
+		{ valor: CIFRAS.anios, etiqueta: 'años de operación' }
 	];
 
 	/** Las tres cifras del hero. Mismo snapshot que la franja de más abajo. */
@@ -776,8 +779,8 @@
 				</h2>
 				<p class="mt-3 max-w-[62ch] text-base leading-relaxed text-gray-600">
 					Desde la sede en Yopal acompañamos operaciones del corredor llanero y del eje
-					Bogotá–Boyacá, con desplazamiento a locación. Estas son las zonas donde más se ha
-					ejecutado, no una lista de intenciones.
+					Bogotá–Boyacá, con desplazamiento a locación. En el mapa, los municipios donde más se ha
+					ejecutado: trabajo hecho, no una lista de intenciones.
 				</p>
 			</div>
 			<a
@@ -788,9 +791,9 @@
 			</a>
 		</div>
 
-		{#if municipiosAtendidos.length}
+		{#if zonas.length}
 			<div class="mt-10">
-				<MapaCobertura municipios={municipiosAtendidos} alto="h-[24rem] sm:h-[30rem]" />
+				<MapaCobertura {zonas} alto="h-[24rem] sm:h-[30rem]" />
 			</div>
 		{/if}
 

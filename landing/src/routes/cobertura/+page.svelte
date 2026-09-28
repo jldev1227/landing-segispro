@@ -61,18 +61,6 @@
 	 * pueden decir cosas distintas.
 	 */
 	const zonas = metricas.zonas ?? [];
-	const municipiosAtendidos = metricas.municipios ?? [];
-	/**
-	 * La barra mide contra el municipio mayor, para que el reparto se vea; la
-	 * cifra escrita al lado es la parte del total localizado, que es lo que
-	 * significa algo. Ninguna de las dos publica el conteo crudo: el total exacto
-	 * de servicios se comunica como umbral, y dos cifras que no cuadran entre sí
-	 * son peor que ninguna.
-	 */
-	const zonaMayor = Math.max(1, ...zonas.map((z) => z.servicios));
-	const proporcionZona = (servicios: number) => Math.round((servicios / zonaMayor) * 100);
-	const localizados = metricas.serviciosLocalizados || 1;
-	const porcentajeZona = (servicios: number) => Math.round((servicios / localizados) * 100);
 </script>
 
 <Seo {title} {description} path="/cobertura" {schema} />
@@ -114,73 +102,21 @@
 		actividades ejecutadas traen municipio registrado, y repartir sobre el
 		total daría a entender que el resto no ocurrió en ninguna parte.
 	-->
-	{#if municipiosAtendidos.length}
-		<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
-			<h2
-				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
-			>
-				Municipios con trabajo ejecutado
-			</h2>
-			<p class="mt-3 max-w-[68ch] text-base leading-relaxed text-gray-600">
-				Cada punto es un municipio donde SEGISPRO ha ejecutado al menos un servicio, y su tamaño es
-				el volumen. El cuadrado verde es la sede en {CONTACT.ciudad}.
-			</p>
-
-			<div class="mt-10">
-				<MapaCobertura municipios={municipiosAtendidos} />
-			</div>
-		</section>
-	{/if}
-
 	{#if zonas.length}
 		<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
 			<h2
 				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
 			>
-				Zonas más frecuentadas
+				Dónde se concentra el trabajo
 			</h2>
 			<p class="mt-3 max-w-[68ch] text-base leading-relaxed text-gray-600">
-				Los seis municipios con más trabajo ejecutado, y qué parte del total localizado se lleva
-				cada uno. Datos del sistema de gestión de SEGISPRO, al
-				{new Date(metricas.calculadoEn).toLocaleDateString('es-CO', {
-					day: 'numeric',
-					month: 'long',
-					year: 'numeric'
-				})}.
+				En navy, los municipios de Casanare donde más servicios se han ejecutado. El cuadrado verde
+				es la sede en {CONTACT.ciudad}, desde donde sale el desplazamiento a locación.
 			</p>
 
-			<ol class="mt-10 space-y-4">
-				{#each zonas as zona (zona.municipio)}
-					<li class="grid gap-x-6 gap-y-1.5 sm:grid-cols-[minmax(0,14rem)_1fr]">
-						<p class="flex items-baseline gap-2">
-							<span class="font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
-								{zona.municipio}
-							</span>
-							<span class="text-xs text-gray-600">{zona.departamento}</span>
-						</p>
-
-						<div class="flex items-center gap-4">
-							<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
-								<span
-									class="block h-full bg-obliga"
-									style="width: {Math.max(proporcionZona(zona.servicios), 2)}%"
-								></span>
-							</span>
-							<span class="w-28 shrink-0 text-right text-sm text-gray-600">
-								<span class="font-bold text-tinta tabular-nums"
-									>{porcentajeZona(zona.servicios)}%</span
-								>
-								del total
-							</span>
-						</div>
-					</li>
-				{/each}
-			</ol>
-
-			<p class="mt-7 max-w-[70ch] text-xs leading-relaxed text-gray-600">
-				Solo cuentan las actividades efectivamente ejecutadas: quedan fuera las anuladas y las que
-				todavía están planificadas o pendientes.
-			</p>
+			<div class="mt-10">
+				<MapaCobertura {zonas} />
+			</div>
 		</section>
 	{/if}
 
