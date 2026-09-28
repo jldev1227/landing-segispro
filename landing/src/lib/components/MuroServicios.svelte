@@ -203,10 +203,19 @@
 	];
 </script>
 
-<div class="space-y-12">
-	{#each grupos as grupo (grupo.titulo)}
-		<article class="border-t-2 border-tinta pt-6">
-			<div class="flex flex-wrap items-start justify-between gap-x-10 gap-y-4">
+<div class="space-y-5 sm:space-y-7">
+	{#each grupos as grupo, indice (grupo.titulo)}
+		<article
+			class="relative overflow-hidden rounded-suave border border-marca-100 bg-placa p-5 shadow-[0_16px_45px_-38px_rgba(17,29,43,.65)] sm:p-7 lg:p-8"
+		>
+			<span
+				class="absolute top-4 right-5 font-leyenda text-xs font-bold tracking-[0.12em] text-marca-300 sm:top-6 sm:right-7"
+				aria-hidden="true"
+			>
+				{String(indice + 1).padStart(2, '0')}
+			</span>
+
+			<div class="grid gap-5 pr-7 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start sm:pr-0">
 				<!--
 					El apoyo sale de `serviciosData`: es el mismo tagline que encabeza la
 					ficha del servicio, así que la promesa del riel y la de la página de
@@ -223,9 +232,18 @@
 				</div>
 				<a
 					href={resolve('/servicios/[slug]', { slug: grupo.slug })}
-					class="mt-1 shrink-0 border-b-2 border-obliga pb-1 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga uppercase transition-colors hover:border-segura hover:text-segura focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-obliga"
+					class="inline-flex w-fit items-center gap-2 rounded-suave border border-marca-200 bg-marca-50 px-3 py-2 font-leyenda text-xs font-bold tracking-[0.07em] text-obliga uppercase transition-colors hover:border-segura hover:bg-acento-50 hover:text-acento-800 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-obliga sm:mt-1"
 				>
-					Ver alcance completo
+					<span>Ver alcance</span>
+					<span class="hidden lg:inline">completo</span>
+					<svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+						<path
+							d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"
+							stroke="currentColor"
+							stroke-width="1.5"
+							stroke-linecap="square"
+						/>
+					</svg>
 				</a>
 			</div>
 
@@ -233,7 +251,7 @@
 				Los filetes van en cada columna, no como `gap-px` sobre fondo gris:
 				un último renglón incompleto pintaba celdas fantasma.
 			-->
-			<div class="mt-8 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="mt-7 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3">
 				{#each grupo.bloques as bloque (bloque.titulo)}
 					<section class="border-t border-gray-200 pt-4">
 						<h4

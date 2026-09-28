@@ -358,10 +358,7 @@
 		{ name: 'Positiva Compañía de Seguros', logo: '/clientes/positiva.png' },
 		{ name: 'AXA Colpatria', logo: '/clientes/axa.png' },
 		{ name: 'Equidad Seguros', logo: '/clientes/equidad.png' },
-		{ name: 'Mapfre Seguros', logo: '/clientes/equidad.png' },
-		{ name: 'Bolívar', logo: '/clientes/bolivar.png' },
-		{ name: 'La Previsora Seguros', logo: '/clientes/previsora.png' },
-		{ name: 'QBE Seguros', logo: '/clientes/qbe.webp' }
+		{ name: 'Bolívar', logo: '/clientes/bolivar.png' }
 	];
 
 	let mapLoaded = false;
@@ -761,9 +758,15 @@
 	las animaba desde cero y a veces se leían en 0. Y la banda «¿Listo para
 	comenzar?» repetía con palabras más flojas la acción que el hero ya ofrece.
 -->
-<section id="services" class="border-t border-gray-200 bg-marca-50">
+<section id="services" class="scroll-mt-20 border-t border-gray-200 bg-marca-50">
 	<div class="container mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-20">
 		<div class="max-w-3xl">
+			<p
+				class="mb-3 flex items-center gap-3 font-leyenda text-xs font-bold tracking-[0.14em] text-acento-800 uppercase"
+			>
+				<span class="h-px w-8 bg-segura"></span>
+				Portafolio
+			</p>
 			<h2
 				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
 			>
@@ -775,7 +778,7 @@
 			</p>
 		</div>
 
-		<div class="mt-12">
+		<div class="mt-9 sm:mt-12">
 			<MuroServicios />
 		</div>
 	</div>
