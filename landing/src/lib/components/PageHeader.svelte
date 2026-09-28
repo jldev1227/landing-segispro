@@ -9,7 +9,7 @@
 	 * hay cajón móvil, con los mismos destinos.
 	 */
 	import { resolve } from '$app/paths';
-	import { CAMPUS_CURSOS } from '$lib/seo/site';
+	import { CAMPUS_CURSOS, CAMPUS_VERIFICAR } from '$lib/seo/site';
 	import { serviciosData } from '$lib/data/servicios';
 	import Icono from './Icono.svelte';
 
@@ -22,17 +22,29 @@
 	let abierto = false;
 
 	const enlaces = [
-		{ clave: 'servicios' as const, texto: 'Servicios', href: `${resolve('/')}#services` },
-		{ clave: 'cobertura' as const, texto: 'Cobertura', href: resolve('/cobertura') },
+		{
+			clave: 'servicios' as const,
+			texto: 'Servicios',
+			href: `${resolve('/')}#services`,
+			externo: false
+		},
+		{
+			clave: 'cobertura' as const,
+			texto: 'Cobertura',
+			href: resolve('/cobertura'),
+			externo: false
+		},
 		{
 			clave: 'trabaja' as const,
 			texto: 'Trabaja con nosotros',
-			href: resolve('/trabaja-con-nosotros')
+			href: resolve('/trabaja-con-nosotros'),
+			externo: false
 		},
 		{
 			clave: 'certificado' as const,
 			texto: 'Validar certificado',
-			href: resolve('/validar-certificado')
+			href: CAMPUS_VERIFICAR,
+			externo: true
 		}
 	];
 </script>
@@ -57,6 +69,8 @@
 				{#each enlaces as enlace (enlace.clave)}
 					<a
 						href={enlace.href}
+						target={enlace.externo ? '_blank' : undefined}
+						rel={enlace.externo ? 'noopener' : undefined}
 						aria-current={activa === enlace.clave ? 'page' : undefined}
 						class="relative py-2 font-leyenda text-xs font-bold tracking-[0.07em] uppercase transition-colors {activa ===
 						enlace.clave
@@ -114,6 +128,8 @@
 						<li>
 							<a
 								href={enlace.href}
+								target={enlace.externo ? '_blank' : undefined}
+								rel={enlace.externo ? 'noopener' : undefined}
 								aria-current={activa === enlace.clave ? 'page' : undefined}
 								class="flex items-center gap-3 py-4 font-leyenda text-sm font-bold tracking-[0.07em] uppercase {activa ===
 								enlace.clave

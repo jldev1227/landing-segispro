@@ -117,8 +117,14 @@
 			El enlace de marca apuntaba a `segispro.co`, un host que redirige y por
 			tanto descarta la señal; ahora usa `SITE_URL`, que es el apex canónico.
 		-->
+		<!--
+			El relleno inferior y derecho deja sitio al botón flotante de WhatsApp,
+			que está fijo contra el borde de la ventana: sin él tapaba el enlace a
+			la política de privacidad en todas las páginas. A `xl` el contenedor ya
+			se ha separado del borde y el relleno sobra.
+		-->
 		<div
-			class="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-marca-700 pt-6 text-xs"
+			class="mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-marca-700 pt-6 pr-20 pb-16 text-xs sm:pb-20 xl:pr-0 xl:pb-0"
 		>
 			<p>
 				© {new Date().getFullYear()} SEGISPRO Ingeniería S.A.S. Todos los derechos reservados.

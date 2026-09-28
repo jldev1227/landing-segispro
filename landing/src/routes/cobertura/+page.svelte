@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/seo/Seo.svelte';
-	import { REGIONES } from '$lib/seo/site';
+	import { CONTACT, REGIONES } from '$lib/seo/site';
 	import {
 		breadcrumbSchema,
 		graph,
@@ -13,6 +13,7 @@
 	import { absoluteUrl } from '$lib/seo/site';
 	import PageHeader from '$lib/components/PageHeader.svelte';
 	import PageFooter from '$lib/components/PageFooter.svelte';
+	import MapaCobertura from '$lib/components/MapaCobertura.svelte';
 	import { serviciosData } from '$lib/data/servicios';
 	import metricas from '$lib/data/metricas.json';
 
@@ -60,9 +61,18 @@
 	 * pueden decir cosas distintas.
 	 */
 	const zonas = metricas.zonas ?? [];
+	const municipiosAtendidos = metricas.municipios ?? [];
+	/**
+	 * La barra mide contra el municipio mayor, para que el reparto se vea; la
+	 * cifra escrita al lado es la parte del total localizado, que es lo que
+	 * significa algo. Ninguna de las dos publica el conteo crudo: el total exacto
+	 * de servicios se comunica como umbral, y dos cifras que no cuadran entre sí
+	 * son peor que ninguna.
+	 */
 	const zonaMayor = Math.max(1, ...zonas.map((z) => z.servicios));
 	const proporcionZona = (servicios: number) => Math.round((servicios / zonaMayor) * 100);
-	const zonasCubren = zonas.reduce((suma, z) => suma + z.servicios, 0);
+	const localizados = metricas.serviciosLocalizados || 1;
+	const porcentajeZona = (servicios: number) => Math.round((servicios / localizados) * 100);
 </script>
 
 <Seo {title} {description} path="/cobertura" {schema} />
@@ -104,6 +114,24 @@
 		actividades ejecutadas traen municipio registrado, y repartir sobre el
 		total daría a entender que el resto no ocurrió en ninguna parte.
 	-->
+	{#if municipiosAtendidos.length}
+		<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
+			<h2
+				class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+			>
+				Municipios con trabajo ejecutado
+			</h2>
+			<p class="mt-3 max-w-[68ch] text-base leading-relaxed text-gray-600">
+				Cada punto es un municipio donde SEGISPRO ha ejecutado al menos un servicio, y su tamaño es
+				el volumen. El cuadrado verde es la sede en {CONTACT.ciudad}.
+			</p>
+
+			<div class="mt-10">
+				<MapaCobertura municipios={municipiosAtendidos} />
+			</div>
+		</section>
+	{/if}
+
 	{#if zonas.length}
 		<section class="container mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16">
 			<h2
@@ -112,9 +140,8 @@
 				Zonas más frecuentadas
 			</h2>
 			<p class="mt-3 max-w-[68ch] text-base leading-relaxed text-gray-600">
-				{zonasCubren.toLocaleString('es-CO')} de los
-				{metricas.serviciosLocalizados.toLocaleString('es-CO')} servicios con municipio registrado se
-				ejecutaron en estos seis. Cifras del sistema de gestión de SEGISPRO, actualizadas al
+				Los seis municipios con más trabajo ejecutado, y qué parte del total localizado se lleva
+				cada uno. Datos del sistema de gestión de SEGISPRO, al
 				{new Date(metricas.calculadoEn).toLocaleDateString('es-CO', {
 					day: 'numeric',
 					month: 'long',
@@ -139,12 +166,11 @@
 									style="width: {Math.max(proporcionZona(zona.servicios), 2)}%"
 								></span>
 							</span>
-							<span class="shrink-0 text-sm text-gray-600">
+							<span class="w-28 shrink-0 text-right text-sm text-gray-600">
 								<span class="font-bold text-tinta tabular-nums"
-									>{zona.servicios.toLocaleString('es-CO')}</span
+									>{porcentajeZona(zona.servicios)}%</span
 								>
-								servicios ·
-								<span class="font-bold text-tinta tabular-nums">{zona.empresas}</span> empresas
+								del total
 							</span>
 						</div>
 					</li>

@@ -17,7 +17,17 @@ const CAMPUS = 'https://formarpro.segispro.com';
  */
 const RETIRADAS: { patron: RegExp; destino: string }[] = [
 	{ patron: /^\/capacitaciones\/?$/, destino: `${CAMPUS}/cursos` },
-	{ patron: /^\/capacitaciones\/.+/, destino: `${CAMPUS}/cursos` }
+	{ patron: /^\/capacitaciones\/.+/, destino: `${CAMPUS}/cursos` },
+	/**
+	 * La validación de certificados se hace en el campus, que es donde está la
+	 * emisión. La página que vivía aquí no consultaba nada: resolvía contra un
+	 * array escrito a mano con personas y cédulas inventadas —su propio fichero
+	 * lo encabezaba con «Datos falsos de certificados para validación»— y
+	 * respondía «certificado válido» a un puñado de UUID de ejemplo. Una página
+	 * pública que dice verificar autenticidad y devuelve registros fabricados es
+	 * peor que no tenerla.
+	 */
+	{ patron: /^\/validar-certificado\/?$/, destino: `${CAMPUS}/verificar` }
 ];
 
 export const handle: Handle = async ({ event, resolve }) => {

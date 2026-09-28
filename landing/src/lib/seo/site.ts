@@ -63,6 +63,13 @@ export const FUNDACION = '2009';
 export const CAMPUS_URL = 'https://formarpro.segispro.com';
 export const CAMPUS_CURSOS = `${CAMPUS_URL}/cursos`;
 
+/**
+ * Verificación de certificados. Vive en el campus porque es donde se emiten;
+ * `hooks.server.ts` redirige `/validar-certificado` aquí con un 301 para no
+ * perder los enlaces que ya apuntan a la landing.
+ */
+export const CAMPUS_VERIFICAR = `${CAMPUS_URL}/verificar`;
+
 /** Imagen por defecto para Open Graph / Twitter (1200×630). */
 export const OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 

@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import Seo from '$lib/seo/Seo.svelte';
 	import { CAMPUS_CURSOS, CONTACT, absoluteUrl } from '$lib/seo/site';
-	import metricas from '$lib/data/metricas.json';
+	import { CIFRAS } from '$lib/data/cifras';
 	import {
 		breadcrumbSchema,
 		graph,
@@ -138,7 +138,7 @@
 				<p class="mb-6 max-w-3xl text-sm leading-relaxed text-gray-600">
 					Buscamos auditores, capacitadores, consultores y especialistas en estudios técnicos para
 					ejecutar servicios en {region.ciudades.slice(0, 3).join(', ')} y el resto de {region.nombre}.
-					La red la integran {metricas.profesionales} profesionales y la contratación es por actividad.
+					La red la integran {CIFRAS.profesionales} profesionales y la contratación es por actividad.
 				</p>
 				<a
 					href={resolve('/trabaja-con-nosotros')}

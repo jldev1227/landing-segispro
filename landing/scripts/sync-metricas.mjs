@@ -48,7 +48,7 @@ function validar(datos) {
  * contra un despliegue atrasado borraría las zonas de cobertura y la página se
  * quedaría sin el tablero, que es peor que mostrar la cifra de la semana pasada.
  */
-const OPCIONALES = ['zonas', 'serviciosLocalizados'];
+const OPCIONALES = ['zonas', 'municipios', 'serviciosLocalizados'];
 
 function conservados(datos, previo) {
 	if (!previo) return datos;

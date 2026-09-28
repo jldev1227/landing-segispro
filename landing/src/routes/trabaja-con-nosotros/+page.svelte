@@ -15,6 +15,7 @@
 	import { enviarPostulacion } from '$lib/api/postulacion';
 	import { obtenerTokenCaptcha, precargarCaptcha } from '$lib/recaptcha';
 	import metricas from '$lib/data/metricas.json';
+	import { CIFRAS } from '$lib/data/cifras';
 	import { AREAS, PASOS, PERFILES, PREGUNTAS } from './datos';
 
 	const title = 'Trabaja con nosotros | Auditores, capacitadores y consultores SST | SEGISPRO';
@@ -42,24 +43,47 @@
 	const CAMPO =
 		'w-full border border-gray-300 bg-placa px-4 py-3 text-sm text-tinta placeholder:text-gray-500 focus:border-obliga focus:outline-2 focus:outline-offset-2 focus:outline-obliga';
 
-	/** Tira de conteo de la banda de leyenda. Mismo snapshot que el home. */
+	/** Tira de conteo de la banda de leyenda. Mismos umbrales que el home. */
 	const prueba = [
-		{ valor: String(metricas.profesionales), etiqueta: 'profesionales activos' },
-		{
-			valor: metricas.serviciosPrestados.toLocaleString('es-CO'),
-			etiqueta: 'servicios ejecutados'
-		},
-		{ valor: String(metricas.ciudadesAtendidas), etiqueta: 'municipios' },
-		{ valor: String(metricas.aniosOperacion), etiqueta: 'años operando' }
+		{ valor: CIFRAS.profesionales, etiqueta: 'profesionales en la red' },
+		{ valor: CIFRAS.servicios, etiqueta: 'servicios ejecutados' },
+		{ valor: CIFRAS.municipios, etiqueta: 'municipios' },
+		{ valor: CIFRAS.anios, etiqueta: 'años operando' }
 	];
 
 	/**
-	 * La barra mide contra la categoría mayor, no contra el total: con
-	 * «Consultoría» en el 74 % todas las demás quedaban en una raya de un píxel
-	 * y el reparto no se leía.
+	 * Las líneas de servicio, ordenadas por volumen y **sin el conteo**.
+	 *
+	 * Antes esto era una tabla con la cifra exacta de cada una: 868 de
+	 * consultoría, 197 de capacitación, 2 de vídeo. Eso es información de
+	 * gestión interna —dice qué líneas están flojas a cualquiera que entre,
+	 * competencia incluida— y a quien se postula no le aporta nada que no le dé
+	 * el orden. Lo que necesita saber es dónde hay volumen, y para eso basta con
+	 * en qué escalón está cada línea.
 	 */
-	const categoriaMayor = Math.max(1, ...metricas.porCategoria.map((c) => c.total));
-	const proporcionCategoria = (total: number) => Math.round((total / categoriaMayor) * 100);
+	const ESCALONES = [
+		{ desde: 0.5, etiqueta: 'La mayor parte del volumen' },
+		{ desde: 0.1, etiqueta: 'Volumen alto' },
+		{ desde: 0.01, etiqueta: 'Volumen medio' },
+		{ desde: 0, etiqueta: 'Volumen ocasional' }
+	];
+
+	const totalCategorias = metricas.porCategoria.reduce((suma, c) => suma + c.total, 0) || 1;
+
+	/**
+	 * El escalón se imprime solo cuando cambia. La lista está ordenada, así que
+	 * repetirlo convierte la columna derecha en «volumen ocasional» nueve veces
+	 * seguidas: el ojo deja de leerlo y el dato desaparece por saturación. Con
+	 * la etiqueta una vez, la columna se lee como bandas.
+	 */
+	let escalonAnterior = '';
+	const lineasServicio = metricas.porCategoria.map((c) => {
+		const escalon = (ESCALONES.find((e) => c.total / totalCategorias >= e.desde) ?? ESCALONES[3])
+			.etiqueta;
+		const abre = escalon !== escalonAnterior;
+		escalonAnterior = escalon;
+		return { etiqueta: c.etiqueta, escalon, abre };
+	});
 
 	// ── Formulario ────────────────────────────────────────────────────────────
 	let nombre = $state('');
@@ -242,9 +266,12 @@
 	</section>
 
 	<!--
-		Reparto real del volumen. La barra mide contra la categoría mayor y la
-		cifra va siempre escrita: quien se postula quiere saber dónde hay trabajo,
-		no ver una proporción bonita.
+		Las líneas de servicio por volumen, sin el conteo de cada una.
+
+		Antes era una tabla con la cifra exacta: 868 de consultoría, 197 de
+		capacitación, 2 de vídeo. Para quien se postula el orden ya dice todo lo
+		que necesita —dónde hay trabajo—, y el detalle es información de gestión
+		interna que quedaba publicada para cualquiera.
 	-->
 	<section class="border-t border-gray-200 bg-marca-50">
 		<div class="container mx-auto max-w-5xl px-6 py-14 sm:px-8 sm:py-16">
@@ -254,34 +281,29 @@
 				En qué se trabaja
 			</h2>
 			<p class="mt-3 max-w-[66ch] text-base leading-relaxed text-gray-600">
-				Reparto de los {metricas.serviciosPrestados.toLocaleString('es-CO')} servicios ejecutados hasta
-				hoy. Sirve para saber dónde hay volumen antes de postularse.
+				Las líneas del portafolio ordenadas por volumen ejecutado, de mayor a menor. Sirve para
+				saber dónde hay trabajo antes de postularse.
 			</p>
 
-			<ul class="mt-10 space-y-3.5">
-				{#each metricas.porCategoria as categoria (categoria.etiqueta)}
-					<li class="grid gap-x-6 gap-y-1 sm:grid-cols-[minmax(0,15rem)_1fr]">
+			<ol class="mt-10 divide-y divide-gray-200 border-y border-gray-200">
+				{#each lineasServicio as linea (linea.etiqueta)}
+					<li class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-4">
 						<span class="font-leyenda text-sm font-bold tracking-[0.04em] text-tinta uppercase">
-							{categoria.etiqueta}
+							{linea.etiqueta}
 						</span>
-						<div class="flex items-center gap-4">
-							<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
-								<span
-									class="block h-full bg-obliga"
-									style="width: {Math.max(proporcionCategoria(categoria.total), 1)}%"
-								></span>
-							</span>
-							<span class="w-16 shrink-0 text-right text-sm font-bold text-tinta tabular-nums">
-								{categoria.total.toLocaleString('es-CO')}
-							</span>
-						</div>
+						<span
+							class="font-leyenda text-xs tracking-[0.06em] text-gray-600 uppercase"
+							aria-label={linea.escalon}
+						>
+							{linea.abre ? linea.escalon : ''}
+						</span>
 					</li>
 				{/each}
-			</ul>
+			</ol>
 
 			<p class="mt-7 text-xs leading-relaxed text-gray-600">
-				Cifras tomadas del sistema de gestión de SEGISPRO; solo cuentan las actividades
-				efectivamente ejecutadas.
+				Orden tomado del sistema de gestión de SEGISPRO; solo cuentan las actividades efectivamente
+				ejecutadas.
 			</p>
 		</div>
 	</section>

@@ -12,7 +12,7 @@
 	 * controles que no existen.
 	 */
 	import { fade } from 'svelte/transition';
-	import metricas from '$lib/data/metricas.json';
+	import { CIFRAS } from '$lib/data/cifras';
 
 	interface Client {
 		name: string;
@@ -64,9 +64,7 @@
 
 		<div class="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2">
 			<p class="text-sm text-gray-600">
-				<span class="text-lg font-bold text-tinta tabular-nums"
-					>{metricas.clientesAtendidos.toLocaleString('es-CO')}</span
-				>
+				<span class="text-lg font-bold text-tinta tabular-nums">{CIFRAS.empresas}</span>
 				empresas atendidas
 			</p>
 			<a

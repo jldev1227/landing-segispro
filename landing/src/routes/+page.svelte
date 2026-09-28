@@ -17,10 +17,19 @@
 	import Placa from '$lib/components/Placa.svelte';
 	import PageFooter from '$lib/components/PageFooter.svelte';
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
+	import MapaCobertura from '$lib/components/MapaCobertura.svelte';
 	import MuroServicios from '$lib/components/MuroServicios.svelte';
 	import { serviciosData } from '$lib/data/servicios';
-	import { CAMPUS_CURSOS, CONTACT, FACEBOOK_URL, REGIONES, WHATSAPP_URL } from '$lib/seo/site';
+	import {
+		CAMPUS_CURSOS,
+		CAMPUS_VERIFICAR,
+		CONTACT,
+		FACEBOOK_URL,
+		REGIONES,
+		WHATSAPP_URL
+	} from '$lib/seo/site';
 	import metricas from '$lib/data/metricas.json';
+	import { CIFRAS } from '$lib/data/cifras';
 
 	// Variable de entorno para la app Segispro
 	const SEGISPRO_APP_URL = import.meta.env.VITE_APP_SEGISPRO || 'http://localhost:5174';
@@ -168,40 +177,32 @@
 	].map((p) => ({ ...p, href: resolve(`/servicios/${p.slug}`) }));
 
 	/**
-	 * Las zonas más frecuentadas, tomadas del sistema de gestión: son los
-	 * municipios donde más actividad se ha ejecutado, con su conteo y las
-	 * empresas distintas atendidas allí.
-	 *
-	 * El denominador es `serviciosLocalizados`, no el total de servicios: de las
-	 * actividades ejecutadas, solo una parte trae municipio registrado. Repartir
-	 * sobre el total daría a entender que el resto no se hizo en ninguna parte.
-	 *
-	 * La barra es la proporción dentro de lo localizado. Yopal se lleva la
-	 * mayoría, y eso es exactamente lo que la página debe decir: la sede es la
-	 * plaza, no una casilla más de una lista de cinco departamentos.
+	 * Los municipios donde se ha ejecutado trabajo, para el mapa. En la portada
+	 * va solo el mapa: el tablero de barras que estaba aquí repetía los mismos
+	 * seis municipios que el mapa ya dimensiona con el tamaño del punto. El
+	 * desglose ordenado vive en `/cobertura`, que es donde se va a buscarlo.
 	 */
-	const zonas = metricas.zonas ?? [];
-	const zonaMayor = Math.max(1, ...zonas.map((z) => z.servicios));
-	const proporcionZona = (servicios: number) => Math.round((servicios / zonaMayor) * 100);
-	/** Cuánto de lo localizado cae en estos seis municipios. */
-	const zonasCubren = zonas.reduce((suma, z) => suma + z.servicios, 0);
+	const municipiosAtendidos = metricas.municipios ?? [];
 
 	/**
 	 * Lo que un profesional necesita saber antes de postularse: cuánta gente ya
 	 * está en la red y cuánto volumen se reparte. La promesa vaga —«empresa
 	 * líder», «proyectos innovadores»— no la puede comprobar nadie; esto sí.
+	 *
+	 * Los umbrales salen de `cifras.ts`, no del snapshot: ahí está explicado por
+	 * qué se publica «+1.000» y no «1.174».
 	 */
 	const pruebaRed = [
-		{ valor: String(metricas.profesionales), etiqueta: 'profesionales activos' },
-		{ valor: cifra(metricas.serviciosPrestados), etiqueta: 'servicios ejecutados' },
-		{ valor: String(metricas.ciudadesAtendidas), etiqueta: 'municipios' }
+		{ valor: CIFRAS.profesionales, etiqueta: 'profesionales en la red' },
+		{ valor: CIFRAS.servicios, etiqueta: 'servicios ejecutados' },
+		{ valor: CIFRAS.municipios, etiqueta: 'municipios' }
 	];
 
 	/** Las tres cifras del hero. Mismo snapshot que la franja de más abajo. */
 	const pruebaHero = [
-		{ valor: cifra(metricas.serviciosPrestados), etiqueta: 'servicios ejecutados' },
-		{ valor: cifra(metricas.clientesAtendidos), etiqueta: 'empresas atendidas' },
-		{ valor: String(metricas.aniosOperacion), etiqueta: 'años de operación' }
+		{ valor: CIFRAS.servicios, etiqueta: 'servicios ejecutados' },
+		{ valor: CIFRAS.empresas, etiqueta: 'empresas atendidas' },
+		{ valor: CIFRAS.anios, etiqueta: 'años de operación' }
 	];
 
 	onMount(() => {
@@ -354,7 +355,7 @@
 		{
 			pregunta: '¿Cómo valido un certificado emitido por SEGISPRO?',
 			respuesta:
-				'Cada certificado tiene un código UUID único que se consulta en la página de validación de certificados del sitio, que confirma titular, curso y fecha de emisión.'
+				'Cada certificado lleva un código único que se consulta en Formar Pro, el campus de SEGISPRO, en formarpro.segispro.com/verificar. La verificación confirma titular, curso y fecha de emisión contra el registro de emisión, que es donde vive el dato.'
 		},
 		{
 			pregunta: '¿Dónde se inscriben las capacitaciones?',
@@ -522,7 +523,9 @@
 						Formación
 					</a>
 					<a
-						href={resolve('/validar-certificado')}
+						href={CAMPUS_VERIFICAR}
+						target="_blank"
+						rel="noopener"
 						class="border-2 border-marca-400 px-5 py-4 text-center font-leyenda text-sm font-bold tracking-[0.08em] text-white uppercase"
 						on:click={() => (mobileMenuOpen = false)}
 					>
@@ -785,61 +788,9 @@
 			</a>
 		</div>
 
-		<!--
-			Tablero de zonas. No es una ilustración: son los municipios con más
-			actividad ejecutada según el sistema de gestión, con el conteo y las
-			empresas distintas atendidas en cada uno. La barra mide contra el
-			municipio mayor, y la cifra va siempre escrita al lado, para que el dato
-			no dependa del largo de una barra.
-		-->
-		{#if zonas.length}
-			<div class="mt-12 border-t-2 border-tinta pt-6">
-				<h3 class="font-leyenda text-sm font-bold tracking-[0.09em] text-tinta uppercase">
-					Zonas más frecuentadas
-				</h3>
-				<p class="mt-2 max-w-[68ch] text-sm leading-relaxed text-gray-600">
-					{cifra(zonasCubren)} de los {cifra(metricas.serviciosLocalizados)} servicios con municipio
-					registrado se ejecutaron en estos seis. Cifras del sistema de gestión de SEGISPRO, actualizadas
-					al {new Date(metricas.calculadoEn).toLocaleDateString('es-CO', {
-						day: 'numeric',
-						month: 'long',
-						year: 'numeric'
-					})}.
-				</p>
-
-				<ol class="mt-7 space-y-4">
-					{#each zonas as zona (zona.municipio)}
-						<li class="grid gap-x-6 gap-y-1.5 sm:grid-cols-[minmax(0,13rem)_1fr]">
-							<p class="flex items-baseline gap-2">
-								<span class="font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase">
-									{zona.municipio}
-								</span>
-								{#if zona.municipio === CONTACT.ciudad}
-									<span
-										class="bg-segura px-1.5 py-0.5 font-leyenda text-[0.625rem] font-bold tracking-[0.09em] text-segura-tinta uppercase"
-									>
-										Sede
-									</span>
-								{/if}
-							</p>
-
-							<div class="flex items-center gap-4">
-								<!-- La barra es decorativa: el dato va escrito a su derecha. -->
-								<span class="h-3 flex-1 bg-marca-100" aria-hidden="true">
-									<span
-										class="block h-full bg-obliga"
-										style="width: {Math.max(proporcionZona(zona.servicios), 2)}%"
-									></span>
-								</span>
-								<span class="shrink-0 text-sm text-gray-600">
-									<span class="font-bold text-tinta tabular-nums">{cifra(zona.servicios)}</span>
-									servicios ·
-									<span class="font-bold text-tinta tabular-nums">{zona.empresas}</span> empresas
-								</span>
-							</div>
-						</li>
-					{/each}
-				</ol>
+		{#if municipiosAtendidos.length}
+			<div class="mt-10">
+				<MapaCobertura municipios={municipiosAtendidos} alto="h-[24rem] sm:h-[30rem]" />
 			</div>
 		{/if}
 
@@ -914,9 +865,10 @@
 	crecía al apuntarlo. Nada de eso existe en el resto de la página.
 
 	Ahora es una placa de obligación —campo navy a todo el ancho— con la red de
-	profesionales contada con la cifra real del sistema de gestión, que es el
-	argumento: no «únete a una empresa líder», sino cuánta gente ya trabaja así y
-	cuánto volumen hay que repartir.
+	profesionales contada con cifras del sistema de gestión, que es el argumento:
+	no «únete a una empresa líder», sino cuánta gente ya trabaja así y cuánto
+	volumen hay que repartir. Van como umbral y no como total exacto: el reparto
+	fino es información de gestión interna.
 -->
 <section class="bg-obliga">
 	<div class="container mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-16">
