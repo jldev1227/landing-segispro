@@ -19,6 +19,7 @@
 	import CarouselClientes from '$lib/components/CarouselClientes.svelte';
 	import MapaCobertura from '$lib/components/MapaCobertura.svelte';
 	import MuroServicios from '$lib/components/MuroServicios.svelte';
+	import TramaTecnica from '$lib/components/TramaTecnica.svelte';
 	import { serviciosData } from '$lib/data/servicios';
 	import {
 		CAMPUS_CURSOS,
@@ -122,6 +123,42 @@
 			src: '/slides/slide-1.webp',
 			alt: 'Grupo de trabajadores al cierre de una jornada de capacitación',
 			pie: 'Cierre de jornada'
+		}
+	];
+
+	/**
+	 * Material visual compartido con las propuestas comerciales. Estas imagenes
+	 * describen escenarios de servicio; las fotografias de `jornadas` siguen
+	 * siendo la evidencia de proyectos ejecutados.
+	 */
+	const escenariosServicio = [
+		{
+			src: '/operacion/oficina-auditoria.webp',
+			alt: 'Equipo consultor revisando hallazgos y documentos de una auditoria',
+			codigo: '01',
+			titulo: 'Diagnostico y auditoria',
+			detalle: 'Brechas, requisitos y planes de accion con trazabilidad.'
+		},
+		{
+			src: '/operacion/taller-tecnicos.webp',
+			alt: 'Profesionales realizando una inspeccion tecnica en una planta industrial',
+			codigo: '02',
+			titulo: 'Verificacion en campo',
+			detalle: 'Inspeccion, medicion y acompanamiento donde ocurre la operacion.'
+		},
+		{
+			src: '/operacion/campana-instructor-pendon.webp',
+			alt: 'Instructor dirigiendo una campana de seguridad vial con personal operativo',
+			codigo: '03',
+			titulo: 'Formacion que se vive',
+			detalle: 'Talleres, simulacros y campanas para equipos operativos.'
+		},
+		{
+			src: '/operacion/campo-equipo-vial.webp',
+			alt: 'Equipo de seguridad vial reunido en una instalacion industrial',
+			codigo: '04',
+			titulo: 'Ejecucion y seguimiento',
+			detalle: 'Entregables claros, responsables y avance verificable.'
 		}
 	];
 
@@ -560,12 +597,27 @@
 -->
 <section id="inicio" class="bg-placa pt-20">
 	<!-- Banda de leyenda -->
-	<div class="bg-obliga">
-		<div class="container mx-auto max-w-7xl px-6 py-10 sm:px-8 sm:py-14">
-			<div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between lg:gap-12">
+	<div class="relative overflow-hidden bg-obliga">
+		<TramaTecnica
+			class="pointer-events-none absolute inset-0 h-full w-full text-marca-300 opacity-55"
+		/>
+		<div
+			class="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full border-[52px] border-segura/10"
+		></div>
+
+		<div class="relative container mx-auto max-w-7xl px-6 py-10 sm:px-8 sm:py-14 lg:py-16">
+			<div
+				class="grid gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(25rem,.95fr)] lg:items-center lg:gap-14"
+			>
 				<div class="max-w-3xl">
+					<p
+						class="mb-5 flex items-center gap-3 font-leyenda text-xs font-bold tracking-[0.15em] text-segura uppercase"
+					>
+						<span class="h-px w-10 bg-segura"></span>
+						Ingeniería aplicada a la operación
+					</p>
 					<h1
-						class="font-leyenda text-3xl leading-[1.08] font-bold tracking-[0.02em] text-balance text-obliga-tinta uppercase sm:text-4xl lg:text-5xl"
+						class="font-leyenda text-4xl leading-[1.02] font-bold tracking-[0.01em] text-balance text-obliga-tinta uppercase sm:text-5xl lg:text-[3.75rem]"
 					>
 						Auditorías, formación y estudios técnicos en seguridad y salud en el trabajo
 					</h1>
@@ -574,38 +626,104 @@
 						Meta, Boyacá, Bogotá y Cundinamarca. Cada servicio se pacta con su alcance, sus fechas y
 						su tarifa.
 					</p>
+
+					<!-- La acción es otra placa del mismo sistema, no un botón flotando. -->
+					<div class="mt-8 flex flex-wrap items-center gap-3">
+						<a
+							href="#contacto"
+							class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+						>
+							Solicitar cotización
+						</a>
+						<a
+							href="#services"
+							class="rounded-suave border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+						>
+							Ver servicios
+						</a>
+					</div>
 				</div>
 
-				<!-- La acción es otra placa del mismo sistema, no un botón flotando. -->
-				<div class="flex shrink-0 flex-wrap items-center gap-3">
-					<a
-						href="#contacto"
-						class="rounded-suave bg-segura px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-segura-tinta uppercase transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+				<figure class="relative mx-auto w-full max-w-[35rem] lg:ml-auto">
+					<div
+						class="relative overflow-hidden rounded-suave border border-white/20 bg-marca-950 shadow-2xl shadow-black/20"
 					>
-						Solicitar cotización
-					</a>
-					<a
-						href="#services"
-						class="rounded-suave border-2 border-marca-400 px-7 py-4 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga-tinta uppercase transition-colors duration-150 hover:border-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:text-base"
+						<img
+							src="/operacion/via-instructor-grupo.webp"
+							alt="Instructor de seguridad vial conversando con un equipo operativo en carretera"
+							width="1400"
+							height="787"
+							fetchpriority="high"
+							class="aspect-[16/11] w-full object-cover object-[64%_center]"
+						/>
+						<div
+							class="absolute inset-0 bg-linear-to-t from-marca-950/80 via-transparent to-transparent"
+						></div>
+					</div>
+					<div
+						class="absolute -top-6 -left-4 hidden w-28 overflow-hidden rounded-suave border-4 border-obliga bg-white shadow-xl sm:block lg:-left-8 lg:w-36"
 					>
-						Ver servicios
-					</a>
-				</div>
+						<img
+							src="/operacion/oficina-auditoria.webp"
+							alt="Equipo consultor revisando documentación durante una auditoría"
+							width="1400"
+							height="933"
+							class="aspect-square w-full object-cover"
+						/>
+					</div>
+					<svg
+						class="absolute -top-5 -right-4 h-20 w-20 text-realce-400"
+						viewBox="0 0 80 80"
+						aria-hidden="true"
+					>
+						<path d="M40 4 76 70H4Z" fill="none" stroke="currentColor" stroke-width="2" />
+						<path
+							d="M40 19 63 62H17Z"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1"
+							opacity=".55"
+						/>
+					</svg>
+					<figcaption class="absolute right-5 bottom-5 left-5 flex items-end justify-between gap-5">
+						<div>
+							<p
+								class="font-leyenda text-[0.65rem] font-bold tracking-[0.16em] text-segura uppercase"
+							>
+								En sitio
+							</p>
+							<p class="mt-1 max-w-xs text-sm font-semibold text-white sm:text-base">
+								Acompañamiento técnico que llega hasta la operación.
+							</p>
+						</div>
+						<span
+							class="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/40 font-leyenda text-xs font-bold text-white sm:flex"
+							>17+</span
+						>
+					</figcaption>
+				</figure>
 			</div>
 		</div>
 	</div>
 
 	<!-- Muro de placas: el portafolio clasificado por forma -->
 	<div class="container mx-auto max-w-7xl px-6 py-12 sm:px-8 sm:py-16">
-		<div class="grid gap-x-10 gap-y-9 sm:grid-cols-2 lg:grid-cols-3">
+		<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{#each placasServicio as placa (placa.slug)}
-				<Placa
-					tipo={placa.tipo}
-					icono={placa.icono}
-					leyenda={placa.leyenda}
-					detalle={placa.detalle}
-					href={placa.href}
-				/>
+				<div
+					class="relative overflow-hidden rounded-suave border border-marca-100 bg-white p-5 shadow-[0_14px_38px_-30px_rgba(17,29,43,.65)] transition duration-200 hover:-translate-y-1 hover:border-marca-300 hover:shadow-[0_20px_45px_-28px_rgba(17,29,43,.5)]"
+				>
+					<span
+						class="absolute top-0 right-0 h-12 w-12 translate-x-6 -translate-y-6 rotate-45 bg-marca-50"
+					></span>
+					<Placa
+						tipo={placa.tipo}
+						icono={placa.icono}
+						leyenda={placa.leyenda}
+						detalle={placa.detalle}
+						href={placa.href}
+					/>
+				</div>
 			{/each}
 		</div>
 	</div>
@@ -659,6 +777,64 @@
 
 		<div class="mt-12">
 			<MuroServicios />
+		</div>
+	</div>
+</section>
+
+<!-- Escenarios de servicio: material editorial compartido con las propuestas. -->
+<section class="relative overflow-hidden border-t border-gray-200 bg-obliga">
+	<TramaTecnica
+		class="pointer-events-none absolute inset-0 h-full w-full text-marca-300 opacity-35"
+	/>
+	<div class="relative container mx-auto max-w-7xl px-6 py-14 sm:px-8 sm:py-20">
+		<div class="grid gap-8 lg:grid-cols-[minmax(0,.7fr)_minmax(0,1.3fr)] lg:items-end">
+			<div class="max-w-xl">
+				<p class="font-leyenda text-xs font-bold tracking-[0.14em] text-segura uppercase">
+					Del plan al terreno
+				</p>
+				<h2
+					class="mt-3 font-leyenda text-3xl leading-[1.05] font-bold tracking-[0.02em] text-balance text-white uppercase sm:text-4xl"
+				>
+					Una metodología para convertir requisitos en acciones
+				</h2>
+			</div>
+			<p class="max-w-[58ch] text-base leading-relaxed text-marca-100 lg:justify-self-end">
+				Cada proyecto conecta diagnóstico, trabajo en sitio, formación y seguimiento. El resultado
+				no es solo un informe: es una operación que sabe qué hacer y cómo demostrarlo.
+			</p>
+		</div>
+
+		<div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+			{#each escenariosServicio as escenario (escenario.codigo)}
+				<article
+					class="group relative min-h-[24rem] overflow-hidden rounded-suave border border-white/15 bg-marca-950 sm:min-h-[28rem] lg:min-h-[31rem]"
+				>
+					<img
+						src={escenario.src}
+						alt={escenario.alt}
+						width="1400"
+						height="933"
+						loading="lazy"
+						decoding="async"
+						class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+					/>
+					<div
+						class="absolute inset-0 bg-linear-to-t from-marca-950 via-marca-950/15 to-transparent"
+					></div>
+					<div class="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+						<div class="flex items-center gap-3">
+							<span
+								class="flex h-8 w-8 items-center justify-center rounded-full border border-segura font-leyenda text-[0.65rem] font-bold text-segura"
+								>{escenario.codigo}</span
+							>
+							<h3 class="font-leyenda text-sm font-bold tracking-[0.06em] text-white uppercase">
+								{escenario.titulo}
+							</h3>
+						</div>
+						<p class="mt-3 text-sm leading-relaxed text-marca-100">{escenario.detalle}</p>
+					</div>
+				</article>
+			{/each}
 		</div>
 	</div>
 </section>

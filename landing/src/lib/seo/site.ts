@@ -29,15 +29,15 @@ export const CONTACT = {
 } as const;
 
 /**
- * WhatsApp comercial. Es el mismo número de `CONTACT.telefono`, pero el enlace
- * se declara una vez aquí porque lo usan el bloque de contacto y el botón
- * flotante, y antes estaba escrito a mano en dos sitios del home: si el número
- * cambiaba, uno de los dos se quedaba atrás.
+ * WhatsApp comercial. Se declara separado del teléfono de llamadas porque el
+ * CTA puede ser atendido por una línea distinta. Lo usan el bloque de contacto,
+ * las fichas de servicio y el botón flotante.
  *
  * `wa.me` exige el número sin «+» ni separadores.
  */
 export const WHATSAPP = {
-	numero: CONTACT.telefono.replace(/\D/g, ''),
+	numero: '573105031316',
+	numeroVisible: '+57 310 503 1316',
 	/** Primera línea del chat. Llega prellenada para que el comprador no redacte. */
 	mensaje: 'Hola, quiero cotizar un servicio con SEGISPRO.'
 } as const;

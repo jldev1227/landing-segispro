@@ -18,7 +18,7 @@
 	 * cuadrada se leía como el canto de un rótulo impreso; sobre la pastilla se
 	 * leía como un botón en relieve de los años dos mil.
 	 */
-	import { WHATSAPP_URL } from '$lib/seo/site';
+	import { WHATSAPP, WHATSAPP_URL } from '$lib/seo/site';
 </script>
 
 <a
@@ -27,7 +27,7 @@
 	rel="noopener"
 	class="grupo-wa fixed right-4 bottom-4 z-40 flex items-center gap-0 rounded-pastilla bg-segura text-segura-tinta shadow-[0_4px_14px_-4px_rgba(22,32,46,0.45)] transition-transform duration-150 hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-tinta sm:right-6 sm:bottom-6"
 	style="padding-bottom: env(safe-area-inset-bottom, 0px);"
-	aria-label="Escribir por WhatsApp al +57 310 485 3340"
+	aria-label={`Escribir por WhatsApp al ${WHATSAPP.numeroVisible}`}
 >
 	<span class="flex h-14 w-14 shrink-0 items-center justify-center sm:h-16 sm:w-16">
 		<!-- Marca de WhatsApp. Decorativa: el destino ya va en el `aria-label`. -->
