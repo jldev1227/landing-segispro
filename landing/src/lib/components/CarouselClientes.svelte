@@ -1,5 +1,17 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
+	/**
+	 * Muro de clientes.
+	 *
+	 * Antes eran dos marquesinas infinitas en direcciones opuestas, con cada
+	 * tarjeta marcada `role="button" tabindex="0"` sin manejador: anunciadas como
+	 * botones al lector de pantalla, enfocables, e inertes. Un logotipo en
+	 * movimiento perpetuo tampoco se puede leer, que es justo lo único que un
+	 * muro de credibilidad tiene que conseguir.
+	 *
+	 * Ahora es una rejilla estática de placas. Se lee, se detiene, y no anuncia
+	 * controles que no existen.
+	 */
+	import { fade } from 'svelte/transition';
 	import metricas from '$lib/data/metricas.json';
 
 	interface Client {
@@ -9,171 +21,60 @@
 
 	export let visible = false;
 	export let clientes: Client[] = [];
-	export let speed = 30;
-
-	// Dividimos clientes en dos grupos para animaciones alternadas
-	$: group1 = clientes.filter((_, i) => i % 2 === 0);
-	$: group2 = clientes.filter((_, i) => i % 2 === 1);
+	/** Conservado por compatibilidad con quien monta el componente; ya no hay marquesina que temporizar. */
+	export let speed = 0;
+	void speed;
 </script>
 
 {#if visible}
-	<div class="relative py-16" in:fade={{ duration: 800, delay: 200 }}>
-		<!-- Encabezado mejorado -->
-		<div class="mb-16 text-center" in:fly={{ y: 30, duration: 800 }}>
-			<h3 class="text-4xl font-bold text-balance text-gray-900 md:text-5xl">
-				Aseguradoras y ARL que nos contratan
-			</h3>
-		</div>
+	<div in:fade={{ duration: 400 }}>
+		<h2
+			class="font-leyenda text-2xl leading-tight font-bold tracking-[0.03em] text-balance text-tinta uppercase sm:text-3xl"
+		>
+			Aseguradoras y ARL que nos contratan
+		</h2>
 
-		<!-- Grid flotante con animaciones alternadas -->
-		<div class="relative mx-auto max-w-7xl">
-			<!-- Fila 1 - Movimiento de izquierda a derecha -->
-			<div class="mb-6 flex gap-6 overflow-hidden py-4">
-				<div class="animate-scroll-right flex gap-6" style="animation-duration: {speed}s;">
-					{#each [...group1, ...group1] as client, i (client.name + i)}
-						<div
-							class="client-card-wrapper group relative w-64 shrink-0 cursor-pointer"
-							role="button"
-							tabindex="0"
+		<!--
+			Los filetes van en cada celda, no como fondo de la rejilla: con `gap-px`
+			sobre un fondo gris, una última fila incompleta pintaba celdas fantasma.
+		-->
+		<ul
+			class="mt-10 grid grid-cols-2 border-t border-l border-gray-200 bg-placa sm:grid-cols-3 lg:grid-cols-4"
+		>
+			{#each clientes as client (client.name)}
+				<li class="flex h-28 items-center justify-center border-r border-b border-gray-200 px-6">
+					{#if client.logo}
+						<img
+							src={client.logo}
+							alt={client.name}
+							loading="lazy"
+							decoding="async"
+							class="max-h-14 w-auto max-w-full object-contain"
+						/>
+					{:else}
+						<span
+							class="text-center font-leyenda text-sm font-bold tracking-[0.05em] text-tinta uppercase"
 						>
-							<!-- Card interno con transform -->
-							<div
-								class="client-card h-32 overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-500"
-							>
-								<!-- Brillo superior -->
-								<div
-									class="absolute top-0 right-0 left-0 h-1 bg-linear-to-r from-transparent via-blue-500 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-								></div>
+							{client.name}
+						</span>
+					{/if}
+				</li>
+			{/each}
+		</ul>
 
-								<!-- Contenido -->
-								<div class="relative z-10 flex h-full items-center justify-center">
-									{#if client.logo}
-										<img
-											src={client.logo}
-											alt={client.name}
-											class="h-16 w-auto transform object-contain transition-all duration-500 group-hover:scale-110"
-										/>
-									{:else}
-										<div
-											class="text-2xl font-bold text-gray-700 transition-colors duration-300 group-hover:text-blue-600"
-										>
-											{client.name}
-										</div>
-									{/if}
-								</div>
-
-								<!-- Esquina decorativa -->
-								<div
-									class="absolute right-0 bottom-0 h-20 w-20 rounded-tl-full bg-linear-to-tl from-blue-500/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-								></div>
-							</div>
-						</div>
-					{/each}
-				</div>
-			</div>
-
-			<!-- Fila 2 - Movimiento de derecha a izquierda -->
-			<div class="flex gap-6 overflow-hidden py-4">
-				<div class="animate-scroll-left flex gap-6" style="animation-duration: {speed * 0.8}s;">
-					{#each [...group2, ...group2] as client (client.name + Math.random())}
-						<div
-							class="client-card-wrapper group relative w-64 shrink-0 cursor-pointer"
-							role="button"
-							tabindex="0"
-						>
-							<!-- Card interno con transform -->
-							<div
-								class="client-card h-32 overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all duration-500"
-							>
-								<!-- Contenido -->
-								<div class="relative z-10 flex h-full items-center justify-center">
-									{#if client.logo}
-										<img
-											src={client.logo}
-											alt={client.name}
-											class="h-16 w-auto transform object-contain transition-all duration-500 group-hover:scale-110"
-										/>
-									{:else}
-										<div
-											class="text-2xl font-bold text-gray-700 transition-colors duration-300 group-hover:text-marca-600"
-										>
-											{client.name}
-										</div>
-									{/if}
-								</div>
-							</div>
-						</div>
-					{/each}
-				</div>
-			</div>
-		</div>
-
-		<!-- Stats o CTA opcional -->
-		<div class="mt-16 text-center" in:fly={{ y: 30, duration: 800, delay: 400 }}>
-			<div
-				class="inline-flex items-center gap-8 rounded-full border border-gray-100 bg-white px-8 py-4 shadow-lg"
-			>
-				<span class="text-sm font-medium text-gray-600">
-					{metricas.clientesAtendidos.toLocaleString('es-CO')} empresas atendidas
-				</span>
-				<div class="h-6 w-px bg-gray-200"></div>
-				<a
-					href="#contacto"
-					class="text-sm font-semibold text-blue-600 transition-colors hover:text-blue-700"
+		<div class="mt-8 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+			<p class="text-sm text-gray-600">
+				<span class="text-lg font-bold text-tinta tabular-nums"
+					>{metricas.clientesAtendidos.toLocaleString('es-CO')}</span
 				>
-					Hablemos de la suya
-				</a>
-			</div>
+				empresas atendidas
+			</p>
+			<a
+				href="#contacto"
+				class="border-b-2 border-obliga pb-0.5 font-leyenda text-sm font-bold tracking-[0.08em] text-obliga uppercase transition-colors hover:border-segura hover:text-segura"
+			>
+				Hablemos de la suya
+			</a>
 		</div>
 	</div>
 {/if}
-
-<style>
-	/* Animación de scroll hacia la derecha */
-	@keyframes scroll-right {
-		0% {
-			transform: translateX(-50%);
-		}
-		100% {
-			transform: translateX(0%);
-		}
-	}
-
-	/* Animación de scroll hacia la izquierda */
-	@keyframes scroll-left {
-		0% {
-			transform: translateX(0%);
-		}
-		100% {
-			transform: translateX(-50%);
-		}
-	}
-
-	.animate-scroll-right {
-		animation: scroll-right linear infinite;
-		will-change: transform;
-	}
-
-	.animate-scroll-left {
-		animation: scroll-left linear infinite;
-		will-change: transform;
-	}
-
-	/* Pausar en hover de la fila completa */
-	.animate-scroll-right:hover,
-	.animate-scroll-left:hover {
-		animation-play-state: paused;
-	}
-
-	/* Wrapper del card con scale en hover */
-	.client-card-wrapper:hover .client-card {
-		transform: translateY(-8px) scale(1.02);
-		box-shadow: 0 12px 28px -8px rgba(34, 58, 84, 0.22);
-	}
-
-	/* Efecto de profundidad */
-	.client-card {
-		position: relative;
-		transform-style: preserve-3d;
-	}
-</style>

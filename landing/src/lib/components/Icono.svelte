@@ -34,6 +34,10 @@
 	import Lightbulb from 'lucide-svelte/icons/lightbulb';
 	import Lock from 'lucide-svelte/icons/lock';
 	import Megaphone from 'lucide-svelte/icons/megaphone';
+	import Menu from 'lucide-svelte/icons/menu';
+	import MapPin from 'lucide-svelte/icons/map-pin';
+	import Mail from 'lucide-svelte/icons/mail';
+	import Phone from 'lucide-svelte/icons/phone';
 	import Scale from 'lucide-svelte/icons/scale';
 	import Siren from 'lucide-svelte/icons/siren';
 	import Stethoscope from 'lucide-svelte/icons/stethoscope';
@@ -41,12 +45,18 @@
 	import TrafficCone from 'lucide-svelte/icons/traffic-cone';
 	import Users from 'lucide-svelte/icons/users';
 	import Wrench from 'lucide-svelte/icons/wrench';
+	import X from 'lucide-svelte/icons/x';
 	import Zap from 'lucide-svelte/icons/zap';
 
 	/** Las claves nombran el concepto del sitio, no el dibujo. */
 	const REGISTRO = {
 		auditoria: FileSearch,
 		campanas: Megaphone,
+		cerrar: X,
+		correo: Mail,
+		menu: Menu,
+		telefono: Phone,
+		ubicacion: MapPin,
 		certificaciones: BadgeCheck,
 		check: Check,
 		colaboracion: Handshake,

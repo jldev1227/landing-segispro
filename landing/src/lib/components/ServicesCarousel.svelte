@@ -300,13 +300,18 @@
 									/>
 								</div>
 								<div class="min-w-0 flex-1 text-left">
-									<h4
-										class="truncate text-sm font-semibold transition-colors {currentIndex === index
+									<!--
+										Etiqueta de pestaña, no encabezado: va dentro de un <button> y
+										como <h4> tras el <h2> de la sección saltaba el nivel <h3>.
+									-->
+									<span
+										class="block text-sm leading-snug font-semibold text-balance transition-colors {currentIndex ===
+										index
 											? 'text-blue-900'
 											: 'text-gray-700 group-hover:text-blue-700'}"
 									>
 										{group.header}
-									</h4>
+									</span>
 								</div>
 							</div>
 
