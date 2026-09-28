@@ -1,0 +1,258 @@
+{
+	"serviciosPrestados": 1174,
+	"clientesAtendidos": 315,
+	"contratantes": 41,
+	"profesionales": 76,
+	"ciudadesAtendidas": 19,
+	"departamentosAtendidos": 6,
+	"aniosOperacion": 17,
+	"zonas": [
+		{
+			"municipio": "Yopal",
+			"departamento": "Casanare",
+			"servicios": 574,
+			"empresas": 227,
+			"lat": 5.3378,
+			"lon": -72.3959
+		},
+		{
+			"municipio": "Tauramena",
+			"departamento": "Casanare",
+			"servicios": 56,
+			"empresas": 17,
+			"lat": 5.0189,
+			"lon": -72.7458
+		},
+		{
+			"municipio": "Aguazul",
+			"departamento": "Casanare",
+			"servicios": 44,
+			"empresas": 21,
+			"lat": 5.1728,
+			"lon": -72.5472
+		},
+		{
+			"municipio": "Villanueva",
+			"departamento": "Casanare",
+			"servicios": 41,
+			"empresas": 23,
+			"lat": 4.61,
+			"lon": -72.9281
+		},
+		{
+			"municipio": "Paz de Ariporo",
+			"departamento": "Casanare",
+			"servicios": 14,
+			"empresas": 7,
+			"lat": 5.88,
+			"lon": -71.8917
+		},
+		{
+			"municipio": "Monterrey",
+			"departamento": "Casanare",
+			"servicios": 9,
+			"empresas": 5,
+			"lat": 4.8783,
+			"lon": -72.8936
+		}
+	],
+	"municipios": [
+		{
+			"municipio": "Yopal",
+			"departamento": "Casanare",
+			"servicios": 574,
+			"lat": 5.3378,
+			"lon": -72.3959
+		},
+		{
+			"municipio": "Tauramena",
+			"departamento": "Casanare",
+			"servicios": 56,
+			"lat": 5.0189,
+			"lon": -72.7458
+		},
+		{
+			"municipio": "Aguazul",
+			"departamento": "Casanare",
+			"servicios": 44,
+			"lat": 5.1728,
+			"lon": -72.5472
+		},
+		{
+			"municipio": "Villanueva",
+			"departamento": "Casanare",
+			"servicios": 41,
+			"lat": 4.61,
+			"lon": -72.9281
+		},
+		{
+			"municipio": "Paz de Ariporo",
+			"departamento": "Casanare",
+			"servicios": 14,
+			"lat": 5.88,
+			"lon": -71.8917
+		},
+		{
+			"municipio": "Monterrey",
+			"departamento": "Casanare",
+			"servicios": 9,
+			"lat": 4.8783,
+			"lon": -72.8936
+		},
+		{
+			"municipio": "Chía",
+			"departamento": "Cundinamarca",
+			"servicios": 6,
+			"lat": 4.8583,
+			"lon": -74.0592
+		},
+		{
+			"municipio": "Maní",
+			"departamento": "Casanare",
+			"servicios": 6,
+			"lat": 4.8172,
+			"lon": -72.2836
+		},
+		{
+			"municipio": "Puerto Gaitán",
+			"departamento": "Meta",
+			"servicios": 5,
+			"lat": 4.3122,
+			"lon": -72.0831
+		},
+		{
+			"municipio": "Orocué",
+			"departamento": "Casanare",
+			"servicios": 4,
+			"lat": 4.7906,
+			"lon": -71.3383
+		},
+		{
+			"municipio": "Cali",
+			"departamento": "Valle del Cauca",
+			"servicios": 3,
+			"lat": 3.4516,
+			"lon": -76.532
+		},
+		{
+			"municipio": "San Luis de Palenque",
+			"departamento": "Casanare",
+			"servicios": 3,
+			"lat": 5.4222,
+			"lon": -71.7314
+		},
+		{
+			"municipio": "Bogotá D.C.",
+			"departamento": "Bogotá D.C.",
+			"servicios": 2,
+			"lat": 4.711,
+			"lon": -74.0721
+		},
+		{
+			"municipio": "Nunchía",
+			"departamento": "Casanare",
+			"servicios": 2,
+			"lat": 5.6364,
+			"lon": -72.1961
+		},
+		{
+			"municipio": "Pore",
+			"departamento": "Casanare",
+			"servicios": 2,
+			"lat": 5.7278,
+			"lon": -71.9931
+		},
+		{
+			"municipio": "Cabuyaro",
+			"departamento": "Meta",
+			"servicios": 1,
+			"lat": 4.2833,
+			"lon": -72.7981
+		},
+		{
+			"municipio": "Saravena",
+			"departamento": "Arauca",
+			"servicios": 1,
+			"lat": 6.9556,
+			"lon": -71.8739
+		},
+		{
+			"municipio": "Trinidad",
+			"departamento": "Casanare",
+			"servicios": 1,
+			"lat": 5.4106,
+			"lon": -71.6631
+		},
+		{
+			"municipio": "Villavicencio",
+			"departamento": "Meta",
+			"servicios": 1,
+			"lat": 4.142,
+			"lon": -73.6266
+		}
+	],
+	"serviciosLocalizados": 775,
+	"porCategoria": [
+		{
+			"etiqueta": "Consultoría",
+			"total": 868,
+			"categorias": ["CONSULTORIA"]
+		},
+		{
+			"etiqueta": "Capacitación",
+			"total": 197,
+			"categorias": ["CAPACITACION"]
+		},
+		{
+			"etiqueta": "Asesoría",
+			"total": 34,
+			"categorias": ["ASESORIA_HORAS"]
+		},
+		{
+			"etiqueta": "Auditoría",
+			"total": 17,
+			"categorias": ["AUDITORIA"]
+		},
+		{
+			"etiqueta": "Inspección de puestos de trabajo",
+			"total": 17,
+			"categorias": ["INSPECCION_PT"]
+		},
+		{
+			"etiqueta": "Estudio de iluminación",
+			"total": 13,
+			"categorias": ["ESTUDIO_LUX"]
+		},
+		{
+			"etiqueta": "Estudio de ruido",
+			"total": 9,
+			"categorias": ["ESTUDIO_SONO"]
+		},
+		{
+			"etiqueta": "Simulacro",
+			"total": 7,
+			"categorias": ["SIMULACRO"]
+		},
+		{
+			"etiqueta": "Campaña",
+			"total": 5,
+			"categorias": ["CAMPANA"]
+		},
+		{
+			"etiqueta": "Rumboterapia",
+			"total": 3,
+			"categorias": ["RUMBOTERAPIA"]
+		},
+		{
+			"etiqueta": "Video",
+			"total": 2,
+			"categorias": ["VIDEO"]
+		},
+		{
+			"etiqueta": "Curso",
+			"total": 2,
+			"categorias": ["CURSO"]
+		}
+	],
+	"calculadoEn": "2026-09-28T00:52:40.249Z"
+}

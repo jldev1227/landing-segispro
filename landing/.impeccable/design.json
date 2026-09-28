@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T00:00:00.000Z",
+  "title": "Design System: SEGISPRO Ingeniería — Landing",
+  "extensions": {
+    "colorMeta": {
+      "marca-800": {
+        "role": "primary",
+        "displayName": "Marca Navy",
+        "canonical": "#223a54",
+        "note": "11,66:1 on white. Brand navy, taken from the logo pixels. Figures and dark fills.",
+        "tonalRamp": [
+          "#111d2b",
+          "#1b2e43",
+          "#223a54",
+          "#2a4566",
+          "#35547a",
+          "#4a6c95",
+          "#9cb3ce",
+          "#f3f6fa"
+        ]
+      },
+      "marca-600": {
+        "role": "primary",
+        "displayName": "Working Navy",
+        "canonical": "#35547a",
+        "note": "7,78:1 on white. Every interactive navy: button fill, link hover, outline stroke.",
+        "tonalRamp": [
+          "#111d2b",
+          "#1b2e43",
+          "#223a54",
+          "#2a4566",
+          "#35547a",
+          "#4a6c95",
+          "#6d8aaf",
+          "#e3eaf2"
+        ]
+      },
+      "acento-500": {
+        "role": "secondary",
+        "displayName": "Acento Green",
+        "canonical": "#00bf62",
+        "note": "Brand green. 2,43:1 on white — fill and graphic only, never text on a light surface.",
+        "tonalRamp": [
+          "#003119",
+          "#065730",
+          "#046b39",
+          "#008544",
+          "#00a353",
+          "#00bf62",
+          "#4ee199",
+          "#e9fbf2"
+        ]
+      },
+      "acento-700": {
+        "role": "secondary",
+        "displayName": "Acento Green Text",
+        "canonical": "#008544",
+        "note": "4,73:1 on white. The only green permitted to set text on white."
+      },
+      "realce-400": {
+        "role": "tertiary",
+        "displayName": "Realce Amber",
+        "canonical": "#ffad2b",
+        "note": "Brand amber. 1,86:1 on white — fill and graphic only.",
+        "tonalRamp": [
+          "#461803",
+          "#79330e",
+          "#933d0d",
+          "#b44e07",
+          "#d96e03",
+          "#f59008",
+          "#ffc451",
+          "#fff9ec"
+        ]
+      },
+      "realce-700": {
+        "role": "tertiary",
+        "displayName": "Realce Amber Text",
+        "canonical": "#b44e07",
+        "note": "5,21:1 on white. The only amber permitted to set text on white."
+      },
+      "neutral-900": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(21% 0.034 264.665)",
+        "note": "Tailwind gray-900, deliberately NOT aliased to the brand ramps. Headings, and the dark hero/footer fill. The dark-fill use is recorded drift, not a rule.",
+        "tonalRamp": [
+          "oklch(13% 0.028 261.692)",
+          "oklch(21% 0.034 264.665)",
+          "oklch(27.8% 0.033 256.848)",
+          "oklch(37.3% 0.034 259.733)",
+          "oklch(44.6% 0.03 256.802)",
+          "oklch(55.1% 0.027 264.364)",
+          "oklch(70.7% 0.022 261.325)",
+          "oklch(98.5% 0.002 247.839)"
+        ]
+      },
+      "neutral-600": {
+        "role": "neutral",
+        "displayName": "Body Text",
+        "canonical": "oklch(44.6% 0.03 256.802)",
+        "note": "All running prose. The system does not set body copy in black."
+      },
+      "neutral-200": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(92.8% 0.006 264.531)",
+        "note": "The 1px card and divider border. The primary depth device in this system."
+      },
+      "neutral-300": {
+        "role": "neutral",
+        "displayName": "Field Stroke",
+        "canonical": "oklch(87.2% 0.01 258.338)",
+        "note": "Input borders, tertiary outline buttons, and footer body text on dark (6,8:1)."
+      },
+      "neutral-0": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#ffffff",
+        "note": "Every card, panel, input and content surface."
+      },
+      "danger-700": {
+        "role": "tertiary",
+        "displayName": "Error Red",
+        "canonical": "oklch(50.5% 0.213 27.518)",
+        "note": "Form error panels only. Red exists in this system exclusively as a semantic error state; the retired isotipo red must not return as a brand color."
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page h1. Standard ramp text-3xl / sm:text-4xl / lg:text-5xl, landing at 48px with line-height 1."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section h2 on light surfaces; 24px at mobile, 30px from sm."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card and article headings at 20px/700."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running prose in neutral-600, leading-relaxed, capped at max-w-3xl. Lead paragraphs step to 18px."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "The dominant size of the system: cards, lists, form fields, nav links, footer links."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Uppercase tracked micro-label for <dt> terms and footer column headings only. Never a standalone kicker above a heading."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Evidence numbers in the trajectory data strip: tabular-nums, tracking-tight, marca-800."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-rest",
+        "value": "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
+        "purpose": "The only resting shadow in the standard. Reads as a printed edge; always paired with a 1px neutral-200 border, never a replacement for it."
+      },
+      {
+        "name": "card-hover",
+        "value": "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
+        "purpose": "Interactive card hover, applied with -4px translate and a border shift to marca-300 over 300ms."
+      },
+      {
+        "name": "header-structural",
+        "value": "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+        "purpose": "Separates the fixed header from scrolling content. The one structural shadow in the system."
+      }
+    ],
+    "motion": [
+      {
+        "name": "duration-standard",
+        "value": "300ms",
+        "purpose": "Default for every hover and focus transition (86 of 128 duration utilities in src)."
+      },
+      {
+        "name": "duration-quick",
+        "value": "200ms",
+        "purpose": "Color-only transitions on small controls such as nav links and chips."
+      },
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Tailwind's default ease; no custom curve is defined anywhere in the build."
+      }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ],
+    "containers": [
+      { "name": "index-pages", "value": "72rem", "purpose": "max-w-6xl — coverage index, home sections, footer." },
+      { "name": "reading-pages", "value": "64rem", "purpose": "max-w-5xl — region detail, careers, long-form." },
+      { "name": "measure", "value": "48rem", "purpose": "max-w-3xl — the cap on any paragraph of prose." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The navy pill CTA. Every primary action on a content page.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Solicitar cotización</a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; background: #35547a; color: #fff; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; line-height: 20px; padding: 12px 24px; border: none; border-radius: 9999px; text-decoration: none; transition: background-color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background: #2a4566; } .ds-btn-primary:focus-visible { outline: 2px solid #4a6c95; outline-offset: 2px; } .ds-btn-primary:active { background: #223a54; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "The secondary choice beside a primary pill, and the CTA inside a light panel.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\">Enviar mi hoja de vida</a>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #35547a; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; line-height: 20px; padding: 12px 24px; border: 2px solid #35547a; border-radius: 9999px; text-decoration: none; transition: background-color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-outline:hover { background: #f3f6fa; } .ds-btn-outline:focus-visible { outline: 2px solid #4a6c95; outline-offset: 2px; }"
+    },
+    {
+      "name": "Form Submit Button",
+      "kind": "button",
+      "refersTo": "button-submit",
+      "description": "Full-width on mobile, auto from sm. 12px radius so it aligns with the fields above it, not the pills elsewhere.",
+      "html": "<button class=\"ds-btn-submit\" type=\"submit\">Enviar postulación</button>",
+      "css": ".ds-btn-submit { width: 100%; background: #35547a; color: #fff; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 14px; font-weight: 600; line-height: 20px; padding: 16px 24px; border: none; border-radius: 12px; cursor: pointer; transition: background-color 300ms cubic-bezier(0.4,0,0.2,1); } @media (min-width: 640px) { .ds-btn-submit { width: auto; } } .ds-btn-submit:hover { background: #2a4566; } .ds-btn-submit:focus-visible { outline: 2px solid #4a6c95; outline-offset: 2px; } .ds-btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Region Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "The canonical surface: white, hairline-bordered, shadow-sm at rest, lifting 4px on hover. Every index grid on the interior pages is built from it.",
+      "html": "<article class=\"ds-card\"><h2 class=\"ds-card-title\"><a href=\"#\">Casanare</a></h2><p class=\"ds-card-body\">Hidrocarburos, transporte de carga y entidades públicas con exigencia contractual alta.</p><ul class=\"ds-card-chips\"><li class=\"ds-chip\">Hidrocarburos</li><li class=\"ds-chip\">Transporte</li></ul><p class=\"ds-card-meta\">Yopal · Aguazul · Tauramena · Villanueva</p><a class=\"ds-card-link\" href=\"#\">Ver servicios en Casanare</a></article>",
+      "css": ".ds-card { display: flex; flex-direction: column; background: #fff; border: 1px solid oklch(92.8% 0.006 264.531); border-radius: 16px; padding: 24px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; transition: transform 300ms cubic-bezier(0.4,0,0.2,1), box-shadow 300ms cubic-bezier(0.4,0,0.2,1), border-color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-card:hover { transform: translateY(-4px); border-color: #9cb3ce; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); } .ds-card-title { margin: 0 0 8px; font-size: 20px; font-weight: 700; line-height: 28px; color: oklch(21% 0.034 264.665); } .ds-card-title a { color: inherit; text-decoration: none; } .ds-card-title a:hover { color: #35547a; } .ds-card-body { margin: 0 0 16px; flex: 1; font-size: 14px; line-height: 1.625; color: oklch(44.6% 0.03 256.802); } .ds-card-chips { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 0 0 16px; padding: 0; } .ds-card-meta { margin: 0 0 16px; font-size: 12px; color: oklch(55.1% 0.027 264.364); } .ds-card-link { font-size: 14px; font-weight: 600; color: #35547a; text-decoration: none; } .ds-card-link:hover { color: #2a4566; }"
+    },
+    {
+      "name": "Sector Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Presentational tag for sectors and regions. No selected state exists in the build.",
+      "html": "<span class=\"ds-chip\">Hidrocarburos</span>",
+      "css": ".ds-chip { display: inline-block; background: #f3f6fa; color: #2a4566; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 12px; font-weight: 500; line-height: 16px; padding: 4px 10px; border-radius: 9999px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Label above, 12px-radius field below. Focus moves both border and ring to navy.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-nombre\">Nombre completo</label><input class=\"ds-input\" id=\"ds-nombre\" type=\"text\" placeholder=\"María Fernanda Rojas\" /></div>",
+      "css": ".ds-field { font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } .ds-label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: 500; line-height: 20px; color: oklch(21% 0.034 264.665); } .ds-input { width: 100%; background: #fff; color: oklch(21% 0.034 264.665); font-family: inherit; font-size: 14px; line-height: 20px; padding: 12px 16px; border: 1px solid oklch(87.2% 0.01 258.338); border-radius: 12px; transition: border-color 200ms cubic-bezier(0.4,0,0.2,1), box-shadow 200ms cubic-bezier(0.4,0,0.2,1); } .ds-input::placeholder { color: oklch(70.7% 0.022 261.325); } .ds-input:focus { outline: none; border-color: #4a6c95; box-shadow: 0 0 0 1px #4a6c95; } .ds-input:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Form Error Panel",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "The one place red appears. Sits above the form rather than styling fields individually.",
+      "html": "<div class=\"ds-error\" role=\"alert\">No pudimos enviar tu postulación. Revisa el archivo adjunto e inténtalo de nuevo.</div>",
+      "css": ".ds-error { background: oklch(97.1% 0.013 17.38); border: 1px solid oklch(88.5% 0.062 18.334); border-radius: 12px; padding: 16px; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; font-size: 14px; line-height: 1.625; color: oklch(50.5% 0.213 27.518); }"
+    },
+    {
+      "name": "Fixed Header",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "White, fixed, shadow-md. Secondary links collapse below sm; the validation link and the Inicio pill always stay.",
+      "html": "<header class=\"ds-header\"><nav class=\"ds-header-inner\"><a class=\"ds-header-logo\" href=\"#\">SEGISPRO</a><div class=\"ds-header-links\"><a class=\"ds-navlink ds-navlink-opt\" href=\"#\">Formación</a><a class=\"ds-navlink ds-navlink-opt\" href=\"#\">Cobertura</a><a class=\"ds-navlink\" href=\"#\">Validar certificado</a><a class=\"ds-header-cta\" href=\"#\">Inicio</a></div></nav></header>",
+      "css": ".ds-header { display: block; background: #fff; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } .ds-header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; } .ds-header-logo { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; color: #223a54; text-decoration: none; } .ds-header-links { display: flex; align-items: center; gap: 24px; } .ds-navlink { font-size: 14px; font-weight: 500; line-height: 20px; color: oklch(37.3% 0.034 259.733); text-decoration: none; transition: color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-navlink:hover { color: #35547a; } .ds-navlink:focus-visible { outline: 2px solid #4a6c95; outline-offset: 4px; } @media (max-width: 639px) { .ds-navlink-opt { display: none; } } .ds-header-cta { background: #35547a; color: #fff; font-size: 14px; font-weight: 600; line-height: 20px; padding: 8px 16px; border-radius: 9999px; text-decoration: none; transition: background-color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-header-cta:hover { background: #2a4566; }"
+    },
+    {
+      "name": "Trajectory Data Strip",
+      "kind": "custom",
+      "refersTo": "data-strip-cell",
+      "description": "The signature component. A <dl> whose gap-px over a neutral-200 ground renders as hairline rules; figures in tabular numerals at marca-800. Replaced four separately-gradiented stat cards whose colors encoded nothing.",
+      "html": "<dl class=\"ds-strip\"><div class=\"ds-strip-cell\"><dt class=\"ds-strip-term\">Servicios ejecutados</dt><dd class=\"ds-strip-def\"><span class=\"ds-strip-num\">1.174</span><span class=\"ds-strip-cap\">Servicios<span class=\"ds-strip-sub\">ejecutados</span></span></dd></div><div class=\"ds-strip-cell\"><dt class=\"ds-strip-term\">Empresas atendidas</dt><dd class=\"ds-strip-def\"><span class=\"ds-strip-num\">315</span><span class=\"ds-strip-cap\">Empresas<span class=\"ds-strip-sub\">atendidas</span></span></dd></div><div class=\"ds-strip-cell\"><dt class=\"ds-strip-term\">Ciudades</dt><dd class=\"ds-strip-def\"><span class=\"ds-strip-num\">41</span><span class=\"ds-strip-cap\">Ciudades<span class=\"ds-strip-sub\">con operación</span></span></dd></div><div class=\"ds-strip-cell\"><dt class=\"ds-strip-term\">Años</dt><dd class=\"ds-strip-def\"><span class=\"ds-strip-num\">17</span><span class=\"ds-strip-cap\">Años<span class=\"ds-strip-sub\">de operación</span></span></dd></div></dl>",
+      "css": ".ds-strip { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1px; background: oklch(92.8% 0.006 264.531); border-radius: 16px; overflow: hidden; margin: 0; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } @media (min-width: 1024px) { .ds-strip { grid-template-columns: repeat(4, minmax(0,1fr)); } } .ds-strip-cell { background: #fff; padding: 32px 24px; text-align: center; } .ds-strip-term { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } .ds-strip-def { margin: 0; } .ds-strip-num { display: block; font-size: 48px; font-weight: 700; line-height: 1; letter-spacing: -0.025em; font-variant-numeric: tabular-nums; color: #223a54; } .ds-strip-cap { display: block; margin-top: 8px; font-size: 14px; line-height: 20px; color: oklch(44.6% 0.03 256.802); } .ds-strip-sub { display: block; font-weight: 500; color: oklch(21% 0.034 264.665); }"
+    },
+    {
+      "name": "Site Footer",
+      "kind": "nav",
+      "refersTo": null,
+      "description": "Dark four-column link graph. neutral-400 on neutral-900 is deliberate: neutral-500 gives 3,66:1 and fails AA at 12px.",
+      "html": "<footer class=\"ds-footer\"><div class=\"ds-footer-grid\"><div><p class=\"ds-footer-brand\">SEGISPRO Ingeniería</p><p class=\"ds-footer-blurb\">Sistemas de gestión en seguridad, salud laboral, medio ambiente y calidad desde 2009.</p></div><div><h2 class=\"ds-footer-head\">Servicios</h2><ul class=\"ds-footer-list\"><li><a href=\"#\">Consultoría y auditoría</a></li><li><a href=\"#\">Formación y campañas</a></li><li><a href=\"#\">Estudios técnicos</a></li></ul></div><div><h2 class=\"ds-footer-head\">Cobertura</h2><ul class=\"ds-footer-list\"><li><a href=\"#\">Casanare</a></li><li><a href=\"#\">Meta</a></li><li><a href=\"#\">Boyacá</a></li></ul></div><div><h2 class=\"ds-footer-head\">Contacto</h2><ul class=\"ds-footer-list\"><li><a href=\"#\">Yopal, Casanare, Colombia</a></li></ul></div></div><div class=\"ds-footer-rule\">© 2026 SEGISPRO Ingeniería S.A.S. Todos los derechos reservados.</div></footer>",
+      "css": ".ds-footer { background: oklch(21% 0.034 264.665); color: oklch(87.2% 0.01 258.338); padding: 56px 24px; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } .ds-footer-grid { display: grid; gap: 40px; grid-template-columns: 1fr; } @media (min-width: 768px) { .ds-footer-grid { grid-template-columns: repeat(4, minmax(0,1fr)); } } .ds-footer-brand { margin: 0 0 16px; font-size: 16px; font-weight: 700; color: #fff; } .ds-footer-blurb { margin: 0; font-size: 14px; line-height: 1.625; color: oklch(70.7% 0.022 261.325); } .ds-footer-head { margin: 0 0 12px; font-size: 14px; font-weight: 600; line-height: 20px; letter-spacing: 0.025em; text-transform: uppercase; color: #fff; } .ds-footer-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; font-size: 14px; } .ds-footer-list a { color: inherit; text-decoration: none; transition: color 300ms cubic-bezier(0.4,0,0.2,1); } .ds-footer-list a:hover { color: #6d8aaf; } .ds-footer-list a:focus-visible { outline: 2px solid #6d8aaf; outline-offset: 2px; } .ds-footer-rule { margin-top: 40px; padding-top: 24px; border-top: 1px solid oklch(27.8% 0.033 256.848); font-size: 12px; color: oklch(70.7% 0.022 261.325); }"
+    },
+    {
+      "name": "Concept Icon",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Icono.svelte resolves a site concept key to a Lucide glyph at one stroke weight, aria-hidden unless given a label. Replaced emoji stored in the data layer; there are zero emoji in src/.",
+      "html": "<span class=\"ds-icon-row\"><svg class=\"ds-icon\" xmlns=\"http://www.w3.org/2000/svg\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\" focusable=\"false\"><path d=\"m10.852 19.772-.383.924\"/><path d=\"m13.148 14.228.383-.923\"/><path d=\"M13.148 19.772a3 3 0 1 0-2.296-5.544l-.383-.923\"/><path d=\"m13.531 20.696-.383-.924\"/><path d=\"m16 22-1-1\"/><path d=\"M8 14 4 4h16l-4 10\"/></svg><span class=\"ds-icon-label\">Auditoría de sistemas de gestión</span></span>",
+      "css": ".ds-icon-row { display: inline-flex; align-items: center; gap: 8px; font-family: 'Geist Variable', ui-sans-serif, system-ui, sans-serif; } .ds-icon { width: 20px; height: 20px; color: #35547a; flex-shrink: 0; } .ds-icon-label { font-size: 14px; line-height: 20px; color: oklch(44.6% 0.03 256.802); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Field Dossier",
+    "overview": "This is the visual language of a technical report handed across a desk in Yopal: navy ink on white paper, real figures set in tabular numerals, no ornament competing with the data. The buyer arrives with a compliance obligation and minutes to spend, so every surface is built to be scanned — bordered white cards on a near-white field, one navy accent doing all the work of emphasis, and a type ramp that only has as many steps as the content needs. The system's confidence comes from the specificity of what it shows (1.174 servicios, 315 empresas, 41 ciudades), not from styling applied on top.\n\nThe palette is unusually disciplined for a marketing site because it has to be: green and amber are the brand's own colors but fail contrast as text on white (2,43:1 and 1,86:1), so they are restricted to fill and graphic roles. That single constraint produced the house look — a monochrome navy system with two colors held in reserve. Depth is carried almost entirely by hairline borders and a barely-there shadow; the site reads flat and printed rather than layered and glassy.\n\nThe system is mid-refactor. Its quality bar lives in /cobertura, /cobertura/[region] and /trabaja-con-nosotros: restrained navy-on-white, real data, no decoration. The home page and /servicios/[slug] still carry an earlier, heavier vocabulary (gradient-filled cards, blurred color orbs, glassmorphic panels, hover-scale on everything). Where this document names a standard, it names the interior-page treatment; the home page's variants are recorded as what shipped, not as what to copy.",
+    "keyCharacteristics": [
+      "Navy-on-white monochrome; green and amber are fill-only, never body text on light surfaces",
+      "Hairline 1px neutral borders instead of shadow as the primary separator",
+      "Fully-round pill buttons on content pages, 12px radius on forms",
+      "One typeface (Geist Variable), weights 400 / 500 / 600 / 700 only",
+      "Figures in tabular numerals with tight tracking; the number is the biggest thing on the page",
+      "Lucide line icons at a single stroke weight, aria-hidden unless labelled — no emoji anywhere in src/"
+    ],
+    "rules": [
+      {
+        "name": "The Aliased Palette Rule",
+        "body": "Never read a color off the markup. blue-600 in a template is navy #35547a. New templates must use marca-*, acento-* and realce-* directly; the legacy names are a migration shim, not a palette.",
+        "section": "colors"
+      },
+      {
+        "name": "The Fill-Only Rule",
+        "body": "Brand green and brand amber never set text on a white surface. If green or amber must carry a word, it is acento-700 or realce-700 — no exceptions, including on hover.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Navy Rule",
+        "body": "A screen gets one accent hue. Navy is it. Green and amber appear as at most one graphic element per section, and never two accents in the same component.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Figure Rule",
+        "body": "Any number presented as evidence is set in tabular-nums with tracking-tight, in marca-800, and marked up as the <dd> of a <dl> whose <dt> names it. Numbers are data, not decoration.",
+        "section": "typography"
+      },
+      {
+        "name": "The Bare Lockup Rule",
+        "body": "A heading stands alone. No eyebrow or kicker line above it, no two-tone split across an h1, no decorative rule beneath it. The heading and its supporting paragraph are the entire lockup.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Face Rule",
+        "body": "Geist Variable sets everything. There is no display/body pairing to honor and no second family to introduce; hierarchy comes from size and weight alone.",
+        "section": "typography"
+      },
+      {
+        "name": "The Header Clearance Rule",
+        "body": "The header is fixed. Any page whose first band is light must open with pt-28; a page whose first band is a dark full-bleed hero uses pt-20 on main and lets the hero absorb the offset.",
+        "section": "layout"
+      },
+      {
+        "name": "The Measure Rule",
+        "body": "Prose is capped at max-w-3xl. A paragraph that runs the full 72rem container is a bug.",
+        "section": "layout"
+      },
+      {
+        "name": "The Hairline-First Rule",
+        "body": "A surface is separated from its background by a 1px neutral-200 border first. Shadow is additive and never stronger than shadow-sm at rest.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Motion-On-Response Rule",
+        "body": "Nothing animates at rest. Elevation and translation are responses to hover or focus, they run at duration-300 with the default ease, and they move at most 4px.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Pill-or-Twelve Rule",
+        "body": "Navigational and CTA buttons are fully round (rounded-full); form submit buttons and inputs are rounded-xl (12px) so they align with the fields above them. A button never takes a card's rounded-2xl.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Band Gradient Rule",
+        "body": "A gradient may fill a full-width section band. It may not fill a card, a button, an icon tile or a chip.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do write new templates against marca-*, acento-* and realce-*. The blue-*/green-*/orange-* aliases exist to keep legacy markup on-brand, not to be extended.",
+      "Do use marca-600 for anything interactive and marca-800 for figures and dark fills.",
+      "Do separate surfaces with a 1px neutral-200 hairline before reaching for a shadow.",
+      "Do set every evidence number in tabular-nums + tracking-tight inside a <dl>/<dt>/<dd>.",
+      "Do cap prose at max-w-3xl and set body copy in neutral-600 at 14–16px with leading-relaxed.",
+      "Do open light interior pages with pt-28 to clear the fixed header.",
+      "Do route every icon through Icono.svelte with a concept key, and give it an etiqueta only when no adjacent text already names it.",
+      "Do render <PageHeader /> and <PageFooter /> on every route. They are the shell; the shared footer also carries the internal link graph the site depends on.",
+      "Do keep the h1 ramp at text-3xl sm:text-4xl lg:text-5xl."
+    ],
+    "donts": [
+      "Don't set body or label text in acento-500 or realce-400 on a white surface. They fail AA (2,43:1 and 1,86:1). Use acento-700 / realce-700 when the word must be colored.",
+      "Don't introduce red outside the error state. The old isotipo red is retired.",
+      "Don't put a gradient inside a card, button, chip or icon tile. Gradients fill full-width bands.",
+      "Don't stack shadow-xl/shadow-2xl on a resting surface, and don't add blurred color orbs (blur-3xl circles) or backdrop-blur glass panels to new work.",
+      "Don't animate anything at rest — no animate-pulse on a CTA, no hover:scale on a button.",
+      "Don't put a kicker, eyebrow, two-tone <span> or decorative rule in a heading lockup.",
+      "Don't type a literal →, · or any pictographic character where the icon system should draw it.",
+      "Don't add a second typeface or a weight outside 400 / 500 / 600 / 700.",
+      "Don't hand-roll a page-level <footer>; import PageFooter.",
+      "Don't invent testimonials, review stars, price tables or trust badges — there is no evidence behind them and the system has no component for them."
+    ],
+    "notCanonized": [
+      "The /cobertura h1 still splits into a two-tone <span class=\"text-blue-600\">, which the Bare Lockup Rule forbids.",
+      "Literal → and · glyphs are typed into link and list text on /cobertura and /cobertura/[region] where Icono.svelte exists to draw them.",
+      "The home page's animate-pulse CTA and blur-3xl decorative orbs are resting animation and pure ornament.",
+      "The dark heroes' neutral gray-900 fill is recorded as drift rather than promoted to a dark-surface token, because legitimizing it would write a near-black into a navy brand system.",
+      "/servicios/[slug], /validar-certificado, /politicas-de-privacidad and /ingreso ship without the PageHeader/PageFooter shell."
+    ]
+  }
+}

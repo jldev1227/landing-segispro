@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Seo from '$lib/seo/Seo.svelte';
 	import { fly, scale, fade } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { onMount } from 'svelte';
@@ -25,15 +26,19 @@
 	}
 </script>
 
+<Seo
+	title="Ingreso a la plataforma | SEGISPRO"
+	description="Acceso privado a la plataforma de SEGISPRO Ingeniería."
+	path="/ingreso"
+	noindex
+/>
+
 <div
 	class="relative min-h-screen overflow-hidden bg-linear-to-br from-gray-900 via-gray-800 to-black"
 >
 	<!-- Grid pattern de fondo -->
 	<div class="absolute inset-0 opacity-5">
-		<div
-			class="absolute inset-0"
-			style="background-image: radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.5) 1px, transparent 0); background-size: 40px 40px;"
-		></div>
+		<div class="absolute inset-0"></div>
 	</div>
 
 	<!-- Gradiente radial -->

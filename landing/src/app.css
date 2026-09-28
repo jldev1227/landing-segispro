@@ -1,3 +1,216 @@
 @import 'tailwindcss';
+/* Archivo y Archivo Narrow, servidas desde node_modules — sin llamada a Google
+   Fonts. Grotescas de linaje señalético: la estrecha compone las bandas de
+   leyenda en versales, la normal lleva la prosa. Cada archivo trae un
+   @font-face por subconjunto con su unicode-range, así que quien lee español
+   solo descarga el latino: 34 KB y 18 KB. */
+@import '@fontsource-variable/archivo/wght.css';
+@import '@fontsource-variable/archivo-narrow/wght.css';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/**
+ * Identidad SEGISPRO.
+ *
+ * Los tres tonos salen de los píxeles de `ICON.png` y `FLAT.png`: navy #223A54,
+ * verde #00BF62 y ámbar #FFAD2B. El rojo del isotipo anterior ya no existe.
+ *
+ * Cada rampa se construyó alrededor de su color de marca y se verificó contra
+ * blanco y contra `marca-800`, que son los dos fondos que usa el sitio. Los
+ * pasos que aparecen comentados con su ratio son los únicos aptos para texto:
+ * el verde y el ámbar puros dan 2,43:1 y 1,86:1 sobre blanco, muy por debajo
+ * del 4,5:1 que exige WCAG AA, así que en claro solo sirven como relleno.
+ */
+@theme {
+	/* Tipografía del mundo señalético. Archivo lleva la prosa; Archivo Narrow
+	   compone las bandas de leyenda en versales, que es donde una señal real
+	   aprieta la letra para que quepa el mensaje en la placa. */
+	--font-sans:
+		'Archivo Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto,
+		'Helvetica Neue', Arial, sans-serif;
+	--font-leyenda:
+		'Archivo Narrow Variable', 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+
+	/* ── Código de color de seguridad, traducido a la marca ──────────────────
+	   ISO 7010 asigna el significado a la forma y al color a la vez: el círculo
+	   obliga, el triángulo advierte, el cuadrado indica condición segura. El
+	   código original es rojo-amarillo-azul; aquí se traduce a la identidad, que
+	   descartó el rojo. Se conserva el significado y cambian los tonos.
+
+	   La forma no es decorativa: es la mitad del mensaje. Por eso `Placa.svelte`
+	   ata geometría y color en un solo `tipo`, y no se pueden combinar mal desde
+	   el sitio de uso. */
+	--color-obliga: #223a54; /* lo normativo: decretos, ISO, resoluciones */
+	--color-obliga-tinta: #ffffff; /* 11,66:1 */
+	--color-advierte: #ffad2b; /* el riesgo que se mide y se gestiona */
+	--color-advierte-tinta: #1b1b1b; /* 9,24:1 */
+	--color-segura: #00bf62; /* la capacidad que se entrega */
+	--color-segura-tinta: #08301d; /* 5,95:1 */
+
+	/* ── Radios ──────────────────────────────────────────────────────────────
+	   Un radio único y corto para todas las superficies: botones, campos,
+	   avisos, fichas, el mapa. Lo justo para que la página no se lea como una
+	   hoja de cálculo, no tanto como para que parezca una tarjeta de producto.
+
+	   `--radius-pastilla` es el otro extremo, y solo lo llevan dos cosas: el
+	   acceso flotante a WhatsApp y la placa de obligación, que es un círculo
+	   porque en ISO 7010 el círculo *significa* obligación.
+
+	   Lo que no se redondea es la geometría de `Placa.svelte`. Ahí la forma es
+	   la mitad del mensaje —círculo obliga, triángulo advierte, cuadrado indica
+	   condición segura—, y un cuadrado con las esquinas comidas deja de
+	   distinguirse del círculo a tamaño pequeño. El cuadrado recibe el radio
+	   suave y nada más. */
+	--radius-suave: 0.3125rem; /* 5px */
+	--radius-pastilla: 9999px;
+
+	/* Sustrato de placa y tinta de cuerpo. Blanco de rótulo, nunca crema. */
+	--color-placa: #ffffff;
+	--color-tinta: #16202e; /* 16,40:1 sobre blanco */
+
+	/* Navy — color primario, el que puede llevar texto en cualquier paso alto. */
+	--color-marca-50: #f3f6fa;
+	--color-marca-100: #e3eaf2;
+	--color-marca-200: #c5d4e4;
+	--color-marca-300: #9cb3ce;
+	--color-marca-400: #6d8aaf;
+	--color-marca-500: #4a6c95;
+	--color-marca-600: #35547a; /* 7,78:1 sobre blanco — botón sólido */
+	--color-marca-700: #2a4566;
+	--color-marca-800: #223a54; /* 11,66:1 — el navy de la marca */
+	--color-marca-900: #1b2e43;
+	--color-marca-950: #111d2b;
+
+	/* Verde — acento. Sobre blanco solo desde el 700. */
+	--color-acento-50: #e9fbf2;
+	--color-acento-100: #c7f5de;
+	--color-acento-200: #8dedbd;
+	--color-acento-300: #4ee199;
+	--color-acento-400: #16d17a;
+	--color-acento-500: #00bf62; /* el verde de la marca — relleno y gráfico */
+	--color-acento-600: #00a353;
+	--color-acento-700: #008544; /* 4,73:1 sobre blanco — el verde cuando es texto */
+	--color-acento-800: #046b39;
+	--color-acento-900: #065730;
+	--color-acento-950: #003119;
+
+	/* Ámbar — realce. Sobre blanco solo desde el 700. */
+	--color-realce-50: #fff9ec;
+	--color-realce-100: #ffefc9;
+	--color-realce-200: #ffdb8e;
+	--color-realce-300: #ffc451;
+	--color-realce-400: #ffad2b; /* el ámbar de la marca — relleno y gráfico */
+	--color-realce-500: #f59008;
+	--color-realce-600: #d96e03;
+	--color-realce-700: #b44e07; /* 5,21:1 sobre blanco — el ámbar cuando es texto */
+	--color-realce-800: #933d0d;
+	--color-realce-900: #79330e;
+	--color-realce-950: #461803;
+
+	/*
+	 * Las paletas de Tailwind que el sitio ya usaba quedan apuntando a la marca.
+	 * Son 390 clases `blue-*`, 44 `green-*` y 43 `orange-*` repartidas por todo
+	 * `src/`: redefinir la rampa las recolorea de golpe y sin tocar el marcado,
+	 * en lugar de reescribir cada una y arriesgar regresiones visuales.
+	 * Las plantillas nuevas usan `marca-*`, `acento-*` y `realce-*` directamente.
+	 */
+	--color-blue-50: var(--color-marca-50);
+	--color-blue-100: var(--color-marca-100);
+	--color-blue-200: var(--color-marca-200);
+	--color-blue-300: var(--color-marca-300);
+	--color-blue-400: var(--color-marca-400);
+	--color-blue-500: var(--color-marca-500);
+	--color-blue-600: var(--color-marca-600);
+	--color-blue-700: var(--color-marca-700);
+	--color-blue-800: var(--color-marca-800);
+	--color-blue-900: var(--color-marca-900);
+	--color-blue-950: var(--color-marca-950);
+
+	--color-indigo-50: var(--color-marca-50);
+	--color-indigo-100: var(--color-marca-100);
+	--color-indigo-200: var(--color-marca-200);
+	--color-indigo-300: var(--color-marca-300);
+	--color-indigo-400: var(--color-marca-400);
+	--color-indigo-500: var(--color-marca-500);
+	--color-indigo-600: var(--color-marca-600);
+	--color-indigo-700: var(--color-marca-700);
+	--color-indigo-800: var(--color-marca-800);
+	--color-indigo-900: var(--color-marca-900);
+	--color-indigo-950: var(--color-marca-950);
+
+	--color-cyan-400: var(--color-acento-400);
+	--color-cyan-500: var(--color-acento-500);
+	--color-cyan-600: var(--color-acento-600);
+	--color-cyan-700: var(--color-acento-700);
+
+	--color-sky-400: var(--color-marca-400);
+	--color-sky-500: var(--color-marca-500);
+	--color-sky-600: var(--color-marca-600);
+
+	--color-green-50: var(--color-acento-50);
+	--color-green-100: var(--color-acento-100);
+	--color-green-200: var(--color-acento-200);
+	--color-green-300: var(--color-acento-300);
+	--color-green-400: var(--color-acento-400);
+	--color-green-500: var(--color-acento-500);
+	--color-green-600: var(--color-acento-600);
+	--color-green-700: var(--color-acento-700);
+	--color-green-800: var(--color-acento-800);
+	--color-green-900: var(--color-acento-900);
+	--color-green-950: var(--color-acento-950);
+
+	--color-emerald-50: var(--color-acento-50);
+	--color-emerald-100: var(--color-acento-100);
+	--color-emerald-200: var(--color-acento-200);
+	--color-emerald-300: var(--color-acento-300);
+	--color-emerald-400: var(--color-acento-400);
+	--color-emerald-500: var(--color-acento-500);
+	--color-emerald-600: var(--color-acento-600);
+	--color-emerald-700: var(--color-acento-700);
+	--color-emerald-800: var(--color-acento-800);
+	--color-emerald-900: var(--color-acento-900);
+
+	--color-teal-400: var(--color-acento-400);
+	--color-teal-500: var(--color-acento-500);
+	--color-teal-600: var(--color-acento-600);
+	--color-teal-700: var(--color-acento-700);
+
+	--color-orange-50: var(--color-realce-50);
+	--color-orange-100: var(--color-realce-100);
+	--color-orange-200: var(--color-realce-200);
+	--color-orange-300: var(--color-realce-300);
+	--color-orange-400: var(--color-realce-400);
+	--color-orange-500: var(--color-realce-500);
+	--color-orange-600: var(--color-realce-600);
+	--color-orange-700: var(--color-realce-700);
+	--color-orange-800: var(--color-realce-800);
+	--color-orange-900: var(--color-realce-900);
+
+	--color-amber-400: var(--color-realce-400);
+	--color-amber-500: var(--color-realce-500);
+	--color-amber-600: var(--color-realce-600);
+	--color-amber-700: var(--color-realce-700);
+}
+
+/*
+	Movimiento reducido.
+
+	Vivía en el `<style>` de la portada. Con `:global` ahí dentro la regla se
+	aplicaba a todo, sí, pero solo en las páginas que cargaran ese componente:
+	al llevar el sistema señalético a las fichas de servicio, a cobertura y a
+	postulación, esas rutas se quedaron con sus transiciones intactas para quien
+	pide en su sistema que no haya movimiento. Aquí lo carga cualquier ruta.
+*/
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}

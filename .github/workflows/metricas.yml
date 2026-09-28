@@ -1,0 +1,43 @@
+name: Sincronizar métricas
+
+# Congela los agregados del backend en `metricas.json` y los commitea. La
+# landing queda estática: no consulta la API en tiempo de ejecución, así que
+# no hay CORS, ni latencia en el primer render, ni endpoint expuesto al
+# tráfico público. Si la API no responde, el snapshot versionado sigue sirviendo.
+on:
+  schedule:
+    # Lunes a las 06:00 UTC — 01:00 en Bogotá.
+    - cron: '0 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Traer los agregados
+        env:
+          # Secreto del repositorio: la URL completa del endpoint público.
+          API_STATS_URL: ${{ secrets.API_STATS_URL }}
+        working-directory: landing
+        run: node scripts/sync-metricas.mjs
+
+      - name: Commitear si cambió
+        run: |
+          if git diff --quiet -- landing/src/lib/data/metricas.json; then
+            echo "Sin cambios en las métricas."
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add landing/src/lib/data/metricas.json
+          git commit -m 'chore(metricas): snapshot automático desde la API'
+          git push

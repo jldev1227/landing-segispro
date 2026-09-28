@@ -194,8 +194,8 @@
 		background: linear-gradient(
 			90deg,
 			transparent,
-			rgba(59, 130, 246, 0.3),
-			rgba(249, 115, 22, 0.3),
+			rgba(34, 58, 84, 0.3),
+			rgba(255, 173, 43, 0.3),
 			transparent
 		);
 		background-size: 200% 100%;
